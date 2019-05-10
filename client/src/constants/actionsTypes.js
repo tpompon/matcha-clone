@@ -1,0 +1,1 @@
+export const LOG_IN_USER_DATA = "LOG_IN_USER_DATA"
