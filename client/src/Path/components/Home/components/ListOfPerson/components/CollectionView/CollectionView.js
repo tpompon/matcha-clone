@@ -1,8 +1,7 @@
 import React, { Component } from "react"
 
 import PreviewProfil from "./components/PreviewProfil"
-
-import { getUsers } from "utils/fileProvider"
+import LikeButtons from "components/LikeButtons"
 
 const listTagArray = [
     "#Movie",
@@ -17,80 +16,72 @@ class CollectionView extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            listPerson: null,
-            listTag: [],
+            listProfil: null,
+            listTag: "",
         }
     }
 
     componentWillMount() {
-        const { dataUser } = this.props
-        getUsers()
-            .then((listUsers) => {
-                let listPerson = {}
-                listUsers.data.forEach((user) => {
-                    if (user.id !== dataUser.id) {
-                        listPerson = {
-                            ...listPerson,
-                            [user.id]: user,
-                        }
-                    }
-                })
-                this.setState({ listPerson })
-            })
-            .catch((error) => console.log(error))
+        const { listPerson } = this.props
+        this.setState({ listProfil: listPerson })
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { listPerson } = nextProps
+        if (this.props.listPerson !== listPerson) {
+            this.listTagFilter(listPerson)
+        }
     }
 
     chooseTag = (tag) => {
+        const { listPerson } = this.props
         const { listTag } = this.state
         if (listTag.indexOf(tag) === -1) {
-            this.setState({ listTag: this.state.listTag + tag }, () => this.listTagFilter())
+            this.setState({ listTag: this.state.listTag + tag }, () => this.listTagFilter(listPerson))
         } else {
-            this.setState({ listTag: this.state.listTag.replace(tag, "") }, () => this.listTagFilter())
+            this.setState({ listTag: this.state.listTag.replace(tag, "") }, () => this.listTagFilter(listPerson))
         }
     }
 
-    listTagFilter = () => {
-        getUsers()
-            .then((listUsers) => {
-                const { listTag } = this.state
-                const listTagFilter = listTag.split("#")
-                listTagFilter.splice(0, 1)
-                if (listTagFilter.length === 0) {
-                    const { dataUser } = this.props
-                    let listPerson = {}
-                    listUsers.data.forEach((user) => {
-                        if (user.id !== dataUser.id) {
-                            listPerson = {
-                                ...listPerson,
-                                [user.id]: user,
-                            }
+    listTagFilter = (listPerson) => {
+        const { listTag } = this.state
+        let newListProfil = {}
+        if (listTag === "") {
+            const { dataUser } = this.props
+            Object.entries(listPerson).forEach((entry) => {
+                if (entry[1].id !== dataUser.id) {
+                    newListProfil = {
+                        ...newListProfil,
+                        [entry[1].id]: entry[1],
+                    }
+                }
+            })
+        } else {
+            Object.entries(listPerson).forEach((entry) => {
+                if (entry[1].listInterest !== null) {
+                    const listInterestProfil = listTag.split("#")
+                    listInterestProfil.splice(0, 1)
+                    let absTag = 1
+                    listInterestProfil.forEach((tag) => {
+                        if (entry[1].listInterest.indexOf(tag) === -1) {
+                            absTag = 0
                         }
                     })
-                    this.setState({ listPerson })
-                } else {
-                    let newListPersonWithFilterTag = {}
-                    listUsers.data.forEach((user) => {
-                        listTagFilter.forEach((tag) => {
-                            if (user.listInterest !== null && user.listInterest.indexOf(tag) !== -1) {
-                                newListPersonWithFilterTag = {
-                                    ...newListPersonWithFilterTag,
-                                    [user.id]: user,
-                                }
-                            }
-                    })
-                    this.setState({ listPerson: newListPersonWithFilterTag })
-                })
-            }
-        })
-        .catch((error) => console.log(error))
+                    if (absTag === 1) {
+                        newListProfil = {
+                            ...newListProfil,
+                            [entry[1].id]: entry[1]
+                        }
+                    }
+                }
+            })
+        }
+        this.setState({ listProfil: newListProfil })
     }
 
     render() {
-        const { chooseDataPerson } = this.props
-        const { listPerson } = this.state
-        if (listPerson === null) {
-            return <div />
-        }
+        const { chooseDataPerson, dataUser } = this.props
+        const { listProfil } = this.state
         return (
             <div>
                 <div>
@@ -107,12 +98,17 @@ class CollectionView extends Component {
                 </div>
                 <div>
                     {
-                        Object.entries(listPerson).map((entry) => (
-                            <PreviewProfil
-                                key={ `PreviewProfil-${entry[0]}` }
-                                data={ entry[1] }
-                                chooseDataPerson={ chooseDataPerson }
-                            />
+                        Object.entries(listProfil).map((entry) => (
+                            <div key={ `PreviewProfil-${entry[0]}` }>
+                                <PreviewProfil
+                                    data={ entry[1] }
+                                    chooseDataPerson={ chooseDataPerson }
+                                />
+                                <LikeButtons
+                                    user={ dataUser.userName }
+                                    profilName={ entry[1].userName }
+                                />
+                            </div>
                         ))
                     }
                 </div>
@@ -121,5 +117,41 @@ class CollectionView extends Component {
     }
 
 }
+
+/*
+        getUsers()
+            .then((listUsers) => {
+                const { listTag } = this.state
+                const listTagFilter = listTag.split("#")
+                listTagFilter.splice(0, 1)
+                if (listTagFilter.length === 0) {
+                    const { dataUser } = this.props
+                    let listProfil = {}
+                    listUsers.data.forEach((user) => {
+                        if (user.id !== dataUser.id) {
+                            listProfil = {
+                                ...listProfil,
+                                [user.id]: user,
+                            }
+                        }
+                    })
+                    this.setState({ listProfil })
+                } else {
+                    let newListPersonWithFilterTag = {}
+                    listUsers.data.forEach((user) => {
+                        listTagFilter.forEach((tag) => {
+                            if (user.listInterest !== null && user.listInterest.indexOf(tag) !== -1) {
+                                newListPersonWithFilterTag = {
+                                    ...newListPersonWithFilterTag,
+                                    [user.id]: user,
+                                }
+                            }
+                    })
+                    this.setState({ listProfil: newListPersonWithFilterTag })
+                })
+            }
+        })
+        .catch((error) => console.log(error))
+        */
 
 export default CollectionView

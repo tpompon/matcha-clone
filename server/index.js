@@ -179,6 +179,79 @@ app.post("/users/getImageProfil", (req, res) => {
 	})
 })
 
+app.post("/users/likeOrUnlikeProfil", (req, res) => {
+	const { user, profilName, valueLike } = req.body
+	const searchLikeProfil = `SELECT * FROM likeuser WHERE (userName, profilName) IN (('${user}', '${profilName}'))`
+	connection.query(searchLikeProfil, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			let likeProfil
+			if (results.length === 0) {
+				likeProfil = `INSERT INTO likeuser (userName, profilName, likeUser) VALUES('${user}', '${profilName}', ${valueLike})`
+			} else {
+				likeProfil = `UPDATE likeuser SET likeUser=${valueLike} WHERE(userName, profilName) IN (('${user}', '${profilName}'))`
+			}
+			connection.query(likeProfil, (error, results) => {
+				if (error) {
+					return res.send(error)
+				} else {
+					return res.send("modified")
+				}
+			})
+		}
+	})
+})
+
+app.post("/users/listBlockProfil", (req, res) => {
+	const { userName } = req.body
+	const listBlock = `SELECT blockProfil from listblockprofil WHERE user='${userName}'`
+	connection.query(listBlock, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.json({ blockList: results })
+		}
+	})
+})
+
+app.post("/users/blockProfil", (req, res) => {
+	const { userName, profilBlock } = req.body
+	const blockProfil = `INSERT INTO listblockprofil (user, blockProfil) VALUES('${userName}', '${profilBlock}')`
+	connection.query(blockProfil, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.send(`${profilBlock} is blocked.`)
+		}
+	})
+})
+
+app.post("/users/deblockUser", (req, res) => {
+	const { userName, userDeblocked } = req.body
+	const deblockProfil = `DELETE FROM listblockprofil WHERE (user, blockProfil) IN (('${userName}', '${userDeblocked}'))`
+	connection.query(deblockProfil, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.send(`${userDeblocked} is deblocked`)
+		}
+	})
+})
+
+app.post("/users/profilLikedMe", (req, res) => {
+	const { userName, userNameProfil } = req.body
+	const profilLikedMe = `SELECT likeUser FROM likeuser WHERE (userName, profilName) IN (('${userName}', '${userNameProfil}'))`
+	connection.query(profilLikedMe, (error, results) => {
+		console.log(results)
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.json({ like: results })
+		}
+	})
+})
+
 app.listen(4000, () => {
 	console.log(`Server is launch on port 4000`)
 })

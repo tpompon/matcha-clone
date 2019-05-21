@@ -21,7 +21,6 @@ class InfosProfil extends Component {
                 { name: "email", type: "email", value: email, placeholder: "email" },
             ],
         }
-        console.log("test")
     }
 
     onChangeValue = (e, index) => {

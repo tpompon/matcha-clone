@@ -3,10 +3,12 @@ import React, { Component } from "react"
 import EditProfil from "./components/EditProfil"
 import Disconnect from "./components/Disconnect"
 import ListOfPerson from "./components/ListOfPerson"
+import ListProfilBlock from "./components/ListProfilBlock"
 
 const optionsArray = [
     "Edit profil",
     "List of person",
+    "List Profil Block",
 ]
 
 class Home extends Component {
@@ -33,6 +35,9 @@ class Home extends Component {
             case "List of person":
                 return <ListOfPerson dataUser={ dataUser } />
             
+            case "List Profil Block":
+                return <ListProfilBlock userName={ dataUser.userName } />
+
             default:
                 return null
 

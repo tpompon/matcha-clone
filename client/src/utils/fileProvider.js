@@ -181,6 +181,35 @@ export const getImageProfil = (id) => {
         .catch((error) => console.log(error))
 }
 
+export const likeOrUnkikeUser = (user, profilName, valueLike) => {
+    fetch("http://localhost:4000/users/likeOrUnlikeProfil", optionsFetch({ user, profilName, valueLike }))
+}
+
+export const blockList = (userName) => {
+    return fetch("http://localhost:4000/users/listBlockProfil", optionsFetch({ userName }))
+        .then((listProfilBlock) => listProfilBlock.json())
+        .then((responseJson) => {
+            const blockList = []
+            responseJson.blockList.forEach((name) => {
+                blockList.push(name.blockProfil)
+            })
+            return blockList
+        })
+        .catch((error) => console.log(error))
+}
+
+export const blockProfil = (userName, profilBlock) => {
+    fetch("http://localhost:4000/users/blockProfil", optionsFetch({ userName, profilBlock }))
+} 
+
+export const deblockUser = (userName, userDeblocked) => {
+    return fetch("http://localhost:4000/users/deblockUser", optionsFetch({ userName, userDeblocked }))
+}
+
+export const profilLikedMe = (userName, userNameProfil) => {
+    return fetch("http://localhost:4000/users/ProfilLikedMe", optionsFetch({ userName, userNameProfil }))
+}
+
 // it's like a htmlspecialchar function in php
 /*
 const escapeHtml = (text) => {
