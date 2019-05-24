@@ -183,6 +183,24 @@ export const getImageProfil = (id) => {
 
 export const likeOrUnkikeUser = (user, profilName, valueLike) => {
     fetch("http://localhost:4000/users/likeOrUnlikeProfil", optionsFetch({ user, profilName, valueLike }))
+        .then((response) => response.text())
+        .then((responseText) => {
+            if (responseText) {
+                fetch("http://localhost:4000/users/profilMatch", optionsFetch({ user, profilName }))
+                    .then((response) => response.text())
+                    .then((res) => {
+                        if (+res === 1 && valueLike === 1) {
+                            alert("You are already matched with this person")
+                        } else if (+res === 1 && valueLike === -1) {
+                            fetch("http://localhost:4000/users/deleteMatch", optionsFetch({ user, profilName }))
+                        } else {
+                            alert(responseText)
+                        }
+                    })
+                    .catch((error) => console.log(error))
+            }
+        })
+        .catch((error) => console.log(error))
 }
 
 export const blockList = (userName) => {
@@ -198,6 +216,13 @@ export const blockList = (userName) => {
         .catch((error) => console.log(error))
 }
 
+export const getAllOtherDataOfProfil = (userName, profilName) => {
+    return fetch("http://localhost:4000/users/getAllOtherDataOfProfil", optionsFetch({ userName, profilName }))
+        .then((response) => response.json())
+        .then((responseJson) => responseJson)
+        .catch((error) => console.log(error))
+}
+
 export const blockProfil = (userName, profilBlock) => {
     fetch("http://localhost:4000/users/blockProfil", optionsFetch({ userName, profilBlock }))
 } 
@@ -206,8 +231,37 @@ export const deblockUser = (userName, userDeblocked) => {
     return fetch("http://localhost:4000/users/deblockUser", optionsFetch({ userName, userDeblocked }))
 }
 
-export const profilLikedMe = (userName, userNameProfil) => {
-    return fetch("http://localhost:4000/users/ProfilLikedMe", optionsFetch({ userName, userNameProfil }))
+export const getListMatch = (userName) => {
+    return fetch("http://localhost:4000/users/getListMatch", optionsFetch({ userName }))
+        .then((response) => response.json())
+        .then((responseJson) => responseJson)
+        .catch((error) => console.log(error))
+}
+
+export const sendMessage = (from, to, message) => {
+    fetch("http://localhost:4000/users/sendMessage", optionsFetch({ from, to, message }))
+}
+
+export const getAllMessages = (userName, profilMatchName) => {
+    return fetch("http://localhost:4000/users/getAllMessages", optionsFetch({ userName, profilMatchName }))
+        .then((response) => response.json())
+        .then((responseJson) => responseJson)
+        .catch((error) => error)
+}
+
+export const getNotificationsNoRead = (userName) => {
+    return fetch("http://localhost:4000/users/getNotificationsNoRead", optionsFetch({ userName }))
+        .then((response) => response.json())
+        .then((responseJson) => responseJson)
+        .catch((error) => console.log(error))
+}
+
+export const updateNotificationsToRead = (userName) => {
+    fetch("http://localhost:4000/users/updateNotificationsToRead", optionsFetch({ userName }))
+}
+
+export const visitProfil = (userName, profilName) => {
+    fetch("http://localhost:4000/users/visitProfil", optionsFetch({ userName, profilName }))
 }
 
 // it's like a htmlspecialchar function in php

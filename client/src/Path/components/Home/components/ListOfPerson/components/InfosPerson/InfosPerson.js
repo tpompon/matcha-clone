@@ -3,9 +3,9 @@ import React, { Component } from "react"
 import Images from "./components/Images"
 import DataProfil from "./components/DataProfil"
 import DataPersonal from "./components/DataPersonal"
-import LikeButtons from "components/LikeButtons"
+import LikeUser from "./components/LikeUser"
 
-import { blockProfil, profilLikedMe } from "utils/fileProvider"
+import { blockProfil } from "utils/fileProvider"
 
 class InfosPerson extends Component {
 
@@ -13,17 +13,7 @@ class InfosPerson extends Component {
         super(props)
         this.state = { blocked: false }
     }
-
-    /*
-    componentDidMount() {
-        const { dataPerson, dataUser } = this.props
-        profilLikedMe(dataUser.userName, dataPerson.userName)
-            .then((response) => response.json())
-            .then((responseJson) => console.log(responseJson))
-            .catch((error) => console.log(error))
-    }
-    */
-
+    
     componentWillReceiveProps(nextProps) {
         const { dataPerson } = nextProps
         if (this.props.dataPerson !== dataPerson) {
@@ -45,10 +35,13 @@ class InfosPerson extends Component {
         }
         const { blocked } = this.state
         const {
-            id, userName, email, lastName, firstName, biography, listInterest, genderOptionChecked, orientationOptionChecked,
+            id, userName, lastName, firstName, biography,
+            listInterest, genderOptionChecked, orientationOptionChecked, likeUser,
         } = dataPerson
-        const dataProfil = { userName, email, lastName, firstName }
-        const dataPersonal = { biography, listInterest, genderOptionChecked, orientationOptionChecked }
+        const dataProfil = { userName, lastName, firstName }
+        const dataPersonal = {
+            biography, listInterest, genderOptionChecked, orientationOptionChecked,
+        }
         return (
             <div>
                 {
@@ -58,7 +51,8 @@ class InfosPerson extends Component {
                                 <Images id={ id } />
                                 <DataProfil dataProfil={ dataProfil } />
                                 <DataPersonal dataPersonal={ dataPersonal } />
-                                <LikeButtons
+                                <LikeUser
+                                    likeUser={ likeUser }
                                     user={ dataUser.userName }
                                     profilName={ userName }
                                 />

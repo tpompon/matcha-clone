@@ -11,6 +11,7 @@ const connection = mysql.createConnection({
 	user: "root",
 	password: "input305",
 	database: "matcha",
+	multipleStatements: true,
 })
 
 const sendMail = (mail, text, subject) => {
@@ -39,6 +40,11 @@ const sendMail = (mail, text, subject) => {
 		console.log("the message was sent")
 		console.log(info)
 	})
+}
+
+const addNotification = (to, message) => {
+	const sqlInsertNotification =  `INSERT INTO notifications (notificationUser, notificationType, date) VALUES ('${to}', '${message.replace(/'/g, "\\'")}', NOW())`
+	return sqlInsertNotification
 }
 
 connection.connect(err => {
@@ -187,18 +193,76 @@ app.post("/users/likeOrUnlikeProfil", (req, res) => {
 			return res.send(error)
 		} else {
 			let likeProfil
+			const textNotification = (valueLike === 1) ? `${user} send you a like` : `${user} send you a unlike`
 			if (results.length === 0) {
-				likeProfil = `INSERT INTO likeuser (userName, profilName, likeUser) VALUES('${user}', '${profilName}', ${valueLike})`
+				likeProfil = `INSERT INTO likeuser (userName, profilName, likeUser) VALUES('${user}', '${profilName}', ${valueLike});`
 			} else {
-				likeProfil = `UPDATE likeuser SET likeUser=${valueLike} WHERE(userName, profilName) IN (('${user}', '${profilName}'))`
+				likeProfil = `UPDATE likeuser SET likeUser=${valueLike} WHERE(userName, profilName) IN (('${user}', '${profilName}'));`
 			}
+			likeProfil += addNotification(profilName, textNotification)
 			connection.query(likeProfil, (error, results) => {
 				if (error) {
 					return res.send(error)
 				} else {
-					return res.send("modified")
+					const matchOrNot = `SELECT likeUser FROM likeuser WHERE (userName, profilName) IN (('${profilName}', '${user}'))`
+					connection.query(matchOrNot, (error, results) => {
+						if (error) {
+							return res.send(error)
+						} else {
+							if (results.length > 0 && results[0].likeUser === 1 && valueLike === 1) {
+								return res.send("It's a match")
+							} else {
+								return res.send("unlike")
+							}
+						}
+					})
 				}
 			})
+		}
+	})
+})
+
+app.post("/users/profilmatch", (req, res) => {
+	const { user, profilName } = req.body
+	const verifyIfMatchExist = `SELECT CONCAT(firstPerson, " ", secondPerson) AS name FROM profilMatch WHERE firstPerson='${user}' OR secondPerson='${user}'`
+	connection.query(verifyIfMatchExist, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			let matchAlreadyExist = 0
+			results.forEach((name) => {
+				let check = name.name.split(" ")
+				if ((user === check[0] || user === check[1])
+					&& (profilName === check[0] || profilName === check[1])) {
+						matchAlreadyExist = 1
+					}
+			})
+			if (matchAlreadyExist === 1)  {
+				return res.send("1")
+			} else {
+				let isAMatch = `INSERT INTO profilmatch (firstPerson, secondPerson) VALUES ('${user}', '${profilName}');`
+				isAMatch += addNotification(profilName, `${user} send you a like and you're like him before so this is a match`)
+				connection.query(isAMatch, (error, results) => {
+					if (error) {
+						return res.send(error)
+					} else {
+						return res.send("0")
+					}
+				})
+			}
+		}
+	})
+})
+
+app.post("/users/deleteMatch", (req, res) => {
+	const { user, profilName } = req.body
+	let deleteMatch = `DELETE FROM profilmatch WHERE (firstPerson='${user}' AND secondPerson='${profilName}') OR (firstPerson='${profilName}' AND secondPerson='${user}');`
+	deleteMatch += addNotification(profilName, `${user} doesn't like you anymore`)
+	connection.query(deleteMatch, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.send("match delete")
 		}
 	})
 })
@@ -239,15 +303,104 @@ app.post("/users/deblockUser", (req, res) => {
 	})
 })
 
-app.post("/users/profilLikedMe", (req, res) => {
-	const { userName, userNameProfil } = req.body
-	const profilLikedMe = `SELECT likeUser FROM likeuser WHERE (userName, profilName) IN (('${userName}', '${userNameProfil}'))`
-	connection.query(profilLikedMe, (error, results) => {
-		console.log(results)
+app.post("/users/getAllOtherDataOfProfil", (req, res) => {
+	const { userName, profilName } = req.body
+	let sql = `SELECT * FROM user WHERE userName='${profilName}';`
+	sql += `SELECT likeUser FROM likeuser WHERE (userName, profilName) IN (('${profilName}', '${userName}'));`
+	connection.query(sql, (error, results) => {
 		if (error) {
 			return res.send(error)
 		} else {
-			return res.json({ like: results })
+			let otherData = {}
+			results.forEach((data) => {
+				Object.entries(data).forEach((entry) => {
+					Object.entries(entry[1]).forEach((entry) => {
+						otherData = {
+							...otherData,
+							[entry[0]]: entry[1],
+						}
+					})
+				})
+			})
+			return res.json({ otherData })
+		}
+	})
+})
+
+app.post("/users/getListMatch", (req, res) => {
+	const { userName } = req.body
+	const getList = `SELECT CONCAT(firstPerson, secondPerson) AS name FROM profilmatch WHERE firstPerson='${userName}' OR secondPerson='${userName}'`
+	connection.query(getList, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			const getListMatch = []
+			results.forEach((name) => {
+				getListMatch.push(name.name.replace(userName, ""))
+			})
+			return res.json({ listMatch: getListMatch })
+		}
+	})
+})
+
+app.post("/users/sendMessage", (req, res) => {
+	const { from, to, message } = req.body
+	const textNotification = `You are new message from ${from}`
+	let saveMessage = `INSERT INTO messages (fromUser, toUser, message, date) VALUES('${from}', '${to}', '${message.replace(/'/g, "\\'")}', NOW());`
+	saveMessage += addNotification(to, textNotification)
+	connection.query(saveMessage, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.send(`Message send to ${to}`)
+		}
+	})
+})
+
+app.post("/users/getAllMessages", (req, res) => {
+	const { userName, profilMatchName } = req.body
+	const getAllMessages = `SELECT *, DATE_FORMAT(date, "%m-%d-%y %H:%i:%s") as date FROM messages WHERE (fromUser='${userName}' OR fromUser='${profilMatchName}') AND (toUser='${userName}' OR toUser='${profilMatchName}')`
+	connection.query(getAllMessages, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.json({ results })
+		}
+	})
+})
+
+app.post("/users/getNotificationsNoRead", (req, res) => {
+	const { userName } = req.body
+	const getNotificationsNoRead = `SELECT id, notificationType FROM notifications WHERE notificationUser='${userName}' AND notificationRead=0`
+	connection.query(getNotificationsNoRead, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.json({ notifications: results })
+		}
+	})
+})
+
+app.post("/users/updateNotificationsToRead", (req, res) => {
+	const { userName } = req.body
+	const updateNotificationsToRead = `UPDATE notifications SET notificationRead=1 WHERE notificationUser='${userName}' AND notificationRead=0`
+	connection.query(updateNotificationsToRead, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.send("Notifications read")
+		}
+	})
+})
+
+app.post("/users/visitProfil", (req, res) => {
+	const { userName, profilName } = req.body
+	const visitNotification = addNotification(profilName, `${userName} visit you're profil`)
+	connection.query(visitNotification, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.send("send notification")
 		}
 	})
 })

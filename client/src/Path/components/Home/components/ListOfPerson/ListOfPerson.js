@@ -3,7 +3,9 @@ import React, { Component } from "react"
 import CollectionView from "./components/CollectionView"
 import InfosPerson from "./components/InfosPerson"
 
-import { getUsers, blockList } from "utils/fileProvider"
+import {
+    getUsers, blockList, getAllOtherDataOfProfil, visitProfil,
+} from "utils/fileProvider"
 
 const styles = {
     container: {
@@ -63,7 +65,11 @@ class ListOfPerson extends Component {
     }
 
     chooseDataPerson = (dataPerson) => {
-        this.setState({ dataPerson })
+        const { dataUser } = this.props
+        visitProfil(dataUser.userName, dataPerson.userName)
+        getAllOtherDataOfProfil(dataUser.userName, dataPerson.userName)
+            .then((response) => this.setState({ dataPerson: response.otherData }))
+            .catch((error) => console.log(error))
     }
 
     render() {
