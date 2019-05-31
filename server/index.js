@@ -307,6 +307,8 @@ app.post("/users/getAllOtherDataOfProfil", (req, res) => {
 	const { userName, profilName } = req.body
 	let sql = `SELECT * FROM user WHERE userName='${profilName}';`
 	sql += `SELECT likeUser FROM likeuser WHERE (userName, profilName) IN (('${profilName}', '${userName}'));`
+	sql += `SELECT fakeUser FROM fakeuser WHERE fakeUser='${profilName}';`
+	sql += `SELECT inline, DATE_FORMAT(date, "%m-%d-%y %H:%i:%s") as date FROM inlineuser WHERE user='${profilName}'`
 	connection.query(sql, (error, results) => {
 		if (error) {
 			return res.send(error)
@@ -404,6 +406,55 @@ app.post("/users/visitProfil", (req, res) => {
 		}
 	})
 })
+
+app.post("/users/userIsLog", (req, res) => {
+	const { userName } = req.body
+	const setUserIsLog = `UPDATE inlineuser SET inline=1 WHERE user='${userName}'`
+	connection.query(setUserIsLog, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.send(`${userName} is log`)
+		}
+	})
+})
+
+app.post("/users/userIsDelog", (req, res) => {
+	const { userName } = req.body
+	const setUserIsDelog = `UPDATE inlineuser SET inline=0, date=NOW() WHERE user='${userName}'`
+	connection.query(setUserIsDelog, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.send(`${userName} is delog`)
+		}
+	})
+})
+
+app.post("/users/reportingFakeProfil", (req, res) => {
+	const { profilName } = req.body
+	const reportingFakeProfil = `INSERT INTO fakeuser (fakeUser) VALUES ('${profilName}')`
+	connection.query(reportingFakeProfil, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.send("Reporting fake user")
+		}
+	})
+})
+
+const populareScore = (profilName) => {
+	let selectScore = `SELECT userName FROM user;`
+	selectScore += `SELECT likeUser FROM likeuser WHERE profilName='${profilName}' AND likeUser=1`
+	connection.query(selectScore, (error, results) => {
+		if (error) {
+			return 
+		} else {
+			const score = (results[1].length / results[0].length) * 100
+			return score
+		}
+	})
+}
 
 app.listen(4000, () => {
 	console.log(`Server is launch on port 4000`)

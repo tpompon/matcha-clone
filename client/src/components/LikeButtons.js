@@ -5,11 +5,11 @@ import { likeOrUnkikeUser } from "utils/fileProvider"
 class LikeButtons extends Component {
 
     render() {
-        const { user, profilName } = this.props
+        const { user, profilName, isLikable } = this.props
         return (
             <div>
-                <button onClick={ () => likeOrUnkikeUser(user, profilName, 1) }>Like</button>
-                <button onClick={ () => likeOrUnkikeUser(user, profilName, -1) }>Unlike</button>
+                <button onClick={ (isLikable === true) ? () => likeOrUnkikeUser(user, profilName, 1) : null }>Like</button>
+                <button onClick={ (isLikable === true) ? () => likeOrUnkikeUser(user, profilName, -1) : null }>Unlike</button>
             </div>
         )
     }

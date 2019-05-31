@@ -1,7 +1,6 @@
 import React, { Component } from "react"
 
 import PreviewProfil from "./components/PreviewProfil"
-import LikeButtons from "components/LikeButtons"
 
 const listTagArray = [
     "#Movie",
@@ -80,7 +79,7 @@ class CollectionView extends Component {
     }
 
     render() {
-        const { chooseDataPerson, dataUser } = this.props
+        const { chooseDataPerson } = this.props
         const { listProfil } = this.state
         return (
             <div>
@@ -104,10 +103,6 @@ class CollectionView extends Component {
                                     data={ entry[1] }
                                     chooseDataPerson={ chooseDataPerson }
                                 />
-                                <LikeButtons
-                                    user={ dataUser.userName }
-                                    profilName={ entry[1].userName }
-                                />
                             </div>
                         ))
                     }
@@ -117,41 +112,5 @@ class CollectionView extends Component {
     }
 
 }
-
-/*
-        getUsers()
-            .then((listUsers) => {
-                const { listTag } = this.state
-                const listTagFilter = listTag.split("#")
-                listTagFilter.splice(0, 1)
-                if (listTagFilter.length === 0) {
-                    const { dataUser } = this.props
-                    let listProfil = {}
-                    listUsers.data.forEach((user) => {
-                        if (user.id !== dataUser.id) {
-                            listProfil = {
-                                ...listProfil,
-                                [user.id]: user,
-                            }
-                        }
-                    })
-                    this.setState({ listProfil })
-                } else {
-                    let newListPersonWithFilterTag = {}
-                    listUsers.data.forEach((user) => {
-                        listTagFilter.forEach((tag) => {
-                            if (user.listInterest !== null && user.listInterest.indexOf(tag) !== -1) {
-                                newListPersonWithFilterTag = {
-                                    ...newListPersonWithFilterTag,
-                                    [user.id]: user,
-                                }
-                            }
-                    })
-                    this.setState({ listProfil: newListPersonWithFilterTag })
-                })
-            }
-        })
-        .catch((error) => console.log(error))
-        */
 
 export default CollectionView

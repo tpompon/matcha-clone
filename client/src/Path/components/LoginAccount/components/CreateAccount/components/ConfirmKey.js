@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { withRouter } from "react-router-dom"
 
-import { checkKey, getUsers } from "utils/fileProvider"
+import { checkKey, getUsers, userIsLog } from "utils/fileProvider"
 
 const styles = {
     popup: {
@@ -43,6 +43,7 @@ class ConfirmKey extends Component {
                         .then((listUser) => {
                             listUser.data.forEach((dataUser) => {
                                 if (userName === dataUser.userName) {
+                                    userIsLog(userName)
                                     history.push("/", { dataUser })
                                 }
                             })

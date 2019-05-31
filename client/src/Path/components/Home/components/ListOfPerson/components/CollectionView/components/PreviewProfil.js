@@ -7,6 +7,12 @@ const styles = {
         width: 100,
         height: 100,
     },
+    noImage: {
+        width: 100,
+        height: 100,
+        borderRadius: 10,
+        border: "10px dashed red",
+    }
 }
 
 class PreviewProfil extends Component {
@@ -22,8 +28,10 @@ class PreviewProfil extends Component {
         const { id } = this.props.data
         getImageProfil(id)
             .then((response) => {
-                if (response.imageProfil[0].picture.length > 0) {
-                    this.setState({ imageProfil: response.imageProfil[0].picture })
+                if (response.imageProfil.length > 0) {
+                    if (response.imageProfil[0].picture.length > 0) {
+                        this.setState({ imageProfil: response.imageProfil[0].picture })
+                    }
                 }
             })
             .catch((error) => console.log(error))
@@ -33,17 +41,32 @@ class PreviewProfil extends Component {
         const { data, chooseDataPerson } = this.props
         const { userName } = data
         const { imageProfil } = this.state
+        /*
         if (imageProfil === null) {
             return <div />
         }
+        */
         return (
-            <div onClick={ () => chooseDataPerson(data) }>
-                <img
-                    style={ styles.image }
-                    src={ imageProfil}
-                    alt={ `Imageprofil-${userName}` }
-                />
-                <p>{ userName }</p>
+            <div>
+                {
+                    (imageProfil === null)
+                        ? (
+                            <div onClick={ () => chooseDataPerson(data) }>
+                                <div style={ styles.noImage } />
+                                <p>{ userName }</p>
+                            </div>
+                        )
+                        : (
+                            <div onClick={ () => chooseDataPerson(data) }>
+                                <img
+                                    style={ styles.image }
+                                    src={ imageProfil}
+                                    alt={ `Imageprofil-${userName}` }
+                                />
+                                <p>{ userName }</p>
+                            </div>
+                        )
+                }
             </div>
         )
     }

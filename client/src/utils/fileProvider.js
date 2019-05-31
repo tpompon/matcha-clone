@@ -264,7 +264,22 @@ export const visitProfil = (userName, profilName) => {
     fetch("http://localhost:4000/users/visitProfil", optionsFetch({ userName, profilName }))
 }
 
-// it's like a htmlspecialchar function in php
+export const userIsLog = (userName) => {
+    fetch("http://localhost:4000/users/userIsLog", optionsFetch({ userName }))
+}
+
+export const userIsDeLog = (userName) => {
+    fetch("http://localhost:4000/users/userIsDelog", optionsFetch({ userName }))
+}
+
+export const reportingFakeProfil = (profilName) => {
+    fetch("http://localhost:4000/users/reportingFakeProfil", optionsFetch({ profilName }))
+}
+
+export const getPopularScoreOfProfil = (profilName) => {
+    fetch("http://localhost:4000/users/showPopulareScore", optionsFetch({ profilName }))
+}
+
 /*
 const escapeHtml = (text) => {
     var map = {

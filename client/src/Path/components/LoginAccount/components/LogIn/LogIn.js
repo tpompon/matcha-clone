@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { withRouter } from "react-router-dom"
 
-import { checkLogIn } from "utils/fileProvider"
+import { checkLogIn, userIsLog } from "utils/fileProvider"
 
 import Form from "components/Form"
 import ForgetPassword from "./components/ForgetPassword"
@@ -31,6 +31,7 @@ class LogIn extends Component {
         checkLogIn(inputArray)
             .then((response) => {
                 if (response !== 0) {
+                    userIsLog(response.userName)
                     history.push("/", { dataUser: { ...response } })
                 } else {
                     alert("Mauvais nom d'utilisateur ou mauvais mot de passe !!!")

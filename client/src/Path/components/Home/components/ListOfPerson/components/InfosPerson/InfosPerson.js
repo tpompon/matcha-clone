@@ -5,7 +5,7 @@ import DataProfil from "./components/DataProfil"
 import DataPersonal from "./components/DataPersonal"
 import LikeUser from "./components/LikeUser"
 
-import { blockProfil } from "utils/fileProvider"
+import { blockProfil, reportingFakeProfil, getPopularScoreOfProfil } from "utils/fileProvider"
 
 class InfosPerson extends Component {
 
@@ -37,6 +37,7 @@ class InfosPerson extends Component {
         const {
             id, userName, lastName, firstName, biography,
             listInterest, genderOptionChecked, orientationOptionChecked, likeUser,
+            fakeUser, inline, date,
         } = dataPerson
         const dataProfil = { userName, lastName, firstName }
         const dataPersonal = {
@@ -52,13 +53,30 @@ class InfosPerson extends Component {
                                 <DataProfil dataProfil={ dataProfil } />
                                 <DataPersonal dataPersonal={ dataPersonal } />
                                 <LikeUser
+                                    id={ id }
                                     likeUser={ likeUser }
                                     user={ dataUser.userName }
                                     profilName={ userName }
                                 />
+                                <p>
+                                    {
+                                        (inline === 0)
+                                            ? `This user is deconnected. His last connection are ${date}`
+                                            : `This user is connected`
+                                    }
+                                </p>
                                 <button onClick={ () => this.onClick() }>
                                     Block this profil
                                 </button>
+                                <button onClick={ () => reportingFakeProfil(userName) }>
+                                    Report this user like a fake profil
+                                </button>
+                                {
+                                    (fakeUser !== undefined)
+                                        ? "This profil is potentially a fake Profil"
+                                        : null
+                                }
+                                <button onClick={ () => getPopularScoreOfProfil(userName) }>Popular score</button>
                             </div>
                         )
                         : <div>This profil is blocked</div>

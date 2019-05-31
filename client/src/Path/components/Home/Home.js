@@ -7,7 +7,7 @@ import ListProfilBlock from "./components/ListProfilBlock"
 import Chat from "./components/Chat"
 import Notifications from "./components/Notifications"
 
-import { getNotificationsNoRead } from "utils/fileProvider"
+import { getNotificationsNoRead, userIsDeLog } from "utils/fileProvider"
 
 const optionsArray = [
     "Edit profil",
@@ -23,13 +23,17 @@ class Home extends Component {
         super(props)
         this.state = {
             showOption: "",
-            notificationsArray: null,
+            notificationsArray: [],
         }
         this.mounted = true
     }
 
     componentWillMount() {
-        this.showNotifications()
+        window.onunload = window.onbeforeunload = () => {
+            const { location } = this.props
+            const { dataUser } = location.state
+            userIsDeLog(dataUser.userName)
+        }
     }
 
     componentDidMount() {
@@ -44,6 +48,9 @@ class Home extends Component {
     showNotifications = () => {
         const { location } = this.props
         const { dataUser } = location.state
+        if (dataUser === undefined) {
+            return
+        }
         getNotificationsNoRead(dataUser.userName)
             .then((notificationsArray) => {
                 if (this.mounted === true) {
@@ -55,9 +62,6 @@ class Home extends Component {
 
     choosenOption = () => {
         const { location } = this.props
-        if (location.state === undefined) {
-            return
-        }
         const { dataUser } = location.state
         const { showOption, notificationsArray } = this.state
         switch (showOption) {
@@ -93,7 +97,9 @@ class Home extends Component {
         const { state } = location
         if (state === undefined) {
             history.push("/LoginAccount")
+            return <div />
         }
+        const { notificationsArray } = this.state
         return (
             <div>
                 {
@@ -102,14 +108,14 @@ class Home extends Component {
                             key={ `option-${option}` }
                             onClick={ () => this.setState({ showOption: option }) }
                         >
-                            { option }
+                            { (option === "Notifications") ? `${notificationsArray.length}, ${option}` : option }
                         </button>
                     ))
                 }
+                <Disconnect userName={ state.dataUser.userName } />
                 {
                     this.choosenOption()
                 }
-                <Disconnect />
             </div>
         )
     }
