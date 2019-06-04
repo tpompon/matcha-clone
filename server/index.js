@@ -2,6 +2,7 @@ const express = require("express")
 const cors = require("cors")
 const mysql = require("mysql")
 const nodemailer = require("nodemailer")
+const fs = require("fs")
 
 const app = express()
 const bodyParser = require("body-parser")
@@ -13,6 +14,8 @@ const connection = mysql.createConnection({
 	database: "matcha",
 	multipleStatements: true,
 })
+
+fs.existsSync("../client/src/imageProfil") || fs.mkdirSync("../client/src/imageProfil", 0777)
 
 const sendMail = (mail, text, subject) => {
 	let transporter = nodemailer.createTransport({
@@ -62,7 +65,7 @@ app.get("/", (req, res) => {
 })
 
 app.get("/users", (req, res) => {
-	const selectAll = "SELECT * FROM user"
+	const selectAll = `SELECT p.*, u.biography, u.gender, u.orientation, u.listInterest FROM profil p INNER JOIN userinfos u ON p.userName=u.userName`
 	connection.query(selectAll, (error, results) => {
 		if (error) {
 			return res.send(error)
@@ -81,6 +84,7 @@ app.post("/users/picturesUser", (req, res) => {
 		} else {
 			return res.json({ pictures: results })
 		}
+		
 	})
 })
 
@@ -88,8 +92,9 @@ app.post("/users/add", (req, res) => {
 	const {
 		name, password, email, lastName, firstName, confirmKey,
 	} = req.body
-	const insertUserIntoBdd = `INSERT INTO user (userName, password, email, lastname, firstname, confirmKey)
-		VALUES('${name}', '${password}', '${email}', '${lastName}', '${firstName}', ${confirmKey})`
+	let insertUserIntoBdd = `INSERT INTO profil (userName, password, email, lastname, firstname, confirmKey)
+		VALUES('${name}', '${password}', '${email}', '${lastName}', '${firstName}', ${confirmKey});`
+	insertUserIntoBdd += `INSERT INTO userinfos (userName) VALUES ('${name}')`
 	connection.query(insertUserIntoBdd, (error, results) => {
 		if (error) {
 			return res.send(error)
@@ -102,10 +107,43 @@ app.post("/users/add", (req, res) => {
 	sendMail(email, text, subject)
 })
 
+/*
 app.post("/users/editProfil/sendPictures", (req, res) => {
 	const {
 		dataPicture, userId, id, requestId,
 	} = req.body
+	const sendDataPictureToBdd = (requestId)
+		? `UPDATE picturesusers SET id='${id}', picture='${dataPicture}' WHERE id='${id}'`
+		: `INSERT INTO picturesusers (userId, picture) VALUES ('${userId}', '${dataPicture}')`
+	connection.query(sendDataPictureToBdd, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.send("picture add")
+		}
+	})
+})
+*/
+
+const fsTest = (dataPicture, userId, id, requestId, namePicture) => {
+	const pathDir = "../client/src/imageProfil"
+	if (fs.existsSync(`${pathDir}/${namePicture}`)) {
+		console.log("soon")
+	} else {
+		fs.appendFile(namePicture, dataPicture, (error) => {
+			if (error) {
+				throw (error)
+			}
+			console.log("save")
+		})
+	}
+}
+
+app.post("/users/editProfil/sendPictures", (req, res) => {
+	const {
+		dataPicture, userId, id, requestId, namePicture,
+	} = req.body
+	fsTest(dataPicture, userId, id, requestId, namePicture)
 	const sendDataPictureToBdd = (requestId)
 		? `UPDATE picturesusers SET id='${id}', picture='${dataPicture}' WHERE id='${id}'`
 		: `INSERT INTO picturesusers (userId, picture) VALUES ('${userId}', '${dataPicture}')`
@@ -123,19 +161,19 @@ app.post("/users/recorverPassword", (req, res) => {
 	const text = `This is Your new password: ${newPassword}`
 	const subject = "New password"
 	sendMail(email, text, subject)
-	const updatePassword = `UPDATE user SET password='${newPasswordHash}' WHERE email='${email}'`
+	const updatePassword = `UPDATE profil SET password='${newPasswordHash}' WHERE email='${email}'`
 	connection.query(updatePassword, (error, results) => {
 		if (error) {
 			return res.send(error)
 		} else {
-			return res.send(`User is confirmed`)
+			return res.send(`profil is confirmed`)
 		}
 	})
 })
 
 app.post("/users/confirmIdendity", (req, res) => {
 	const { key, name } = req.body
-	const updateConfirmKeyOk = `UPDATE user SET confirmKeyOk=1 WHERE (userName, confirmKey) IN (('${name}', ${key}))`
+	const updateConfirmKeyOk = `UPDATE profil SET confirmKeyOk=1 WHERE (userName, confirmKey) IN (('${name}', ${key}))`
 	connection.query(updateConfirmKeyOk, (error, results) => {
 		if (error) {
 			return res.send(error)
@@ -149,7 +187,7 @@ app.post("/users/updateInfosProfil", (req, res) => {
 	const {
 		id, userName, newPassword, email, firstName, lastName,
 	} = req.body
-	const updateDataUser = `UPDATE user SET userName='${userName}', password='${newPassword}', email='${email}', firstName='${firstName}', lastName='${lastName}' WHERE id=${id}`
+	const updateDataUser = `UPDATE profil SET userName='${userName}', password='${newPassword}', email='${email}', firstName='${firstName}', lastName='${lastName}' WHERE id=${id}`
 	connection.query(updateDataUser, (error, results) => {
 		if (error) {
 			return res.send(error)
@@ -161,14 +199,14 @@ app.post("/users/updateInfosProfil", (req, res) => {
 
 app.post("/users/updateInfosPersonal", (req, res) => {
 	const {
-		orientationOptionChecked, genderOptionChecked, biography, listInterest, id,
+		orientation, gender, biography, listInterest, userName,
 	} = req.body
-	const updateInfosPersonal = `UPDATE user SET orientationOptionChecked='${orientationOptionChecked}', genderOptionChecked='${genderOptionChecked}', biography='${biography}', listInterest='${listInterest}' WHERE id=${id}`
-	connection.query(updateInfosPersonal, (error, result) => {
+	const updateUserInfos = `UPDATE userinfos SET orientation='${orientation}', gender='${gender}', biography='${biography}', listInterest='${listInterest}' WHERE userName='${userName}'`
+	connection.query(updateUserInfos, (error, result) => {
 		if (error) {
 			return res.send(error)
 		} else {
-			return res.send(`user with ${id} is modified`)
+			return res.send(`${userName} personal infos is modified`)
 		}
 	})
 })
@@ -305,7 +343,7 @@ app.post("/users/deblockUser", (req, res) => {
 
 app.post("/users/getAllOtherDataOfProfil", (req, res) => {
 	const { userName, profilName } = req.body
-	let sql = `SELECT * FROM user WHERE userName='${profilName}';`
+	let sql = `SELECT p.*, u.biography, u.gender, u.orientation, u.listInterest FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.userName='${profilName}';`
 	sql += `SELECT likeUser FROM likeuser WHERE (userName, profilName) IN (('${profilName}', '${userName}'));`
 	sql += `SELECT fakeUser FROM fakeuser WHERE fakeUser='${profilName}';`
 	sql += `SELECT inline, DATE_FORMAT(date, "%m-%d-%y %H:%i:%s") as date FROM inlineuser WHERE user='${profilName}'`
@@ -444,7 +482,7 @@ app.post("/users/reportingFakeProfil", (req, res) => {
 })
 
 const populareScore = (profilName) => {
-	let selectScore = `SELECT userName FROM user;`
+	let selectScore = `SELECT userName FROM profil;`
 	selectScore += `SELECT likeUser FROM likeuser WHERE profilName='${profilName}' AND likeUser=1`
 	connection.query(selectScore, (error, results) => {
 		if (error) {

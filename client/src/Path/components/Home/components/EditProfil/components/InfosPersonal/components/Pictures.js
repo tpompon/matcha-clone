@@ -72,6 +72,7 @@ class Pictures extends Component {
                     userId: (picturesArray.length >= 5 || picturesArray[index]) ? null : userId,
                     dataPicture: picturesFiles[index].imagePreviewUrl,
                     requestId: (picturesArray.length >= 5 || picturesArray[index]) ? true : false,
+                    namePicture: picturesFiles[index].file.name,
                 })
             }).then(() => this.onLoadPicture()).catch((error) => console.log(error))
         }

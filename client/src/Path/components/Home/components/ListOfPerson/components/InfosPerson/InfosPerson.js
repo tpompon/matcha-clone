@@ -36,12 +36,12 @@ class InfosPerson extends Component {
         const { blocked } = this.state
         const {
             id, userName, lastName, firstName, biography,
-            listInterest, genderOptionChecked, orientationOptionChecked, likeUser,
+            listInterest, gender, orientation, likeUser,
             fakeUser, inline, date,
         } = dataPerson
         const dataProfil = { userName, lastName, firstName }
         const dataPersonal = {
-            biography, listInterest, genderOptionChecked, orientationOptionChecked,
+            biography, listInterest, gender, orientation,
         }
         return (
             <div>

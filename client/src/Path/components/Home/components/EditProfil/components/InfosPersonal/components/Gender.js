@@ -10,7 +10,7 @@ const Gender = ({ optionChecked, onChangeValue }) => (
         { optionChecked || radioInputArray[0] }
         <RadioInput
             radioInputArray={ radioInputArray }
-            onChangeValue={ (e) => onChangeValue(e, "genderOptionChecked") }
+            onChangeValue={ (e) => onChangeValue(e, "gender") }
             optionChecked={ optionChecked || radioInputArray[0] }
         />
     </div>

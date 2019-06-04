@@ -17,7 +17,10 @@ const optionsFetch = (dataBody) => {
 export const getUsers = () => {
     return fetch("http://localhost:4000/users")
         .then((response) => response.json())
-        .then((responseJson) => responseJson)
+        .then((responseJson) => {
+            console.log(responseJson)
+            return responseJson
+        })
         .catch((error) => {
             console.log(error)
         })
@@ -170,7 +173,6 @@ export const saveInfosProfil = (id, inputArray) => {
 }
 
 export const saveInfosPersonal = (infosPersonal) => {
-    console.log(infosPersonal)
     fetch("http://localhost:4000/users/updateInfosPersonal", optionsFetch(infosPersonal))
 }
 

@@ -21,12 +21,12 @@ class InfosPersonal extends Component {
     componentWillMount() {
         const { infosUser } = this.props
         const {
-            biography, genderOptionChecked, orientationOptionChecked, listInterest,
+            biography, gender, orientation, listInterest,
         } = infosUser
         this.setState({
             ...this.state,
             infosPersonalUser: {
-                biography, genderOptionChecked, orientationOptionChecked, listInterest,
+                biography, gender, orientation, listInterest,
             },
         })
     }
@@ -53,20 +53,20 @@ class InfosPersonal extends Component {
 
     render() {
         const { infosUser } = this.props
-        const { id } = infosUser
+        const { userName, id } = infosUser
         const { infosPersonalUser } = this.state
         const {
-            orientationOptionChecked, genderOptionChecked, biography, listInterest,
+            orientation, gender, biography, listInterest,
         } = infosPersonalUser
         return (
             <div>
                 <Orientation
                     onChangeValue={ this.onChangeValue }
-                    optionChecked={ orientationOptionChecked }
+                    optionChecked={ orientation }
                 />
                 <Gender
                     onChangeValue={ this.onChangeValue }
-                    optionChecked={ genderOptionChecked }
+                    optionChecked={ gender }
                 />
                 <Biography
                     onChangeValue={ this.onChangeValue }
@@ -77,7 +77,7 @@ class InfosPersonal extends Component {
                     list={ listInterest }
                 />
                 <Pictures userId={ id } />
-                <button onClick={ () => saveInfosPersonal({ ...infosPersonalUser, id }) }>Save</button>
+                <button onClick={ () => saveInfosPersonal({ ...infosPersonalUser, userName }) }>Save</button>
             </div>
         )
     }

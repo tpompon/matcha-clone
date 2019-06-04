@@ -10,7 +10,7 @@ const Orientation = ({ optionChecked, onChangeValue }) => (
         { optionChecked || radioInputArray[0] }
         <RadioInput
             radioInputArray={ radioInputArray }
-            onChangeValue={ (e) => onChangeValue(e, "orientationOptionChecked") }
+            onChangeValue={ (e) => onChangeValue(e, "orientation") }
             optionChecked={ optionChecked || radioInputArray[0] }
         />
     </div>
