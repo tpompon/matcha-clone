@@ -44,21 +44,9 @@ class Pictures extends Component {
             .catch((error) => console.log(error))
     }
 
-    onLoadPicture = () => {
-        const { userId } = this.props
-        getPicturesUser(userId)
-            .then((response) => {
-                this.setState({
-                    ...this.state,
-                    picturesArray: response.pictures,
-                })
-            })
-            .catch((error) => console.log(error))
-    }
-
     handleSubmit = (e, index) => {
         e.preventDefault()
-        const { userId } = this.props
+        const { userId, userName } = this.props
         const { picturesFiles, picturesArray } = this.state
         if (picturesFiles[index].imagePreviewUrl) {
             fetch("http://localhost:4000/users/editProfil/sendPictures", {
@@ -73,8 +61,9 @@ class Pictures extends Component {
                     dataPicture: picturesFiles[index].imagePreviewUrl,
                     requestId: (picturesArray.length >= 5 || picturesArray[index]) ? true : false,
                     namePicture: picturesFiles[index].file.name,
+                    userName,
                 })
-            }).then(() => this.onLoadPicture()).catch((error) => console.log(error))
+            }).then(() => this.getPictures(userId)).catch((error) => console.log(error))
         }
     }
 
@@ -117,7 +106,7 @@ class Pictures extends Component {
                                         <img
                                             key={ `pictureData-${index}` }
                                             alt={ `pictureData-${index}` }
-                                            src={ pictureData.picture }
+                                            src={ process.env.PUBLIC_URL + `/imageProfil/${pictureData.picture}` }
                                             style={ { width: 200, height: 150 } }
                                         />
                                     )

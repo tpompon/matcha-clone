@@ -10,12 +10,12 @@ const bodyParser = require("body-parser")
 const connection = mysql.createConnection({
 	host: "localhost",
 	user: "root",
-	password: "input305",
+	password: "",
 	database: "matcha",
 	multipleStatements: true,
 })
 
-fs.existsSync("../client/src/imageProfil") || fs.mkdirSync("../client/src/imageProfil", 0777)
+fs.existsSync("../client/public/imageProfil") || fs.mkdirSync("../client/public/imageProfil", 0777)
 
 const sendMail = (mail, text, subject) => {
 	let transporter = nodemailer.createTransport({
@@ -125,12 +125,13 @@ app.post("/users/editProfil/sendPictures", (req, res) => {
 })
 */
 
-const fsTest = (dataPicture, userId, id, requestId, namePicture) => {
-	const pathDir = "../client/src/imageProfil"
+const saveImage = (dataPicture, userId, id, requestId, namePicture, userName) => {
+	const pathDir = `../client/public/imageProfil/${userName}`
+	fs.existsSync(pathDir, 0777) || fs.mkdirSync(pathDir, 0777)
 	if (fs.existsSync(`${pathDir}/${namePicture}`)) {
 		console.log("soon")
 	} else {
-		fs.appendFile(namePicture, dataPicture, (error) => {
+		fs.writeFile(`${pathDir}/${namePicture}`, Buffer.from(dataPicture.split(",")[1], "base64"), (error) => {
 			if (error) {
 				throw (error)
 			}
@@ -141,12 +142,12 @@ const fsTest = (dataPicture, userId, id, requestId, namePicture) => {
 
 app.post("/users/editProfil/sendPictures", (req, res) => {
 	const {
-		dataPicture, userId, id, requestId, namePicture,
+		dataPicture, userId, id, requestId, namePicture, userName,
 	} = req.body
-	fsTest(dataPicture, userId, id, requestId, namePicture)
+	saveImage(dataPicture, userId, id, requestId, namePicture, userName)
 	const sendDataPictureToBdd = (requestId)
-		? `UPDATE picturesusers SET id='${id}', picture='${dataPicture}' WHERE id='${id}'`
-		: `INSERT INTO picturesusers (userId, picture) VALUES ('${userId}', '${dataPicture}')`
+		? `UPDATE picturesusers SET id='${id}', picture='${userName}/${namePicture}' WHERE id='${id}'`
+		: `INSERT INTO picturesusers (userId, picture) VALUES ('${userId}', '${userName}/${namePicture}')`
 	connection.query(sendDataPictureToBdd, (error, results) => {
 		if (error) {
 			return res.send(error)
