@@ -17,13 +17,17 @@ const optionsFetch = (dataBody) => {
 export const getUsers = () => {
     return fetch("http://localhost:4000/users")
         .then((response) => response.json())
-        .then((responseJson) => {
-            console.log(responseJson)
-            return responseJson
-        })
+        .then((responseJson) => responseJson)
         .catch((error) => {
             console.log(error)
         })
+}
+
+export const getUserProfil = (id) => {
+    return fetch("http://localhost:4000/users/getUserProfil", optionsFetch({ id }))
+        .then((response) => response.json())
+        .then((responseJson) => responseJson)
+        .catch((error) => console.log(error))
 }
 
 export const getPicturesUser = (userId) => {
@@ -125,15 +129,15 @@ export const recorverPassword = (email) => {
     }))
 }
 
-export const saveInfosProfil = (id, inputArray) => {
-    let infosProfilUser = { id }
+export const updateInfosProfil = (id, previousUserName, inputArray) => {
+    let infosProfilUser = { id, previousUserName }
         inputArray.forEach((data) => {
             infosProfilUser = {
                 ...infosProfilUser,
                 [data.name]: data.value,
             }
         })
-    getUsers()
+    return getUsers()
         .then((listUsers) => {
             let userNameAlreadyExist = 0
             let emailAlreadyExist = 0
@@ -166,13 +170,15 @@ export const saveInfosProfil = (id, inputArray) => {
                 } else {
                     infosProfilUser.newPassword = hash.sha256().update(newPassword).digest("hex")
                     fetch("http://localhost:4000/users/updateInfosProfil", optionsFetch(infosProfilUser))
+                    return 1
                 }
+                return 0
             }
         })
         .catch((error) => console.log(error))
 }
 
-export const saveInfosPersonal = (infosPersonal) => {
+export const updateInfosPersonal = (infosPersonal) => {
     fetch("http://localhost:4000/users/updateInfosPersonal", optionsFetch(infosPersonal))
 }
 

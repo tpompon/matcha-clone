@@ -57,7 +57,7 @@ class Pictures extends Component {
                 method: "POST",
                 body: JSON.stringify({
                     id: (picturesArray.length >= 5 || picturesArray[index]) ? picturesArray[index].id : null,
-                    userId: (picturesArray.length >= 5 || picturesArray[index]) ? null : userId,
+                    userId,
                     dataPicture: picturesFiles[index].imagePreviewUrl,
                     requestId: (picturesArray.length >= 5 || picturesArray[index]) ? true : false,
                     namePicture: picturesFiles[index].file.name,
@@ -87,6 +87,7 @@ class Pictures extends Component {
         if (picturesArray === undefined) {
             return <div />
         }
+        const { userId } = this.props
         const picturesDataArray = []
         for (let i = 0; i < 5; i++) {
             if (picturesArray[i] === undefined) {
@@ -106,7 +107,7 @@ class Pictures extends Component {
                                         <img
                                             key={ `pictureData-${index}` }
                                             alt={ `pictureData-${index}` }
-                                            src={ process.env.PUBLIC_URL + `/imageProfil/${pictureData.picture}` }
+                                            src={ process.env.PUBLIC_URL + `/imageProfil/${userId}/${pictureData.picture}` }
                                             style={ { width: 200, height: 150 } }
                                         />
                                     )

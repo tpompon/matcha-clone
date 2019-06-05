@@ -10,7 +10,7 @@ const bodyParser = require("body-parser")
 const connection = mysql.createConnection({
 	host: "localhost",
 	user: "root",
-	password: "",
+	password: "input305",
 	database: "matcha",
 	multipleStatements: true,
 })
@@ -45,6 +45,21 @@ const sendMail = (mail, text, subject) => {
 	})
 }
 
+const saveImage = (dataPicture, userId, namePicture) => {
+	const pathDir = `../client/public/imageProfil/${userId}`
+	fs.existsSync(pathDir, 0777) || fs.mkdirSync(pathDir, 0777)
+	if (fs.existsSync(`${pathDir}/${namePicture}`)) {
+		console.log("soon")
+	} else {
+		fs.writeFile(`${pathDir}/${namePicture}`, Buffer.from(dataPicture.split(",")[1], "base64"), (error) => {
+			if (error) {
+				throw (error)
+			}
+			console.log("save")
+		})
+	}
+}
+
 const addNotification = (to, message) => {
 	const sqlInsertNotification =  `INSERT INTO notifications (notificationUser, notificationType, date) VALUES ('${to}', '${message.replace(/'/g, "\\'")}', NOW())`
 	return sqlInsertNotification
@@ -65,8 +80,20 @@ app.get("/", (req, res) => {
 })
 
 app.get("/users", (req, res) => {
-	const selectAll = `SELECT p.*, u.biography, u.gender, u.orientation, u.listInterest FROM profil p INNER JOIN userinfos u ON p.userName=u.userName`
-	connection.query(selectAll, (error, results) => {
+	const selectAllProfil = `SELECT p.*, u.biography, u.gender, u.orientation, u.listInterest FROM profil p INNER JOIN userinfos u ON p.userName=u.userName`
+	connection.query(selectAllProfil, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.json({ data: results })
+		}
+	})
+})
+
+app.post("/users/getUserProfil", (req, res) => {
+	const { id } = req.body
+	const selectDataProfil = `SELECT p.*, u.biography, u.gender, u.orientation, u.listInterest FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.id='${id}'`
+	connection.query(selectDataProfil, (error, results) => {
 		if (error) {
 			return res.send(error)
 		} else {
@@ -107,47 +134,14 @@ app.post("/users/add", (req, res) => {
 	sendMail(email, text, subject)
 })
 
-/*
 app.post("/users/editProfil/sendPictures", (req, res) => {
 	const {
-		dataPicture, userId, id, requestId,
+		dataPicture, userId, id, requestId, namePicture,
 	} = req.body
+	saveImage(dataPicture, userId, namePicture)
 	const sendDataPictureToBdd = (requestId)
-		? `UPDATE picturesusers SET id='${id}', picture='${dataPicture}' WHERE id='${id}'`
-		: `INSERT INTO picturesusers (userId, picture) VALUES ('${userId}', '${dataPicture}')`
-	connection.query(sendDataPictureToBdd, (error, results) => {
-		if (error) {
-			return res.send(error)
-		} else {
-			return res.send("picture add")
-		}
-	})
-})
-*/
-
-const saveImage = (dataPicture, userId, id, requestId, namePicture, userName) => {
-	const pathDir = `../client/public/imageProfil/${userName}`
-	fs.existsSync(pathDir, 0777) || fs.mkdirSync(pathDir, 0777)
-	if (fs.existsSync(`${pathDir}/${namePicture}`)) {
-		console.log("soon")
-	} else {
-		fs.writeFile(`${pathDir}/${namePicture}`, Buffer.from(dataPicture.split(",")[1], "base64"), (error) => {
-			if (error) {
-				throw (error)
-			}
-			console.log("save")
-		})
-	}
-}
-
-app.post("/users/editProfil/sendPictures", (req, res) => {
-	const {
-		dataPicture, userId, id, requestId, namePicture, userName,
-	} = req.body
-	saveImage(dataPicture, userId, id, requestId, namePicture, userName)
-	const sendDataPictureToBdd = (requestId)
-		? `UPDATE picturesusers SET id='${id}', picture='${userName}/${namePicture}' WHERE id='${id}'`
-		: `INSERT INTO picturesusers (userId, picture) VALUES ('${userId}', '${userName}/${namePicture}')`
+		? `UPDATE picturesusers SET id='${id}', picture='${namePicture}' WHERE id='${id}'`
+		: `INSERT INTO picturesusers (userId, picture) VALUES ('${userId}', '${namePicture}')`
 	connection.query(sendDataPictureToBdd, (error, results) => {
 		if (error) {
 			return res.send(error)
@@ -186,9 +180,20 @@ app.post("/users/confirmIdendity", (req, res) => {
 
 app.post("/users/updateInfosProfil", (req, res) => {
 	const {
-		id, userName, newPassword, email, firstName, lastName,
+		id, userName, newPassword, email, firstName, lastName, previousUserName,
 	} = req.body
-	const updateDataUser = `UPDATE profil SET userName='${userName}', password='${newPassword}', email='${email}', firstName='${firstName}', lastName='${lastName}' WHERE id=${id}`
+	let updateDataUser = `UPDATE profil SET userName='${userName}', password='${newPassword}', email='${email}', firstName='${firstName}', lastName='${lastName}' WHERE id=${id};`
+	updateDataUser += `UPDATE userinfos SET userName='${userName}' WHERE userName='${previousUserName}';`
+	updateDataUser += `UPDATE profilmatch SET firstPerson='${userName}' WHERE firstPerson='${previousUserName}';`
+	updateDataUser += `UPDATE profilmatch SET secondPerson='${userName}' WHERE secondPerson='${previousUserName}';`
+	updateDataUser += `UPDATE notifications SET notificationUser='${userName}' WHERE notificationUser='${previousUserName}';`
+	updateDataUser += `UPDATE messages SET fromUser='${userName}' WHERE fromUser='${previousUserName}';`
+	updateDataUser += `UPDATE messages SET toUser='${userName}' WHERE toUser='${previousUserName}';`
+	updateDataUser += `UPDATE listblockprofil SET user='${userName}' WHERE user='${previousUserName}';`
+	updateDataUser += `UPDATE likeuser SET userName='${userName}' WHERE userName='${previousUserName}';`
+	updateDataUser += `UPDATE likeuser SET profilName='${userName}' WHERE profilName='${previousUserName}';`
+	updateDataUser += `UPDATE inlineUser SET user='${userName}' WHERE user='${previousUserName}';`
+	updateDataUser += `UPDATE fakeuser SET fakeUser='${userName}' WHERE fakeUser='${previousUserName}';`
 	connection.query(updateDataUser, (error, results) => {
 		if (error) {
 			return res.send(error)
@@ -203,7 +208,7 @@ app.post("/users/updateInfosPersonal", (req, res) => {
 		orientation, gender, biography, listInterest, userName,
 	} = req.body
 	const updateUserInfos = `UPDATE userinfos SET orientation='${orientation}', gender='${gender}', biography='${biography}', listInterest='${listInterest}' WHERE userName='${userName}'`
-	connection.query(updateUserInfos, (error, result) => {
+	connection.query(updateUserInfos, (error, results) => {
 		if (error) {
 			return res.send(error)
 		} else {

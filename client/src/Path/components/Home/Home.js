@@ -7,7 +7,7 @@ import ListProfilBlock from "./components/ListProfilBlock"
 import Chat from "./components/Chat"
 import Notifications from "./components/Notifications"
 
-import { getNotificationsNoRead, userIsDeLog } from "utils/fileProvider"
+import { getNotificationsNoRead, /*userIsDeLog,*/ getUserProfil } from "utils/fileProvider"
 
 const optionsArray = [
     "Edit profil",
@@ -24,16 +24,26 @@ class Home extends Component {
         this.state = {
             showOption: "",
             notificationsArray: [],
+            dataUser: undefined,
         }
         this.mounted = true
     }
 
     componentWillMount() {
+        const { state } = this.props.location
+        if (state === undefined) {
+            return
+        }
+        const { dataUser } = state
+        getUserProfil(dataUser.id)
+            .then((response) => this.setState({ dataUser: response.data[0] }))
+            .catch((error) => console.log(error))
+        this.setState({ dataUser })
+        /*
         window.onunload = window.onbeforeunload = () => {
-            const { location } = this.props
-            const { dataUser } = location.state
             userIsDeLog(dataUser.userName)
         }
+        */
     }
 
     componentDidMount() {
@@ -46,8 +56,7 @@ class Home extends Component {
     }
 
     showNotifications = () => {
-        const { location } = this.props
-        const { dataUser } = location.state
+        const { dataUser } = this.state
         if (dataUser === undefined) {
             return
         }
@@ -60,31 +69,35 @@ class Home extends Component {
             .catch((error) => console.log(error))
     }
 
+    updateDataUser = (updateDataUser) => {
+        const { dataUser } = this.state
+        this.setState({
+            dataUser: {
+                ...dataUser,
+                ...updateDataUser,
+            }
+        })
+    }
+
     choosenOption = () => {
-        const { location } = this.props
-        const { dataUser } = location.state
-        const { showOption, notificationsArray } = this.state
+        const { showOption, notificationsArray, dataUser } = this.state
+        const { userName } = dataUser
         switch (showOption) {
             
             case "Edit profil":
-                return <EditProfil dataUser={ dataUser } />
+                return <EditProfil dataUser={ dataUser } updateDataUser={ this.updateDataUser } />
 
             case "List of person":
                 return <ListOfPerson dataUser={ dataUser } />
             
             case "List Profil Block":
-                return <ListProfilBlock userName={ dataUser.userName } />
+                return <ListProfilBlock userName={ userName } />
 
             case "Chat":
-                return <Chat userName={ dataUser.userName } />
+                return <Chat userName={ userName } />
 
             case "Notifications":
-                return (
-                    <Notifications
-                        notificationsArray={ notificationsArray }
-                        userName={ dataUser.userName }
-                    />
-                )
+                return <Notifications notificationsArray={ notificationsArray } userName={ userName } />
 
             default:
                 return null
@@ -93,13 +106,12 @@ class Home extends Component {
     }
 
     render() {
-        const { history, location } = this.props
-        const { state } = location
-        if (state === undefined) {
+        const { history } = this.props
+        const { notificationsArray, dataUser } = this.state
+        if (dataUser === undefined) {
             history.push("/LoginAccount")
             return <div />
         }
-        const { notificationsArray } = this.state
         return (
             <div>
                 {
@@ -112,10 +124,8 @@ class Home extends Component {
                         </button>
                     ))
                 }
-                <Disconnect userName={ state.dataUser.userName } />
-                {
-                    this.choosenOption()
-                }
+                <Disconnect userName={ dataUser.userName } />
+                { this.choosenOption() }
             </div>
         )
     }

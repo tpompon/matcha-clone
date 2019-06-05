@@ -48,7 +48,7 @@ class Images extends Component {
                                     height: (index === 0) ? 200 : 100,
                                 }
                             }
-                            src={ image.picture }
+                            src={ process.env.PUBLIC_URL + `/imageProfil/${image.userId}/${image.picture}` }
                             alt={ `PhotoProfil-${index}` }
                         />
                     ))

@@ -41,11 +41,6 @@ class PreviewProfil extends Component {
         const { data, chooseDataPerson } = this.props
         const { userName } = data
         const { imageProfil } = this.state
-        /*
-        if (imageProfil === null) {
-            return <div />
-        }
-        */
         return (
             <div>
                 {
@@ -60,7 +55,7 @@ class PreviewProfil extends Component {
                             <div onClick={ () => chooseDataPerson(data) }>
                                 <img
                                     style={ styles.image }
-                                    src={ imageProfil}
+                                    src={ process.env.PUBLIC_URL + `/imageProfil/${data.id}/${imageProfil}` }
                                     alt={ `Imageprofil-${userName}` }
                                 />
                                 <p>{ userName }</p>

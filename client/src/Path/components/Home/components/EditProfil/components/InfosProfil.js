@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 // import PropTypes from "prop-types"
 
-import { saveInfosProfil } from "utils/fileProvider"
+import { updateInfosProfil } from "utils/fileProvider"
 
 import Form  from "components/Form"
 
@@ -22,6 +22,24 @@ class InfosProfil extends Component {
             ],
         }
     }
+    
+    onClick = (id, userName, inputArray) => {
+        const { updateDataUser } = this.props
+        let newDataUser = {}
+        inputArray.forEach((data) => {
+            newDataUser = {
+                ...newDataUser,
+                [data.name]: data.value,
+            }
+        })
+        updateInfosProfil(id, userName, inputArray)
+            .then((response) => {
+                if (response === 1) {
+                    updateDataUser(newDataUser)
+                }
+            })
+            .catch((error) => console.log(error))
+    }
 
     onChangeValue = (e, index) => {
         const { inputArray } = this.state
@@ -30,12 +48,12 @@ class InfosProfil extends Component {
     }
 
     render() {
-        const { infosUser } = this.props
+        const { id, userName } = this.props.infosUser
         const { inputArray } = this.state
         return (
             <div>
                 <Form inputArray={ inputArray } onChangeValue={ this.onChangeValue } />
-                <button onClick={ () => saveInfosProfil(infosUser.id, inputArray) }>Save</button>
+                <button onClick={ () => this.onClick(id, userName, inputArray) }>Save</button>
             </div>
         )
     }

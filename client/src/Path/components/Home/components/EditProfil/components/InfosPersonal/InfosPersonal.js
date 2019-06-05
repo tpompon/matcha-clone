@@ -7,7 +7,7 @@ import Orientation from "./components/Orientation"
 import Gender from "./components/Gender"
 import Pictures from "./components/Pictures"
 
-import { saveInfosPersonal } from "utils/fileProvider"
+import { updateInfosPersonal } from "utils/fileProvider"
 
 class InfosPersonal extends Component {
 
@@ -51,6 +51,12 @@ class InfosPersonal extends Component {
         })
     }
 
+    onClick = (infosPersonalUser, userName) => {
+        const { updateDataUser } = this.props
+        updateInfosPersonal({ ...infosPersonalUser, userName })
+        updateDataUser(infosPersonalUser)
+    }
+
     render() {
         const { infosUser } = this.props
         const { userName, id } = infosUser
@@ -77,7 +83,7 @@ class InfosPersonal extends Component {
                     list={ listInterest }
                 />
                 <Pictures userId={ id } userName={ userName } />
-                <button onClick={ () => saveInfosPersonal({ ...infosPersonalUser, userName }) }>Save</button>
+                <button onClick={ () => this.onClick(infosPersonalUser, userName) }>Save</button>
             </div>
         )
     }

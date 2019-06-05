@@ -4,13 +4,15 @@ import React from "react"
 import InfosProfil from "./components/InfosProfil"
 import InfosPersonal from "./components/InfosPersonal"
 
-const EditProfil = ({ dataUser }) => (
+const EditProfil = ({ dataUser, updateDataUser }) => (
     <div>
         <InfosProfil
             infosUser={ dataUser }
+            updateDataUser={ updateDataUser }
         />
         <InfosPersonal
             infosUser={ dataUser }
+            updateDataUser={ updateDataUser }
         />
     </div>
 )
