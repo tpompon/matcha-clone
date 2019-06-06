@@ -3,7 +3,6 @@ import React, { Component } from "react"
 import GeocodingForm from "./components/GeocodingForm"
 import GeocodingResults from "./components/GeocodingResults"
 
-import ipInfo from "ipinfo"
 import * as Opencage from "opencage-api-client"
 
 const apiKey = "54b379950fdd4dbeb5c56bc93a60afa9"
@@ -20,9 +19,9 @@ class Geolocation extends Component {
     }
 
     componentWillMount() {
-        fetch("https://ipinfo.io/62.210.34.224/json?token=b437da7a71a24e")
+        fetch("https://geoip-db.com/json/{ipv4-address}")
             .then((response) => response.json())
-            .then((responseText) => console.log(responseText))
+            .then((json) => console.log(json))
             .catch((error) => console.log(error))
     }
 
