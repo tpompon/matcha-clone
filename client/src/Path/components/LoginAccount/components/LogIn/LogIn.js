@@ -5,6 +5,7 @@ import { checkLogIn, userIsLog } from "utils/fileProvider"
 
 import Form from "components/Form"
 import ForgetPassword from "./components/ForgetPassword"
+import Geolocalisation from "./components/Geolocalisation"
 
 class LogIn extends Component {
 
@@ -52,6 +53,9 @@ class LogIn extends Component {
                         ? <ForgetPassword />
                         : null
                 }
+                <div>
+                    <Geolocalisation />
+                </div>
             </div>
         )
     }

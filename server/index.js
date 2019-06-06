@@ -90,6 +90,18 @@ app.get("/users", (req, res) => {
 	})
 })
 
+app.post("/users/checkLogin", (req, res) => {
+	const { name, hashPassword } = req.body
+	const checkLogin = `SELECT * FROM profil WHERE (userName, password, confirmKeyOk) IN (('${name}', '${hashPassword}', 1))`
+	connection.query(checkLogin, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.json({ dataUser: results })
+		}
+	})
+})
+
 app.post("/users/getUserProfil", (req, res) => {
 	const { id } = req.body
 	const selectDataProfil = `SELECT p.*, u.biography, u.gender, u.orientation, u.listInterest FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.id='${id}'`
@@ -134,6 +146,22 @@ app.post("/users/add", (req, res) => {
 	sendMail(email, text, subject)
 })
 
+app.post("/users/checkUserAlreadyExist", (req, res) => {
+	const { userName, email } = req.body
+	const checkUserAlreadyExist = `SELECT * FROM profil WHERE userName='${userName}' OR email='${email}'`
+	connection.query(checkUserAlreadyExist, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			if (results.length > 0) {
+				return res.send("1")
+			}  else {
+				return res.send("0")
+			}
+		}
+	})
+})
+
 app.post("/users/editProfil/sendPictures", (req, res) => {
 	const {
 		dataPicture, userId, id, requestId, namePicture,
@@ -168,12 +196,23 @@ app.post("/users/recorverPassword", (req, res) => {
 
 app.post("/users/confirmIdendity", (req, res) => {
 	const { key, name } = req.body
-	const updateConfirmKeyOk = `UPDATE profil SET confirmKeyOk=1 WHERE (userName, confirmKey) IN (('${name}', ${key}))`
-	connection.query(updateConfirmKeyOk, (error, results) => {
+	const checkKey = `SELECT * FROM profil WHERE (userName, confirmKey) IN (('${name}', ${key}))`
+	connection.query(checkKey, (error, results) => {
 		if (error) {
 			return res.send(error)
 		} else {
-			return res.send(`User is confirmed`)
+			if (results.length > 0) {
+				const updateConfirmKeyOk = `UPDATE profil SET confirmKeyOk=1 WHERE (userName, confirmKey) IN (('${name}', ${key}))`
+				connection.query(updateConfirmKeyOk, (error, results) => {
+					if (error) {
+						return res.send(error)
+					} else {
+						return res.send("1")
+					}
+				})
+			} else {
+				return res.send("0")
+			}
 		}
 	})
 })
@@ -182,23 +221,34 @@ app.post("/users/updateInfosProfil", (req, res) => {
 	const {
 		id, userName, newPassword, email, firstName, lastName, previousUserName,
 	} = req.body
-	let updateDataUser = `UPDATE profil SET userName='${userName}', password='${newPassword}', email='${email}', firstName='${firstName}', lastName='${lastName}' WHERE id=${id};`
-	updateDataUser += `UPDATE userinfos SET userName='${userName}' WHERE userName='${previousUserName}';`
-	updateDataUser += `UPDATE profilmatch SET firstPerson='${userName}' WHERE firstPerson='${previousUserName}';`
-	updateDataUser += `UPDATE profilmatch SET secondPerson='${userName}' WHERE secondPerson='${previousUserName}';`
-	updateDataUser += `UPDATE notifications SET notificationUser='${userName}' WHERE notificationUser='${previousUserName}';`
-	updateDataUser += `UPDATE messages SET fromUser='${userName}' WHERE fromUser='${previousUserName}';`
-	updateDataUser += `UPDATE messages SET toUser='${userName}' WHERE toUser='${previousUserName}';`
-	updateDataUser += `UPDATE listblockprofil SET user='${userName}' WHERE user='${previousUserName}';`
-	updateDataUser += `UPDATE likeuser SET userName='${userName}' WHERE userName='${previousUserName}';`
-	updateDataUser += `UPDATE likeuser SET profilName='${userName}' WHERE profilName='${previousUserName}';`
-	updateDataUser += `UPDATE inlineUser SET user='${userName}' WHERE user='${previousUserName}';`
-	updateDataUser += `UPDATE fakeuser SET fakeUser='${userName}' WHERE fakeUser='${previousUserName}';`
-	connection.query(updateDataUser, (error, results) => {
+	const checkIfUserAlreadyExist = `SELECT * FROM profil WHERE id <> ${id} AND (userName='${userName}' OR email='${email}')`
+	connection.query(checkIfUserAlreadyExist, (error, results) => {
 		if (error) {
 			return res.send(error)
 		} else {
-			return res.send(`user with ${id} is modified`)
+			if (results.length > 0) {
+				return res.send("0")
+			} else {
+				let updateDataUser = `UPDATE profil SET userName='${userName}', password='${newPassword}', email='${email}', firstName='${firstName}', lastName='${lastName}' WHERE id=${id};`
+				updateDataUser += `UPDATE userinfos SET userName='${userName}' WHERE userName='${previousUserName}';`
+				updateDataUser += `UPDATE profilmatch SET firstPerson='${userName}' WHERE firstPerson='${previousUserName}';`
+				updateDataUser += `UPDATE profilmatch SET secondPerson='${userName}' WHERE secondPerson='${previousUserName}';`
+				updateDataUser += `UPDATE notifications SET notificationUser='${userName}' WHERE notificationUser='${previousUserName}';`
+				updateDataUser += `UPDATE messages SET fromUser='${userName}' WHERE fromUser='${previousUserName}';`
+				updateDataUser += `UPDATE messages SET toUser='${userName}' WHERE toUser='${previousUserName}';`
+				updateDataUser += `UPDATE listblockprofil SET user='${userName}' WHERE user='${previousUserName}';`
+				updateDataUser += `UPDATE likeuser SET userName='${userName}' WHERE userName='${previousUserName}';`
+				updateDataUser += `UPDATE likeuser SET profilName='${userName}' WHERE profilName='${previousUserName}';`
+				updateDataUser += `UPDATE inlineUser SET user='${userName}' WHERE user='${previousUserName}';`
+				updateDataUser += `UPDATE fakeuser SET fakeUser='${userName}' WHERE fakeUser='${previousUserName}';`
+				connection.query(updateDataUser, (error, results) => {
+					if (error) {
+						return res.send(error)
+					} else {
+						return res.send("1")
+					}
+				})
+			}
 		}
 	})
 })

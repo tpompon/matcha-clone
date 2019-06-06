@@ -36,6 +36,8 @@ class InfosProfil extends Component {
             .then((response) => {
                 if (response === 1) {
                     updateDataUser(newDataUser)
+                } else {
+                    alert("This username or email are already use !")
                 }
             })
             .catch((error) => console.log(error))

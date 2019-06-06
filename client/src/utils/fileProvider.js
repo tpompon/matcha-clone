@@ -14,6 +14,17 @@ const optionsFetch = (dataBody) => {
     return options
 }
 
+const transformArrayInObject = (array) => {
+    let dataObject = {}
+    array.forEach((data) => {
+        dataObject = {
+            ...dataObject,
+            [data.name]: data.value,
+        }
+    })
+    return dataObject
+}
+
 export const getUsers = () => {
     return fetch("http://localhost:4000/users")
         .then((response) => response.json())
@@ -38,13 +49,7 @@ export const getPicturesUser = (userId) => {
 }
 
 export const addNewUser = (newUser) => {
-    let userData = {}
-    newUser.forEach((inputData) => {
-        userData = {
-            ...userData,
-            [inputData.name]: inputData.value,
-        }
-    })
+    const userData = { ...transformArrayInObject(newUser) }
     return checkUserAlreadyExist(userData)
         .then((userExist) => {
             if (userExist === 0) {
@@ -76,48 +81,24 @@ export const checkLogIn = (inputArray) => {
     const name = inputArray[0].value
     const password = inputArray[1].value
     const hashPassword = hash.sha256().update(password).digest("hex")
-    return getUsers()
-        .then((listUsers) => {
-            let logUser = 0
-            listUsers.data.forEach((dataUser) => {
-                if (dataUser.userName === name && dataUser.password === hashPassword && dataUser.confirmKeyOk === 1) {
-                    logUser = dataUser
-                }
-            })
-            return logUser
-        })
+    return fetch("http://localhost:4000/users/checkLogin", optionsFetch({ name, hashPassword }))
+        .then((response) => response.json())
+        .then((responseJson) => responseJson.dataUser[0])
         .catch((error) => console.log(error))
 }
 
 export const checkKey = (name, key) => {
-    return getUsers()
-        .then((listUsers) => {
-            let keyExist = 0
-            listUsers.data.forEach((dataUser) => {
-                if (dataUser.userName === name && dataUser.confirmKey === key) {
-                    fetch(`http://localhost:4000/users/confirmIdendity`, optionsFetch({ key, name }))
-                    keyExist = 1
-                }
-            })
-            return keyExist
-        })
+    return fetch(`http://localhost:4000/users/confirmIdendity`, optionsFetch({ key, name }))
+        .then((response) => response.text())
+        .then((responseText) => (responseText === "1") ? 1 : 0)
         .catch((error) => console.log(error))
 }
 
 const checkUserAlreadyExist = (dataNewUser) => {
     const { userName, email } = dataNewUser
-    return getUsers()
-        .then((listUsers) => {
-            let userAlreadyExist = 0
-            if (listUsers.data !== undefined) {
-                listUsers.data.forEach((dataUser) => {
-                    if (dataUser.userName === userName || dataUser.email === email) {
-                        userAlreadyExist = 1
-                    }
-                })
-            }
-            return userAlreadyExist
-        })
+    return fetch("http://localhost:4000/users/checkUserAlreadyExist", optionsFetch({ userName, email }))
+        .then((response) => response.text())
+        .then((responseText) => (responseText === "1") ? 1 : 0)
         .catch((error) => console.log(error))
 }
 
@@ -130,52 +111,19 @@ export const recorverPassword = (email) => {
 }
 
 export const updateInfosProfil = (id, previousUserName, inputArray) => {
-    let infosProfilUser = { id, previousUserName }
-        inputArray.forEach((data) => {
-            infosProfilUser = {
-                ...infosProfilUser,
-                [data.name]: data.value,
-            }
-        })
-    return getUsers()
-        .then((listUsers) => {
-            let userNameAlreadyExist = 0
-            let emailAlreadyExist = 0
-            if (listUsers.data !== undefined) {
-                const { userName, email, newPassword } = infosProfilUser
-                listUsers.data.forEach((dataUser) => {
-                    if (dataUser.userName === userName) {
-                        if (infosProfilUser.userName === userName) {
-                            userNameAlreadyExist = 0
-                        } else {
-                            userNameAlreadyExist = 1
-                        }
-                    }
-                    if (dataUser.email === email) {
-                        if (infosProfilUser.email === email) {
-                            emailAlreadyExist = 0
-                        } else {
-                            emailAlreadyExist = 1
-                        }
-                    }
-                })
-                if (userNameAlreadyExist === 1) {
-                    alert("UserName is already exist")
-                } else if (emailAlreadyExist === 1) {
-                    alert("Email is already exist")
-                } else if (!checkEmail(email)) {
-                    alert("email address is not valid")
-                } else if (!checkPassword(newPassword)) {
-                    alert("Password is not secured.")
-                } else {
-                    infosProfilUser.newPassword = hash.sha256().update(newPassword).digest("hex")
-                    fetch("http://localhost:4000/users/updateInfosProfil", optionsFetch(infosProfilUser))
-                    return 1
-                }
-                return 0
-            }
-        })
-        .catch((error) => console.log(error))
+    const infosProfilUser = { id, previousUserName, ...transformArrayInObject(inputArray) }
+    const { email, newPassword } = infosProfilUser
+    if (!checkEmail(email)) {
+        alert("email address is not valid")
+    } else if (!checkPassword(newPassword)) {
+        alert("Password is not secured.")
+    } else {
+        infosProfilUser.newPassword = hash.sha256().update(newPassword).digest("hex")
+        return fetch("http://localhost:4000/users/updateInfosProfil", optionsFetch(infosProfilUser))
+            .then((response) => response.text())
+            .then((responseText) => (responseText === "1") ? 1 : 0)
+            .catch((error) => console.log(error))
+    }
 }
 
 export const updateInfosPersonal = (infosPersonal) => {
