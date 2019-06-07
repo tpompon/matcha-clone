@@ -1,6 +1,9 @@
 import hash from "hash.js"
+import * as Opencage from "opencage-api-client"
 
 import { checkEmail, checkPassword } from "utils/utils"
+
+const apiKey = "54b379950fdd4dbeb5c56bc93a60afa9"
 
 const optionsFetch = (dataBody) => {
     const options = {
@@ -234,6 +237,66 @@ export const reportingFakeProfil = (profilName) => {
 
 export const getPopularScoreOfProfil = (profilName) => {
     fetch("http://localhost:4000/users/showPopulareScore", optionsFetch({ profilName }))
+}
+
+export const getUserLocation = (userName) => {
+    location()
+        .then((location) => {
+            Opencage
+                .geocode({
+                    key: apiKey,
+                    q: `${location.coords.latitude}, ${location.coords.longitude}`,
+                })
+                .then((response) => fetch("http://localhost:4000/users/getUserLocation", optionsFetch({
+                    userAdress: response.results[0].formatted,
+                    coords: `${location.coords.latitude}, ${location.coords.longitude}`,
+                    userName,
+                })))
+                .catch((error) => { console.log(error) })
+        })
+        .catch((error) => console.log(error))
+    getUserApproximateLocation(userName)
+}
+
+export const setNewLocation = (userName, newLocation) => {
+    Opencage
+        .geocode({
+            key: apiKey,
+            q: newLocation,
+        })
+        .then((response) => fetch("http://localhost:4000/users/getUserLocation", optionsFetch({
+            userAdress: response.results[0].formatted,
+            coords: `${response.results[0].geometry.lat}, ${response.results[0].geometry.lng}`,
+            userName,
+        })))
+        .catch((error) => console.log(error))
+}
+
+const location = () => {
+    const geolocation = navigator.geolocation
+    const getLocation = new Promise((resolve, reject) => {
+        if (!geolocation) {
+            console.log("Not supported !")
+        }
+        geolocation.getCurrentPosition((position) => {
+            console.log("Location found !")
+            resolve(position)
+        }, () => {
+            console.log("Location: Permission denied !")
+        })
+    })
+    return getLocation
+}
+
+const getUserApproximateLocation = (userName) => {
+    fetch("https://geoip-db.com/json/{ipv4-address}")
+        .then((response) => response.json())
+        .then((json) => fetch("http://localhost:4000/users/getUserApproximateLocation", optionsFetch({
+            coords: `${json.latitude}, ${json.longitude}`,
+            city: json.city,
+            userName,
+        })))
+        .catch((error) => console.log(error))
 }
 
 /*

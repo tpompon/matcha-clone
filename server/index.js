@@ -104,7 +104,7 @@ app.post("/users/checkLogin", (req, res) => {
 
 app.post("/users/getUserProfil", (req, res) => {
 	const { id } = req.body
-	const selectDataProfil = `SELECT p.*, u.biography, u.gender, u.orientation, u.listInterest FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.id='${id}'`
+	const selectDataProfil = `SELECT p.*, u.age, u.biography, u.listInterest, u.gender, u.orientation, u.userAddress FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.id='${id}'`
 	connection.query(selectDataProfil, (error, results) => {
 		if (error) {
 			return res.send(error)
@@ -255,9 +255,9 @@ app.post("/users/updateInfosProfil", (req, res) => {
 
 app.post("/users/updateInfosPersonal", (req, res) => {
 	const {
-		orientation, gender, biography, listInterest, userName,
+		age, orientation, gender, biography, listInterest, userName,
 	} = req.body
-	const updateUserInfos = `UPDATE userinfos SET orientation='${orientation}', gender='${gender}', biography='${biography}', listInterest='${listInterest}' WHERE userName='${userName}'`
+	const updateUserInfos = `UPDATE userinfos SET age='${age}', orientation='${orientation}', gender='${gender}', biography='${biography}', listInterest='${listInterest}' WHERE userName='${userName}'`
 	connection.query(updateUserInfos, (error, results) => {
 		if (error) {
 			return res.send(error)
@@ -399,7 +399,7 @@ app.post("/users/deblockUser", (req, res) => {
 
 app.post("/users/getAllOtherDataOfProfil", (req, res) => {
 	const { userName, profilName } = req.body
-	let sql = `SELECT p.*, u.biography, u.gender, u.orientation, u.listInterest FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.userName='${profilName}';`
+	let sql = `SELECT p.*, u.age, u.biography, u.gender, u.orientation, u.listInterest, u.userAddress FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.userName='${profilName}';`
 	sql += `SELECT likeUser FROM likeuser WHERE (userName, profilName) IN (('${profilName}', '${userName}'));`
 	sql += `SELECT fakeUser FROM fakeuser WHERE fakeUser='${profilName}';`
 	sql += `SELECT inline, DATE_FORMAT(date, "%m-%d-%y %H:%i:%s") as date FROM inlineuser WHERE user='${profilName}'`
@@ -533,6 +533,30 @@ app.post("/users/reportingFakeProfil", (req, res) => {
 			return res.send(error)
 		} else {
 			return res.send("Reporting fake user")
+		}
+	})
+})
+
+app.post("/users/getUserLocation", (req, res) => {
+	const { coords, userName, userAdress } = req.body
+	const insertLocation = `UPDATE userinfos SET userLocation='${coords}', userAddress='${userAdress}' WHERE userName='${userName}'`
+	connection.query(insertLocation, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.send("insert location success")
+		}
+	})
+})
+
+app.post("/users/getUserApproximateLocation", (req, res) => {
+	const { coords, userName, city } = req.body
+	const insertApproximateLocation = `UPDATE userinfos SET userApproximateLocation='${coords}', userApproximateCity='${city}' WHERE userName='${userName}'`
+	connection.query(insertApproximateLocation, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.send("insert approximate location success")
 		}
 	})
 })

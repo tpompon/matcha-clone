@@ -3,7 +3,7 @@ import React, { Component } from "react"
 
 import { updateInfosProfil } from "utils/fileProvider"
 
-import Form  from "components/Form"
+import Form from "components/Form"
 
 class InfosProfil extends Component {
 

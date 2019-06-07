@@ -1,11 +1,13 @@
 import React, { Component } from "react"
 // import PropTypes from "prop-types"
 
+import Age from "./components/Age"
 import Biography from "./components/Biography"
 import ListInterest from "./components/ListInterest"
 import Orientation from "./components/Orientation"
 import Gender from "./components/Gender"
 import Pictures from "./components/Pictures"
+import NewLocation from "./components/NewLocation"
 
 import { updateInfosPersonal } from "utils/fileProvider"
 
@@ -21,12 +23,14 @@ class InfosPersonal extends Component {
     componentWillMount() {
         const { infosUser } = this.props
         const {
-            biography, gender, orientation, listInterest,
+            age, biography, gender, orientation,
+            listInterest, userAddress,
         } = infosUser
         this.setState({
             ...this.state,
             infosPersonalUser: {
-                biography, gender, orientation, listInterest,
+                age, biography, gender, orientation,
+                listInterest, userAddress,
             },
         })
     }
@@ -62,10 +66,15 @@ class InfosPersonal extends Component {
         const { userName, id } = infosUser
         const { infosPersonalUser } = this.state
         const {
-            orientation, gender, biography, listInterest,
+            age, orientation, gender, biography,
+            listInterest, userAddress,
         } = infosPersonalUser
         return (
             <div>
+                <Age
+                    onChangeValue={ this.onChangeValue }
+                    age={ age }
+                />
                 <Orientation
                     onChangeValue={ this.onChangeValue }
                     optionChecked={ orientation }
@@ -77,6 +86,10 @@ class InfosPersonal extends Component {
                 <Biography
                     onChangeValue={ this.onChangeValue }
                     value={ biography }
+                />
+                <NewLocation
+                    userName={ userName }
+                    userAddress={ userAddress }
                 />
                 <ListInterest
                     onChangeValue={ this.updateListInterest }

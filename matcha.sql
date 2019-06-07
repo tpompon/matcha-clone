@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  localhost:3306
--- Généré le :  Mer 05 Juin 2019 à 06:01
+-- Généré le :  Ven 07 Juin 2019 à 06:07
 -- Version du serveur :  5.6.29
 -- Version de PHP :  5.6.20
 
@@ -57,11 +57,11 @@ CREATE TABLE `inlineuser` (
 --
 
 INSERT INTO `inlineuser` (`id`, `user`, `inline`, `date`) VALUES
-(1, 'metentis', 1, '2019-06-05 13:58:21'),
-(2, 'jai', 0, '2019-06-05 14:24:33'),
-(3, 'HH', 0, '2019-06-05 14:48:24'),
+(1, 'metentis', 1, '2019-06-07 13:37:39'),
+(2, 'jai', 0, '2019-06-07 14:06:49'),
+(3, 'HH', 0, '2019-06-07 14:14:52'),
 (4, 'tyr', 0, '2019-05-27 11:46:51'),
-(5, 'bouboule', 0, '2019-06-05 14:03:40'),
+(5, 'bouboule', 0, '2019-06-07 13:41:25'),
 (6, 'le roi des math', 0, '2019-05-27 11:46:51');
 
 -- --------------------------------------------------------
@@ -291,7 +291,15 @@ INSERT INTO `notifications` (`id`, `notificationUser`, `notificationType`, `noti
 (186, 'tyr', 'jainko visit you\'re profil', 0, '2019-06-05 14:10:50'),
 (187, 'jai', 'HH visit you\'re profil', 0, '2019-06-05 14:11:09'),
 (188, 'HH', 'jainko visit you\'re profil', 1, '2019-06-05 14:11:14'),
-(189, 'jai', 'HH visit you\'re profil', 0, '2019-06-05 14:11:20');
+(189, 'jai', 'HH visit you\'re profil', 0, '2019-06-05 14:11:20'),
+(190, 'jai', 'metentis visit you\'re profil', 0, '2019-06-07 09:54:45'),
+(191, 'jai', 'metentis visit you\'re profil', 0, '2019-06-07 10:21:04'),
+(192, 'jai', 'metentis visit you\'re profil', 0, '2019-06-07 10:26:15'),
+(193, 'jai', 'metentis visit you\'re profil', 0, '2019-06-07 10:27:25'),
+(194, 'bouboule', 'metentis visit you\'re profil', 0, '2019-06-07 10:27:27'),
+(195, 'tyr', 'metentis visit you\'re profil', 0, '2019-06-07 10:27:28'),
+(196, 'HH', 'metentis visit you\'re profil', 1, '2019-06-07 10:27:28'),
+(197, 'metentis', 'metentis visit you\'re profil', 1, '2019-06-07 10:27:30');
 
 -- --------------------------------------------------------
 
@@ -338,7 +346,7 @@ CREATE TABLE `profil` (
 --
 
 INSERT INTO `profil` (`id`, `userName`, `password`, `email`, `lastName`, `firstName`, `confirmKey`, `confirmKeyOk`) VALUES
-(128, 'metentis', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'sylvain.boeuf@free.fr', 'bouef', 'sylvain', 8394950248921, 1),
+(128, 'metentis', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'sylvain.boeuf@free.fr', 'boeuf', 'sylvain', 8394950248921, 1),
 (129, 'jai', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'florent.boeuf@free.fr', 'boeuf', 'florent', 6923653259421, 1),
 (130, 'bouboule', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'audrey.boeuf@free.fr', 'boeuf', 'audrey', 7772988799848, 1),
 (131, 'tyr', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'amandine.richard@free.fr', 'Richard', 'amandine', 9971396599816, 1),
@@ -347,7 +355,8 @@ INSERT INTO `profil` (`id`, `userName`, `password`, `email`, `lastName`, `firstN
 (134, 'test', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'test@gmail.com', 'test', 'test', 3454300560392, 1),
 (135, 'test2', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'test2@gmail.com', 'test2', 'test2', 1677337025450, 1),
 (136, 'test3', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'test3@gmail.fr', 'test3', 'test3', 2376701668198, 1),
-(137, 'test4', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'test4@gmail.com', 'test4', 'test4', 6037373664254, 1);
+(137, 'test4', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'test4@gmail.com', 'test4', 'test4', 6037373664254, 1),
+(139, 'coucou', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'coucoucou@gmail.com', 'coucou', 'coucou', 6981057521520, 1);
 
 -- --------------------------------------------------------
 
@@ -380,27 +389,34 @@ INSERT INTO `profilmatch` (`id`, `firstPerson`, `secondPerson`) VALUES
 CREATE TABLE `userinfos` (
   `id` int(11) NOT NULL,
   `userName` varchar(255) NOT NULL,
+  `age` int(11) DEFAULT NULL,
   `biography` text,
   `gender` varchar(255) NOT NULL DEFAULT 'Male',
   `orientation` varchar(255) NOT NULL DEFAULT 'Bisexuelle',
-  `listInterest` text
+  `listInterest` text,
+  `userLocation` text,
+  `userApproximateLocation` text,
+  `userAddress` text,
+  `userApproximateCity` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `userinfos`
 --
 
-INSERT INTO `userinfos` (`id`, `userName`, `biography`, `gender`, `orientation`, `listInterest`) VALUES
-(1, 'metentis', 'il flotte fais chier', 'Femme', 'Homme', 'null#Movie#data processing#NigthParty'),
-(2, 'jai', 'jcavjlerabv', 'Male', 'Homme', 'null#Movie#Manga#Sport'),
-(3, 'bouboule', 'vhkrueiubv', 'Male', 'Femme', 'null#data processing#NigthParty#Sport'),
-(6, 'tyr', 'vsdvhuy', 'Male', 'Femme', 'null#Movie#Manga#Sport#NigthParty#data processing'),
-(7, 'HH', 'null', 'Male', 'Homme', 'null#Manga#Sport'),
-(8, 'le roi des math', 'ewfthyeg', 'Male', 'Homme', 'null#data processing#NigthParty#Sport#Manga#Movie'),
-(9, 'test', 'ca bug', 'Femme', 'Femme', 'null#Sport#NigthParty'),
-(10, 'test2', 'testtsetsets', 'Male', 'Femme', 'null#Manga#NigthParty'),
-(12, 'test3', NULL, 'Male', 'Bisexuelle', NULL),
-(13, 'test4', 'htrhdghjydnjuyrj', 'Male', 'Bisexuelle', 'null#Manga#Sport');
+INSERT INTO `userinfos` (`id`, `userName`, `age`, `biography`, `gender`, `orientation`, `listInterest`, `userLocation`, `userApproximateLocation`, `userAddress`, `userApproximateCity`) VALUES
+(1, 'metentis', 27, 'plus maintenannt', 'Femme', 'Homme', 'null#Movie#data processing#NigthParty#Sport#Manga', '48.812949, 2.2471245', '48.8574, 2.3795', 'Rue du Docteur Vuillième, 92190 Meudon, France', 'Paris'),
+(2, 'jai', 22, 'jcavjlerabv', 'Male', 'Homme', 'null#Movie#Manga#Sport', '48.887398399999995, 2.3134208', '48.8574, 2.3795', '1 Boulevard Pereire, 75017 Paris, France', 'Paris'),
+(3, 'bouboule', 29, 'vhkrueiubv', 'Male', 'Femme', 'null#data processing#NigthParty#Sport', '48.887398399999995, 2.3134208', '48.8574, 2.3795', NULL, NULL),
+(6, 'tyr', 23, 'vsdvhuy', 'Male', 'Femme', 'null#Movie#Manga#Sport#NigthParty#data processing', NULL, '', NULL, NULL),
+(7, 'HH', 30, 'null', 'Male', 'Homme', 'null#Manga#Sport', NULL, '48.8574, 2.3795', NULL, 'Paris'),
+(8, 'le roi des math', 39, 'ewfthyeg', 'Male', 'Homme', 'null#data processing#NigthParty#Sport#Manga#Movie', NULL, '', NULL, NULL),
+(9, 'test', 50, 'ca bug', 'Femme', 'Femme', 'null#Sport#NigthParty', NULL, '', NULL, NULL),
+(10, 'test2', 60, 'testtsetsets', 'Male', 'Femme', 'null#Manga#NigthParty', NULL, '', NULL, NULL),
+(12, 'test3', 70, NULL, 'Male', 'Bisexuelle', NULL, NULL, '', NULL, NULL),
+(13, 'test4', 10, 'htrhdghjydnjuyrj', 'Male', 'Bisexuelle', 'null#Manga#Sport', NULL, '', NULL, NULL),
+(14, 'HHH', 15, NULL, 'Male', 'Bisexuelle', NULL, NULL, '', NULL, NULL),
+(15, 'coucou', 46, NULL, 'Male', 'Bisexuelle', NULL, NULL, '', NULL, NULL);
 
 --
 -- Index pour les tables exportées
@@ -479,7 +495,7 @@ ALTER TABLE `fakeuser`
 -- AUTO_INCREMENT pour la table `inlineuser`
 --
 ALTER TABLE `inlineuser`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT pour la table `likeuser`
 --
@@ -489,7 +505,7 @@ ALTER TABLE `likeuser`
 -- AUTO_INCREMENT pour la table `listblockprofil`
 --
 ALTER TABLE `listblockprofil`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `messages`
 --
@@ -499,7 +515,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT pour la table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=190;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=198;
 --
 -- AUTO_INCREMENT pour la table `picturesusers`
 --
@@ -509,17 +525,17 @@ ALTER TABLE `picturesusers`
 -- AUTO_INCREMENT pour la table `profil`
 --
 ALTER TABLE `profil`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=140;
 --
 -- AUTO_INCREMENT pour la table `profilmatch`
 --
 ALTER TABLE `profilmatch`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT pour la table `userinfos`
 --
 ALTER TABLE `userinfos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

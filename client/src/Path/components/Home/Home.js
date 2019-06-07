@@ -7,7 +7,9 @@ import ListProfilBlock from "./components/ListProfilBlock"
 import Chat from "./components/Chat"
 import Notifications from "./components/Notifications"
 
-import { getNotificationsNoRead, /*userIsDeLog,*/ getUserProfil } from "utils/fileProvider"
+import {
+    getNotificationsNoRead, /*userIsDeLog,*/ getUserProfil, getUserLocation,
+} from "utils/fileProvider"
 
 const optionsArray = [
     "Edit profil",
@@ -35,6 +37,7 @@ class Home extends Component {
             return
         }
         const { dataUser } = state
+        getUserLocation(dataUser.userName)
         getUserProfil(dataUser.id)
             .then((response) => this.setState({ dataUser: response.data[0] }))
             .catch((error) => console.log(error))

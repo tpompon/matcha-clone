@@ -6,13 +6,17 @@ class GeocodingForm extends Component {
         super(props)
         this.state = { isLocating: false }
     }
+
+    componentWillMount() {
+        this.handleGeoLocation()
+    }
+
     handleGeoLocation = () => {
         const geolocation = navigator.geolocation
         const getLocation = new Promise((resolve, reject) => {
             if (!geolocation) {
                 reject(new Error("Not supported !"))
             }
-            this.setState({ isLocating: true })
             geolocation.getCurrentPosition((position) => {
                 console.log("Location found !")
                 resolve(position)
@@ -23,23 +27,15 @@ class GeocodingForm extends Component {
         })
         getLocation
             .then((location) => {
-                this.setState({ isLocating: false }, () => 
-                    this.props.onChange("query", `${location.coords.latitude}, ${location.coords.longitude}`)
-                )
+                console.log(`${location}, ${location.coords.latitude}, ${location.coords.longitude}`)
             })
             .catch((error) => console.log(error))
     }
 
-    handleSubmit = (e) => {
-        console.log("Form was submitted with state: ", this.state)
-        e.preventDefault()
-    }
-
     render() {
         const {
-            apiKey, /*isSubmitting,*/ query, onChange, onSubmit,
+            apiKey, query, onChange, onSubmit,
         } = this.props
-        // const { isLocating } = this.state
         return (
             <div>
                 <p>{ `apiKey: ${apiKey}` }</p>
@@ -48,7 +44,6 @@ class GeocodingForm extends Component {
                     value={ query }
                     onChange={ (e) => onChange("query", e.target.value) }
                 />
-                <button onClick={ () => this.handleGeoLocation() }>handleGeoLocation</button>
                 <button onClick={ (e) => onSubmit(e) }>Geocode</button>
             </div>
         )
