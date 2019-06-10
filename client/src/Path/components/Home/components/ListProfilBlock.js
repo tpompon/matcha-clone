@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 
-import { blockList, deblockUser } from "utils/fileProvider"
+import { deblockUser, getBlockList } from "utils/fileProvider"
 
 class ListProfilBlock extends Component {
 
@@ -15,8 +15,8 @@ class ListProfilBlock extends Component {
 
     getListBlockProfil = () => {
         const { userName } = this.props
-        blockList(userName)
-            .then((list) => this.setState({ list }))
+        getBlockList(userName)
+            .then((response) => this.setState({ list: response.blockList }))
             .catch((error) => console.log(error))
     }
 
@@ -36,9 +36,9 @@ class ListProfilBlock extends Component {
             <div>
                 {
                     list.map((nameProfilBlock) => (
-                        <div key={ `name-${nameProfilBlock}` }>
-                            <p>{ nameProfilBlock }</p>
-                            <button onClick={ () => this.getNewListBlockProfil(userName, nameProfilBlock) }>Delete of block list</button>
+                        <div key={ `name-${nameProfilBlock.blockProfil}` }>
+                            <p>{ nameProfilBlock.blockProfil }</p>
+                            <button onClick={ () => this.getNewListBlockProfil(userName, nameProfilBlock.blockProfil) }>Delete of block list</button>
                         </div>
                     ))
                 }

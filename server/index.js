@@ -10,7 +10,7 @@ const bodyParser = require("body-parser")
 const connection = mysql.createConnection({
 	host: "localhost",
 	user: "root",
-	password: "input305",
+	password: "",
 	database: "matcha",
 	multipleStatements: true,
 })
@@ -104,7 +104,7 @@ app.post("/users/checkLogin", (req, res) => {
 
 app.post("/users/getUserProfil", (req, res) => {
 	const { id } = req.body
-	const selectDataProfil = `SELECT p.*, u.age, u.biography, u.listInterest, u.gender, u.orientation, u.userAddress FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.id='${id}'`
+	const selectDataProfil = `SELECT p.*, u.age, u.biography, u.listInterest, u.gender, u.orientation, u.userAddress, u.userLocation, u.userApproximateLocation FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.id='${id}'`
 	connection.query(selectDataProfil, (error, results) => {
 		if (error) {
 			return res.send(error)
@@ -363,8 +363,20 @@ app.post("/users/deleteMatch", (req, res) => {
 
 app.post("/users/listBlockProfil", (req, res) => {
 	const { userName } = req.body
-	const listBlock = `SELECT blockProfil from listblockprofil WHERE user='${userName}'`
+	const listBlock = `SELECT p.*, u.age, u.biography, u.gender, u.orientation, u.listInterest, u.userAddress, u.userLocation, u.userApproximateLocation FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.userName NOT IN (SELECT blockProfil FROM listblockprofil WHERE user='${userName}') AND p.userName<>'${userName}'`
 	connection.query(listBlock, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.json({ blockList: results })
+		}
+	})
+})
+
+app.post("/users/getBlockList", (req, res) => {
+	const { userName } = req.body
+	const getBlockList = `SELECT blockProfil FROM listblockprofil WHERE user='${userName}'`
+	connection.query(getBlockList, (error, results) => {
 		if (error) {
 			return res.send(error)
 		} else {
@@ -561,18 +573,26 @@ app.post("/users/getUserApproximateLocation", (req, res) => {
 	})
 })
 
-const populareScore = (profilName) => {
-	let selectScore = `SELECT userName FROM profil;`
-	selectScore += `SELECT likeUser FROM likeuser WHERE profilName='${profilName}' AND likeUser=1`
+app.post("/users/populareScore", (req, res) => {
+	const { profilName } = req.body
+	const selectScore = `SELECT likeUser FROM likeuser WHERE profilName='${profilName}'`
 	connection.query(selectScore, (error, results) => {
 		if (error) {
-			return 
+			return res.send(error)
 		} else {
-			const score = (results[1].length / results[0].length) * 100
-			return score
+			const valueLike = (1 / results.length) * 100
+			let populareScore = 0
+			results.forEach((like) => {
+				if (like.likeUser === 1) {
+					populareScore += valueLike
+				} else {
+					populareScore -= valueLike
+				}
+			})
+			return res.json({ populareScore })
 		}
 	})
-}
+})
 
 app.listen(4000, () => {
 	console.log(`Server is launch on port 4000`)

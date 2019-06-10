@@ -30,7 +30,7 @@ class PreviewProfil extends Component {
             .then((response) => {
                 if (response.imageProfil.length > 0) {
                     if (response.imageProfil[0].picture.length > 0) {
-                        this.setState({ imageProfil: response.imageProfil[0].picture })
+                        this.setState({ imageProfil: response.imageProfil[0].picture }, () => console.log(this.state, id))
                     }
                 }
             })

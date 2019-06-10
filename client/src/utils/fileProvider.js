@@ -164,14 +164,15 @@ export const likeOrUnkikeUser = (user, profilName, valueLike) => {
 
 export const blockList = (userName) => {
     return fetch("http://localhost:4000/users/listBlockProfil", optionsFetch({ userName }))
-        .then((listProfilBlock) => listProfilBlock.json())
-        .then((responseJson) => {
-            const blockList = []
-            responseJson.blockList.forEach((name) => {
-                blockList.push(name.blockProfil)
-            })
-            return blockList
-        })
+        .then((response) => response.json())
+        .then((responseJson) => responseJson)
+        .catch((error) => console.log(error))
+}
+
+export const getBlockList = (userName) => {
+    return fetch("http://localhost:4000/users/getBlockList", optionsFetch({ userName }))
+        .then((response) => response.json())
+        .then((responseJson) => responseJson)
         .catch((error) => console.log(error))
 }
 
@@ -298,6 +299,35 @@ const getUserApproximateLocation = (userName) => {
         })))
         .catch((error) => console.log(error))
 }
+
+export const calculDistance = (lat1, lon1, lat2, lon2) => {
+    if ((lat1 === lat2) && (lon1 === lon2)) {
+        return 0
+    } else {
+        const radLat1 = Math.PI * lat1 / 180
+        const radLat2 = Math.PI * lat2 / 180
+        const theta = lon1 - lon2
+        const radTheta = Math.PI * theta / 180
+        let distance = Math.sin(radLat1) * Math.sin(radLat2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radTheta)
+        if (distance > 1) {
+            distance = 1
+        }
+        distance = Math.acos(distance)
+        distance = distance * 180 / Math.PI
+        distance = distance * 60 * 1.1515
+        distance = distance * 1.609344
+        return distance
+    }
+}
+
+/*
+const filterPopulareScore = (userName) => {
+    return fetch("http://localhost:4000/users/populareScore", optionsFetch({ profilName: userName }))
+        .then((response) => response.json())
+        .then((responseJson) => responseJson)
+        .catch((error) => console.log(error))
+}
+*/
 
 /*
 const escapeHtml = (text) => {

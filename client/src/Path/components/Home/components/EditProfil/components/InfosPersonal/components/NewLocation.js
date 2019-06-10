@@ -6,22 +6,41 @@ class NewLocation extends Component {
 
     constructor(props) {
         super(props)
-        this.state = { valueLocation: "" }
+        this.state = {
+            valueLocation: "",
+            userAddress: "",
+        }
+    }
+
+    componentWillMount() {
+        const { userAddress } = this.props
+        this.setState({ userAddress })
+    }
+
+    onChange = (e) => {
+        this.setState({ valueLocation: e.target.value })
+    }
+
+    onClick = () => {
+        const { userName } = this.props
+        const { valueLocation } = this.state
+        setNewLocation(userName, valueLocation)
+        this.setState({ userAddress: valueLocation })
     }
 
     render() {
-        const { userAddress, userName } = this.props
-        const { valueLocation } = this.state
+        const { userName } = this.props
+        const { valueLocation, userAddress } = this.state
         return (
             <div>
                 <p>{ userAddress }</p>
                 <input
-                    onChange={ (e) => this.setState({ valueLocation: e.target.value }) }
+                    onChange={ (e) => this.onChange(e) }
                     value={ valueLocation }
                     type="text"
                     placeholder="Set new location !!!"
                 />
-                <button onClick={ () => setNewLocation(userName, valueLocation) }>Send new location</button>
+                <button onClick={ () => this.onClick(userName, valueLocation) }>Send new location</button>
             </div>
         )
     }

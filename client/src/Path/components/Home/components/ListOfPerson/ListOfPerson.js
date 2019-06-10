@@ -3,9 +3,7 @@ import React, { Component } from "react"
 import CollectionView from "./components/CollectionView"
 import InfosPerson from "./components/InfosPerson"
 
-import {
-    getUsers, blockList, getAllOtherDataOfProfil, visitProfil,
-} from "utils/fileProvider"
+import { blockList, getAllOtherDataOfProfil, visitProfil } from "utils/fileProvider"
 
 const styles = {
     container: {
@@ -35,32 +33,8 @@ class ListOfPerson extends Component {
 
     getListUser = () => {
         const { dataUser } = this.props
-        getUsers()
-            .then((listUsers) => {
-                blockList(dataUser.userName)
-                    .then((listProfilBlock) => {
-                        let listPerson = {}
-                        let profilIsBlocked
-                        listUsers.data.forEach((user) => {
-                            profilIsBlocked = 0
-                            for (let i = 0; i < listProfilBlock.length; i++) {
-                                if (listProfilBlock[i] === user.userName) {
-                                    profilIsBlocked = 1
-                                    break
-                                }
-                            }
-                            if (user.id !== dataUser.id && profilIsBlocked === 0) {
-                                listPerson = {
-                                    ...listPerson,
-                                    [user.id]: user,
-                                }
-                            }
-                        })
-                        this.setState({ listPerson })
-                    }
-                )
-                .catch((error) => console.log(error))
-            })
+        blockList(dataUser.userName)
+            .then((response) => this.setState({ listPerson: response.blockList }))
             .catch((error) => console.log(error))
     }
 

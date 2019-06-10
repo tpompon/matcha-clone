@@ -95,7 +95,10 @@ class InfosPersonal extends Component {
                     onChangeValue={ this.updateListInterest }
                     list={ listInterest }
                 />
-                <Pictures userId={ id } userName={ userName } />
+                <Pictures
+                    userId={ id }
+                    userName={ userName }
+                />
                 <button onClick={ () => this.onClick(infosPersonalUser, userName) }>Save</button>
             </div>
         )

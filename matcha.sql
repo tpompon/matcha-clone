@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.5.1
--- http://www.phpmyadmin.net
+-- version 4.8.4
+-- https://www.phpmyadmin.net/
 --
--- Client :  localhost:3306
--- Généré le :  Ven 07 Juin 2019 à 06:07
--- Version du serveur :  5.6.29
--- Version de PHP :  5.6.20
+-- Hôte : 127.0.0.1:3306
+-- Généré le :  lun. 10 juin 2019 à 23:47
+-- Version du serveur :  5.7.24
+-- Version de PHP :  7.2.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -26,13 +28,15 @@ SET time_zone = "+00:00";
 -- Structure de la table `fakeuser`
 --
 
-CREATE TABLE `fakeuser` (
-  `id` int(11) NOT NULL,
-  `fakeUser` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `fakeuser`;
+CREATE TABLE IF NOT EXISTS `fakeuser` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fakeUser` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
--- Contenu de la table `fakeuser`
+-- Déchargement des données de la table `fakeuser`
 --
 
 INSERT INTO `fakeuser` (`id`, `fakeUser`) VALUES
@@ -45,24 +49,26 @@ INSERT INTO `fakeuser` (`id`, `fakeUser`) VALUES
 -- Structure de la table `inlineuser`
 --
 
-CREATE TABLE `inlineuser` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `inlineuser`;
+CREATE TABLE IF NOT EXISTS `inlineuser` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `user` varchar(255) NOT NULL,
   `inline` int(11) NOT NULL DEFAULT '0',
-  `date` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 --
--- Contenu de la table `inlineuser`
+-- Déchargement des données de la table `inlineuser`
 --
 
 INSERT INTO `inlineuser` (`id`, `user`, `inline`, `date`) VALUES
-(1, 'metentis', 1, '2019-06-07 13:37:39'),
-(2, 'jai', 0, '2019-06-07 14:06:49'),
-(3, 'HH', 0, '2019-06-07 14:14:52'),
-(4, 'tyr', 0, '2019-05-27 11:46:51'),
+(1, 'metentis', 1, '2019-06-09 17:54:36'),
+(2, 'jai', 0, '2019-06-09 17:06:08'),
+(3, 'HH', 0, '2019-06-09 00:13:25'),
+(4, 'tyr', 0, '2019-06-09 00:12:53'),
 (5, 'bouboule', 0, '2019-06-07 13:41:25'),
-(6, 'le roi des math', 0, '2019-05-27 11:46:51');
+(6, 'le roi des math', 0, '2019-06-09 00:13:39');
 
 -- --------------------------------------------------------
 
@@ -70,15 +76,17 @@ INSERT INTO `inlineuser` (`id`, `user`, `inline`, `date`) VALUES
 -- Structure de la table `likeuser`
 --
 
-CREATE TABLE `likeuser` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `likeuser`;
+CREATE TABLE IF NOT EXISTS `likeuser` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `userName` varchar(255) NOT NULL,
   `profilName` varchar(255) NOT NULL,
-  `likeUser` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `likeUser` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
 
 --
--- Contenu de la table `likeuser`
+-- Déchargement des données de la table `likeuser`
 --
 
 INSERT INTO `likeuser` (`id`, `userName`, `profilName`, `likeUser`) VALUES
@@ -94,7 +102,7 @@ INSERT INTO `likeuser` (`id`, `userName`, `profilName`, `likeUser`) VALUES
 (31, 'bouboule', 'metentis', -1),
 (33, 'metentis', 'bouboule', 1),
 (34, 'metentis', 'HH', -1),
-(35, 'metentis', 'jai', -1),
+(35, 'metentis', 'jai', 1),
 (36, 'metentis', 'tyr', 1),
 (37, 'metentis', 'le roi des math', 1),
 (38, 'tyr', 'metentis', 1),
@@ -113,11 +121,23 @@ INSERT INTO `likeuser` (`id`, `userName`, `profilName`, `likeUser`) VALUES
 -- Structure de la table `listblockprofil`
 --
 
-CREATE TABLE `listblockprofil` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `listblockprofil`;
+CREATE TABLE IF NOT EXISTS `listblockprofil` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `user` varchar(255) NOT NULL,
-  `blockProfil` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `blockProfil` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `listblockprofil`
+--
+
+INSERT INTO `listblockprofil` (`id`, `user`, `blockProfil`) VALUES
+(3, 'jai', 'tyr'),
+(4, 'jai', 'le roi des math'),
+(5, 'jai', 'test'),
+(6, 'jai', 'metentis');
 
 -- --------------------------------------------------------
 
@@ -125,16 +145,18 @@ CREATE TABLE `listblockprofil` (
 -- Structure de la table `messages`
 --
 
-CREATE TABLE `messages` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `messages`;
+CREATE TABLE IF NOT EXISTS `messages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fromUser` varchar(255) DEFAULT NULL,
   `toUser` varchar(255) DEFAULT NULL,
   `message` text,
-  `date` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
 
 --
--- Contenu de la table `messages`
+-- Déchargement des données de la table `messages`
 --
 
 INSERT INTO `messages` (`id`, `fromUser`, `toUser`, `message`, `date`) VALUES
@@ -144,7 +166,9 @@ INSERT INTO `messages` (`id`, `fromUser`, `toUser`, `message`, `date`) VALUES
 (56, 'jai', 'tyr', 'test', '2019-06-05 13:08:52'),
 (57, 'jai', 'tyr', 'perfect', '2019-06-05 13:09:00'),
 (58, 'jai', 'HH', 'voyons voir ca', '2019-06-05 14:08:03'),
-(59, 'HH', 'jai', 'ca marche au poil', '2019-06-05 14:08:11');
+(59, 'HH', 'jai', 'ca marche au poil', '2019-06-05 14:08:11'),
+(60, 'metentis', 'jai', 'cdhsziu', '2019-06-09 17:05:06'),
+(61, 'jai', 'metentis', 'coucou', '2019-06-09 17:05:50');
 
 -- --------------------------------------------------------
 
@@ -152,16 +176,18 @@ INSERT INTO `messages` (`id`, `fromUser`, `toUser`, `message`, `date`) VALUES
 -- Structure de la table `notifications`
 --
 
-CREATE TABLE `notifications` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `notifications`;
+CREATE TABLE IF NOT EXISTS `notifications` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `notificationUser` varchar(255) NOT NULL,
   `notificationType` text NOT NULL,
   `notificationRead` int(11) NOT NULL DEFAULT '0',
-  `date` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=233 DEFAULT CHARSET=utf8;
 
 --
--- Contenu de la table `notifications`
+-- Déchargement des données de la table `notifications`
 --
 
 INSERT INTO `notifications` (`id`, `notificationUser`, `notificationType`, `notificationRead`, `date`) VALUES
@@ -286,20 +312,55 @@ INSERT INTO `notifications` (`id`, `notificationUser`, `notificationType`, `noti
 (181, 'tyr', 'jainko visit you\'re profil', 0, '2019-06-05 13:21:13'),
 (182, 'HH', 'You are new message from jainko', 1, '2019-06-05 14:08:03'),
 (183, 'jai', 'You are new message from HH', 1, '2019-06-05 14:08:11'),
-(184, 'jai', 'HH visit you\'re profil', 0, '2019-06-05 14:09:21'),
+(184, 'jai', 'HH visit you\'re profil', 1, '2019-06-05 14:09:21'),
 (185, 'metentis', 'HH visit you\'re profil', 1, '2019-06-05 14:09:38'),
 (186, 'tyr', 'jainko visit you\'re profil', 0, '2019-06-05 14:10:50'),
-(187, 'jai', 'HH visit you\'re profil', 0, '2019-06-05 14:11:09'),
+(187, 'jai', 'HH visit you\'re profil', 1, '2019-06-05 14:11:09'),
 (188, 'HH', 'jainko visit you\'re profil', 1, '2019-06-05 14:11:14'),
-(189, 'jai', 'HH visit you\'re profil', 0, '2019-06-05 14:11:20'),
-(190, 'jai', 'metentis visit you\'re profil', 0, '2019-06-07 09:54:45'),
-(191, 'jai', 'metentis visit you\'re profil', 0, '2019-06-07 10:21:04'),
-(192, 'jai', 'metentis visit you\'re profil', 0, '2019-06-07 10:26:15'),
-(193, 'jai', 'metentis visit you\'re profil', 0, '2019-06-07 10:27:25'),
+(189, 'jai', 'HH visit you\'re profil', 1, '2019-06-05 14:11:20'),
+(190, 'jai', 'metentis visit you\'re profil', 1, '2019-06-07 09:54:45'),
+(191, 'jai', 'metentis visit you\'re profil', 1, '2019-06-07 10:21:04'),
+(192, 'jai', 'metentis visit you\'re profil', 1, '2019-06-07 10:26:15'),
+(193, 'jai', 'metentis visit you\'re profil', 1, '2019-06-07 10:27:25'),
 (194, 'bouboule', 'metentis visit you\'re profil', 0, '2019-06-07 10:27:27'),
 (195, 'tyr', 'metentis visit you\'re profil', 0, '2019-06-07 10:27:28'),
 (196, 'HH', 'metentis visit you\'re profil', 1, '2019-06-07 10:27:28'),
-(197, 'metentis', 'metentis visit you\'re profil', 1, '2019-06-07 10:27:30');
+(197, 'metentis', 'metentis visit you\'re profil', 1, '2019-06-07 10:27:30'),
+(198, 'jai', 'metentis visit you\'re profil', 1, '2019-06-09 17:02:41'),
+(199, 'jai', 'metentis visit you\'re profil', 1, '2019-06-09 17:04:37'),
+(200, 'jai', 'metentis send you a like', 1, '2019-06-09 17:04:47'),
+(201, 'jai', 'metentis send you a like and you\'re like him before so this is a match', 1, '2019-06-09 17:04:48'),
+(202, 'jai', 'You are new message from metentis', 1, '2019-06-09 17:05:06'),
+(203, 'metentis', 'You are new message from jai', 1, '2019-06-09 17:05:50'),
+(204, 'bouboule', 'metentis visit you\'re profil', 0, '2019-06-09 17:06:23'),
+(205, 'jai', 'metentis visit you\'re profil', 1, '2019-06-09 17:06:33'),
+(206, 'test3', 'metentis visit you\'re profil', 0, '2019-06-09 17:49:27'),
+(207, 'test3', 'metentis visit you\'re profil', 0, '2019-06-09 17:49:28'),
+(208, 'test3', 'metentis visit you\'re profil', 0, '2019-06-09 17:49:29'),
+(209, 'test2', 'metentis visit you\'re profil', 0, '2019-06-09 17:49:51'),
+(210, 'tyr', 'jai visit you\'re profil', 0, '2019-06-09 17:54:48'),
+(211, 'le roi des math', 'jai visit you\'re profil', 0, '2019-06-09 17:54:51'),
+(212, 'test', 'jai visit you\'re profil', 0, '2019-06-09 17:54:54'),
+(213, 'metentis', 'jai visit you\'re profil', 0, '2019-06-09 17:55:02'),
+(214, 'undefined', 'metentis visit you\'re profil', 0, '2019-06-09 22:26:15'),
+(215, 'metentis', 'metentis visit you\'re profil', 0, '2019-06-09 22:34:08'),
+(216, 'metentis', 'metentis visit you\'re profil', 0, '2019-06-09 22:38:25'),
+(217, 'jai', 'metentis visit you\'re profil', 0, '2019-06-09 22:39:22'),
+(218, 'test3', 'metentis visit you\'re profil', 0, '2019-06-09 23:06:10'),
+(219, 'jai', 'metentis visit you\'re profil', 0, '2019-06-09 23:10:48'),
+(220, 'jai', 'metentis visit you\'re profil', 0, '2019-06-10 11:11:22'),
+(221, 'bouboule', 'metentis visit you\'re profil', 0, '2019-06-10 11:11:23'),
+(222, 'test', 'metentis visit you\'re profil', 0, '2019-06-10 22:53:36'),
+(223, 'test', 'metentis visit you\'re profil', 0, '2019-06-10 22:53:38'),
+(224, 'test', 'metentis visit you\'re profil', 0, '2019-06-10 22:53:38'),
+(225, 'test', 'metentis visit you\'re profil', 0, '2019-06-10 22:53:39'),
+(226, 'test', 'metentis visit you\'re profil', 0, '2019-06-10 23:18:38'),
+(227, 'test', 'metentis visit you\'re profil', 0, '2019-06-10 23:18:38'),
+(228, 'test4', 'metentis visit you\'re profil', 0, '2019-06-10 23:18:50'),
+(229, 'test', 'metentis visit you\'re profil', 0, '2019-06-10 23:18:52'),
+(230, 'bouboule', 'metentis visit you\'re profil', 0, '2019-06-10 23:19:02'),
+(231, 'tyr', 'metentis visit you\'re profil', 0, '2019-06-10 23:19:03'),
+(232, 'tyr', 'metentis visit you\'re profil', 0, '2019-06-10 23:32:18');
 
 -- --------------------------------------------------------
 
@@ -307,19 +368,21 @@ INSERT INTO `notifications` (`id`, `notificationUser`, `notificationType`, `noti
 -- Structure de la table `picturesusers`
 --
 
-CREATE TABLE `picturesusers` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `picturesusers`;
+CREATE TABLE IF NOT EXISTS `picturesusers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `userId` varchar(255) NOT NULL,
-  `picture` longtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `picture` longtext NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=185 DEFAULT CHARSET=latin1;
 
 --
--- Contenu de la table `picturesusers`
+-- Déchargement des données de la table `picturesusers`
 --
 
 INSERT INTO `picturesusers` (`id`, `userId`, `picture`) VALUES
-(179, '128', 'image3.jpg'),
-(180, '128', 'image.jpeg'),
+(179, '128', 'FR.jpg'),
+(180, '128', 'CD.jpg'),
 (181, '128', 'image2.jpeg'),
 (183, '128', 'download.jpeg'),
 (184, '129', 'image4.jpg');
@@ -330,19 +393,21 @@ INSERT INTO `picturesusers` (`id`, `userId`, `picture`) VALUES
 -- Structure de la table `profil`
 --
 
-CREATE TABLE `profil` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `profil`;
+CREATE TABLE IF NOT EXISTS `profil` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `userName` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `lastName` varchar(255) NOT NULL,
   `firstName` varchar(255) NOT NULL,
   `confirmKey` bigint(20) NOT NULL,
-  `confirmKeyOk` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `confirmKeyOk` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=140 DEFAULT CHARSET=latin1;
 
 --
--- Contenu de la table `profil`
+-- Déchargement des données de la table `profil`
 --
 
 INSERT INTO `profil` (`id`, `userName`, `password`, `email`, `lastName`, `firstName`, `confirmKey`, `confirmKeyOk`) VALUES
@@ -364,21 +429,24 @@ INSERT INTO `profil` (`id`, `userName`, `password`, `email`, `lastName`, `firstN
 -- Structure de la table `profilmatch`
 --
 
-CREATE TABLE `profilmatch` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `profilmatch`;
+CREATE TABLE IF NOT EXISTS `profilmatch` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `firstPerson` varchar(255) NOT NULL,
-  `secondPerson` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `secondPerson` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
 --
--- Contenu de la table `profilmatch`
+-- Déchargement des données de la table `profilmatch`
 --
 
 INSERT INTO `profilmatch` (`id`, `firstPerson`, `secondPerson`) VALUES
 (11, 'tyr', 'metentis'),
 (12, 'tyr', 'bouboule'),
 (14, 'jai', 'tyr'),
-(15, 'jai', 'HH');
+(15, 'jai', 'HH'),
+(16, 'metentis', 'jai');
 
 -- --------------------------------------------------------
 
@@ -386,8 +454,9 @@ INSERT INTO `profilmatch` (`id`, `firstPerson`, `secondPerson`) VALUES
 -- Structure de la table `userinfos`
 --
 
-CREATE TABLE `userinfos` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `userinfos`;
+CREATE TABLE IF NOT EXISTS `userinfos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `userName` varchar(255) NOT NULL,
   `age` int(11) DEFAULT NULL,
   `biography` text,
@@ -397,145 +466,28 @@ CREATE TABLE `userinfos` (
   `userLocation` text,
   `userApproximateLocation` text,
   `userAddress` text,
-  `userApproximateCity` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `userApproximateCity` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 
 --
--- Contenu de la table `userinfos`
+-- Déchargement des données de la table `userinfos`
 --
 
 INSERT INTO `userinfos` (`id`, `userName`, `age`, `biography`, `gender`, `orientation`, `listInterest`, `userLocation`, `userApproximateLocation`, `userAddress`, `userApproximateCity`) VALUES
-(1, 'metentis', 27, 'plus maintenannt', 'Femme', 'Homme', 'null#Movie#data processing#NigthParty#Sport#Manga', '48.812949, 2.2471245', '48.8574, 2.3795', 'Rue du Docteur Vuillième, 92190 Meudon, France', 'Paris'),
-(2, 'jai', 22, 'jcavjlerabv', 'Male', 'Homme', 'null#Movie#Manga#Sport', '48.887398399999995, 2.3134208', '48.8574, 2.3795', '1 Boulevard Pereire, 75017 Paris, France', 'Paris'),
-(3, 'bouboule', 29, 'vhkrueiubv', 'Male', 'Femme', 'null#data processing#NigthParty#Sport', '48.887398399999995, 2.3134208', '48.8574, 2.3795', NULL, NULL),
-(6, 'tyr', 23, 'vsdvhuy', 'Male', 'Femme', 'null#Movie#Manga#Sport#NigthParty#data processing', NULL, '', NULL, NULL),
-(7, 'HH', 30, 'null', 'Male', 'Homme', 'null#Manga#Sport', NULL, '48.8574, 2.3795', NULL, 'Paris'),
-(8, 'le roi des math', 39, 'ewfthyeg', 'Male', 'Homme', 'null#data processing#NigthParty#Sport#Manga#Movie', NULL, '', NULL, NULL),
-(9, 'test', 50, 'ca bug', 'Femme', 'Femme', 'null#Sport#NigthParty', NULL, '', NULL, NULL),
-(10, 'test2', 60, 'testtsetsets', 'Male', 'Femme', 'null#Manga#NigthParty', NULL, '', NULL, NULL),
-(12, 'test3', 70, NULL, 'Male', 'Bisexuelle', NULL, NULL, '', NULL, NULL),
-(13, 'test4', 10, 'htrhdghjydnjuyrj', 'Male', 'Bisexuelle', 'null#Manga#Sport', NULL, '', NULL, NULL),
-(14, 'HHH', 15, NULL, 'Male', 'Bisexuelle', NULL, NULL, '', NULL, NULL),
-(15, 'coucou', 46, NULL, 'Male', 'Bisexuelle', NULL, NULL, '', NULL, NULL);
+(1, 'metentis', 27, 'plus maintenannt', 'Femme', 'Homme', 'null#Movie#data processing#NigthParty#Sport#Manga', '48.80921180000001, 2.2395904', '48.8138, 2.235', '89A Rue de Paris, 92190 Meudon, France', 'Meudon'),
+(2, 'jai', 22, 'jcavjlerabv', 'Male', 'Homme', 'null#Movie#Manga#Sport', '48.812461000000006, 2.246998', '48.8138, 2.235', '12BIS Rue du Docteur Vuillième, 92190 Meudon, France', 'Meudon'),
+(3, 'bouboule', 29, 'vhkrueiubv', 'Male', 'Femme', 'null#data processing#NigthParty#Sport', '48.8079933, 2.2396035999999997', '48.8138, 2.235', '2bis Rue Servien, 92190 Meudon, France', 'Meudon'),
+(6, 'tyr', 23, 'vsdvhuy', 'Male', 'Femme', 'null#Movie#Manga#Sport#NigthParty#data processing', '48.8079933, 2.2396035999999997', '48.8138, 2.235', '2bis Rue Servien, 92190 Meudon, France', 'Meudon'),
+(7, 'HH', 30, 'null', 'Male', 'Homme', 'null#Manga#Sport', '48.8042, 2.2810200000000123', '48.8138, 2.235', '46 Rue Jean Jaurès, 92320 Châtillon, France', 'Meudon'),
+(8, 'le roi des math', 39, 'ewfthyeg', 'Male', 'Homme', 'null#data processing#NigthParty#Sport#Manga#Movie', '48.8079933, 2.2396035999999997', '48.8138, 2.235', '2bis Rue Servien, 92190 Meudon, France', 'Meudon'),
+(9, 'test', 50, 'ca bug', 'Femme', 'Femme', 'null#Sport#NigthParty', '48.8964, 2.3184499999999844', '48.8138, 2.235', '96 Boulevard Bessières, Paris 17e Arrondissement, France', 'Meudon'),
+(10, 'test2', 60, 'testtsetsets', 'Male', 'Femme', 'null#Manga#NigthParty', '48.8079933, 2.2396035999999997', '48.8138, 2.235', '2bis Rue Servien, 92190 Meudon, France', 'Meudon'),
+(12, 'test3', 70, NULL, 'Male', 'Bisexuelle', NULL, '48.8079933, 2.2396035999999997', '48.8138, 2.235', '2bis Rue Servien, 92190 Meudon, France', 'Meudon'),
+(13, 'test4', 10, 'htrhdghjydnjuyrj', 'Male', 'Bisexuelle', 'null#Manga#Sport', '48.8079933, 2.2396035999999997', '48.8138, 2.235', '2bis Rue Servien, 92190 Meudon, France', 'Meudon'),
+(15, 'coucou', 46, NULL, 'Male', 'Bisexuelle', NULL, '48.812550200000004, 2.2469897999999997', '48.8138, 2.235', '12BIS Rue du Docteur Vuillième, 92190 Meudon, France', 'Meudon');
+COMMIT;
 
---
--- Index pour les tables exportées
---
-
---
--- Index pour la table `fakeuser`
---
-ALTER TABLE `fakeuser`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `inlineuser`
---
-ALTER TABLE `inlineuser`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `likeuser`
---
-ALTER TABLE `likeuser`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `listblockprofil`
---
-ALTER TABLE `listblockprofil`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `messages`
---
-ALTER TABLE `messages`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `notifications`
---
-ALTER TABLE `notifications`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `picturesusers`
---
-ALTER TABLE `picturesusers`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `profil`
---
-ALTER TABLE `profil`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `profilmatch`
---
-ALTER TABLE `profilmatch`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `userinfos`
---
-ALTER TABLE `userinfos`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT pour les tables exportées
---
-
---
--- AUTO_INCREMENT pour la table `fakeuser`
---
-ALTER TABLE `fakeuser`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT pour la table `inlineuser`
---
-ALTER TABLE `inlineuser`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
---
--- AUTO_INCREMENT pour la table `likeuser`
---
-ALTER TABLE `likeuser`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
---
--- AUTO_INCREMENT pour la table `listblockprofil`
---
-ALTER TABLE `listblockprofil`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `messages`
---
-ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
---
--- AUTO_INCREMENT pour la table `notifications`
---
-ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=198;
---
--- AUTO_INCREMENT pour la table `picturesusers`
---
-ALTER TABLE `picturesusers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=185;
---
--- AUTO_INCREMENT pour la table `profil`
---
-ALTER TABLE `profil`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=140;
---
--- AUTO_INCREMENT pour la table `profilmatch`
---
-ALTER TABLE `profilmatch`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
---
--- AUTO_INCREMENT pour la table `userinfos`
---
-ALTER TABLE `userinfos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
