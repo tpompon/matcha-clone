@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.5.1
--- http://www.phpmyadmin.net
+-- version 4.8.4
+-- https://www.phpmyadmin.net/
 --
--- Client :  localhost:3306
--- Généré le :  Mar 11 Juin 2019 à 05:17
--- Version du serveur :  5.6.29
--- Version de PHP :  5.6.20
+-- Hôte : 127.0.0.1:3306
+-- Généré le :  mar. 11 juin 2019 à 21:52
+-- Version du serveur :  5.7.24
+-- Version de PHP :  7.2.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -26,18 +28,22 @@ SET time_zone = "+00:00";
 -- Structure de la table `fakeuser`
 --
 
-CREATE TABLE `fakeuser` (
-  `id` int(11) NOT NULL,
-  `fakeUser` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `fakeuser`;
+CREATE TABLE IF NOT EXISTS `fakeuser` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fakeUser` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 --
--- Contenu de la table `fakeuser`
+-- Déchargement des données de la table `fakeuser`
 --
 
 INSERT INTO `fakeuser` (`id`, `fakeUser`) VALUES
 (1, 'HH'),
-(2, 'tyr');
+(2, 'tyr'),
+(3, 'metentis'),
+(4, 'metentis');
 
 -- --------------------------------------------------------
 
@@ -45,20 +51,22 @@ INSERT INTO `fakeuser` (`id`, `fakeUser`) VALUES
 -- Structure de la table `inlineuser`
 --
 
-CREATE TABLE `inlineuser` (
-  `id` int(11) NOT NULL,
-  `user` varchar(255) NOT NULL,
+DROP TABLE IF EXISTS `inlineuser`;
+CREATE TABLE IF NOT EXISTS `inlineuser` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `inline` int(11) NOT NULL DEFAULT '0',
-  `date` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 --
--- Contenu de la table `inlineuser`
+-- Déchargement des données de la table `inlineuser`
 --
 
 INSERT INTO `inlineuser` (`id`, `user`, `inline`, `date`) VALUES
-(1, 'metentis', 0, '2019-06-11 13:57:19'),
-(2, 'jai', 0, '2019-06-09 17:06:08'),
+(1, 'metentis', 0, '2019-06-11 23:33:31'),
+(2, 'jai', 0, '2019-06-11 23:40:03'),
 (3, 'HH', 0, '2019-06-09 00:13:25'),
 (4, 'tyr', 0, '2019-06-09 00:12:53'),
 (5, 'bouboule', 1, '2019-06-11 10:23:36'),
@@ -70,15 +78,17 @@ INSERT INTO `inlineuser` (`id`, `user`, `inline`, `date`) VALUES
 -- Structure de la table `likeuser`
 --
 
-CREATE TABLE `likeuser` (
-  `id` int(11) NOT NULL,
-  `userName` varchar(255) NOT NULL,
-  `profilName` varchar(255) NOT NULL,
-  `likeUser` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `likeuser`;
+CREATE TABLE IF NOT EXISTS `likeuser` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `profilName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `likeUser` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8;
 
 --
--- Contenu de la table `likeuser`
+-- Déchargement des données de la table `likeuser`
 --
 
 INSERT INTO `likeuser` (`id`, `userName`, `profilName`, `likeUser`) VALUES
@@ -105,7 +115,10 @@ INSERT INTO `likeuser` (`id`, `userName`, `profilName`, `likeUser`) VALUES
 (43, 'jai', 'bouboule', 1),
 (44, 'jai', 'tyr', 1),
 (45, 'jai', 'le roi des math', 1),
-(46, 'jai', 'HH', 1);
+(46, 'jai', 'HH', 1),
+(47, 'test3', 'jai', 1),
+(48, 'bat test', 'metentis', 1),
+(49, 'jai', 'bat test', -1);
 
 -- --------------------------------------------------------
 
@@ -113,22 +126,21 @@ INSERT INTO `likeuser` (`id`, `userName`, `profilName`, `likeUser`) VALUES
 -- Structure de la table `listblockprofil`
 --
 
-CREATE TABLE `listblockprofil` (
-  `id` int(11) NOT NULL,
-  `user` varchar(255) NOT NULL,
-  `blockProfil` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `listblockprofil`;
+CREATE TABLE IF NOT EXISTS `listblockprofil` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `blockProfil` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 --
--- Contenu de la table `listblockprofil`
+-- Déchargement des données de la table `listblockprofil`
 --
 
 INSERT INTO `listblockprofil` (`id`, `user`, `blockProfil`) VALUES
-(3, 'jai', 'tyr'),
-(4, 'jai', 'le roi des math'),
-(5, 'jai', 'test'),
-(6, 'jai', 'metentis'),
-(8, 'metentis', 'bouboule');
+(8, 'metentis', 'bouboule'),
+(9, 'bat test', 'jai');
 
 -- --------------------------------------------------------
 
@@ -136,16 +148,18 @@ INSERT INTO `listblockprofil` (`id`, `user`, `blockProfil`) VALUES
 -- Structure de la table `messages`
 --
 
-CREATE TABLE `messages` (
-  `id` int(11) NOT NULL,
-  `fromUser` varchar(255) DEFAULT NULL,
-  `toUser` varchar(255) DEFAULT NULL,
+DROP TABLE IF EXISTS `messages`;
+CREATE TABLE IF NOT EXISTS `messages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fromUser` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `toUser` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `message` text,
-  `date` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8;
 
 --
--- Contenu de la table `messages`
+-- Déchargement des données de la table `messages`
 --
 
 INSERT INTO `messages` (`id`, `fromUser`, `toUser`, `message`, `date`) VALUES
@@ -157,7 +171,10 @@ INSERT INTO `messages` (`id`, `fromUser`, `toUser`, `message`, `date`) VALUES
 (58, 'jai', 'HH', 'voyons voir ca', '2019-06-05 14:08:03'),
 (59, 'HH', 'jai', 'ca marche au poil', '2019-06-05 14:08:11'),
 (60, 'metentis', 'jai', 'cdhsziu', '2019-06-09 17:05:06'),
-(61, 'jai', 'metentis', 'coucou', '2019-06-09 17:05:50');
+(61, 'jai', 'metentis', 'coucou', '2019-06-09 17:05:50'),
+(62, 'bat test', 'metentis', 'test', '2019-06-11 23:28:36'),
+(63, 'metentis', 'bat test', 'test avec des \' \" !!!', '2019-06-11 23:28:46'),
+(64, 'metentis', 'bat test', '<script>alert(\"coucou\")</script>', '2019-06-11 23:29:13');
 
 -- --------------------------------------------------------
 
@@ -165,16 +182,18 @@ INSERT INTO `messages` (`id`, `fromUser`, `toUser`, `message`, `date`) VALUES
 -- Structure de la table `notifications`
 --
 
-CREATE TABLE `notifications` (
-  `id` int(11) NOT NULL,
-  `notificationUser` varchar(255) NOT NULL,
+DROP TABLE IF EXISTS `notifications`;
+CREATE TABLE IF NOT EXISTS `notifications` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `notificationUser` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `notificationType` text NOT NULL,
   `notificationRead` int(11) NOT NULL DEFAULT '0',
-  `date` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=339 DEFAULT CHARSET=utf8;
 
 --
--- Contenu de la table `notifications`
+-- Déchargement des données de la table `notifications`
 --
 
 INSERT INTO `notifications` (`id`, `notificationUser`, `notificationType`, `notificationRead`, `date`) VALUES
@@ -332,10 +351,10 @@ INSERT INTO `notifications` (`id`, `notificationUser`, `notificationType`, `noti
 (214, 'undefined', 'metentis visit you\'re profil', 0, '2019-06-09 22:26:15'),
 (215, 'metentis', 'metentis visit you\'re profil', 1, '2019-06-09 22:34:08'),
 (216, 'metentis', 'metentis visit you\'re profil', 1, '2019-06-09 22:38:25'),
-(217, 'jai', 'metentis visit you\'re profil', 0, '2019-06-09 22:39:22'),
+(217, 'jai', 'metentis visit you\'re profil', 1, '2019-06-09 22:39:22'),
 (218, 'test3', 'metentis visit you\'re profil', 0, '2019-06-09 23:06:10'),
-(219, 'jai', 'metentis visit you\'re profil', 0, '2019-06-09 23:10:48'),
-(220, 'jai', 'metentis visit you\'re profil', 0, '2019-06-10 11:11:22'),
+(219, 'jai', 'metentis visit you\'re profil', 1, '2019-06-09 23:10:48'),
+(220, 'jai', 'metentis visit you\'re profil', 1, '2019-06-10 11:11:22'),
 (221, 'bouboule', 'metentis visit you\'re profil', 1, '2019-06-10 11:11:23'),
 (222, 'test', 'metentis visit you\'re profil', 0, '2019-06-10 22:53:36'),
 (223, 'test', 'metentis visit you\'re profil', 0, '2019-06-10 22:53:38'),
@@ -365,7 +384,7 @@ INSERT INTO `notifications` (`id`, `notificationUser`, `notificationType`, `noti
 (247, 'bouboule', 'metentis visit you\'re profil', 1, '2019-06-11 10:16:45'),
 (248, 'bouboule', 'metentis visit you\'re profil', 1, '2019-06-11 10:17:35'),
 (249, 'bouboule', 'metentis visit you\'re profil', 0, '2019-06-11 10:21:01'),
-(250, 'jai', 'metentis visit you\'re profil', 0, '2019-06-11 10:21:37'),
+(250, 'jai', 'metentis visit you\'re profil', 1, '2019-06-11 10:21:37'),
 (251, 'bouboule', 'metentis visit you\'re profil', 0, '2019-06-11 10:21:38'),
 (252, 'bouboule', 'metentis send you a like', 0, '2019-06-11 10:21:40'),
 (253, 'bouboule', 'metentis send you a like and you\'re like him before so this is a match', 0, '2019-06-11 10:21:40'),
@@ -380,7 +399,7 @@ INSERT INTO `notifications` (`id`, `notificationUser`, `notificationType`, `noti
 (262, 'tyr', 'metentis visit you\'re profil', 0, '2019-06-11 10:29:07'),
 (263, 'tyr', 'metentis visit you\'re profil', 0, '2019-06-11 10:29:44'),
 (264, 'tyr', 'metentis visit you\'re profil', 0, '2019-06-11 10:30:24'),
-(265, 'jai', 'metentis visit you\'re profil', 0, '2019-06-11 10:31:49'),
+(265, 'jai', 'metentis visit you\'re profil', 1, '2019-06-11 10:31:49'),
 (266, 'bouboule', 'metentis visit you\'re profil', 0, '2019-06-11 10:31:49'),
 (267, 'tyr', 'metentis visit you\'re profil', 0, '2019-06-11 11:01:32'),
 (268, 'bouboule', 'metentis visit you\'re profil', 0, '2019-06-11 11:02:54'),
@@ -392,43 +411,68 @@ INSERT INTO `notifications` (`id`, `notificationUser`, `notificationType`, `noti
 (274, 'metentis', 'bouboule send you a like', 1, '2019-06-11 11:07:55'),
 (275, 'metentis', 'bouboule visit you\'re profil', 1, '2019-06-11 11:08:59'),
 (276, 'metentis', 'bouboule send you a like', 1, '2019-06-11 11:09:01'),
-(277, 'jai', 'bouboule visit you\'re profil', 0, '2019-06-11 11:09:05'),
-(278, 'jai', 'bouboule send you a like', 0, '2019-06-11 11:09:07'),
-(279, 'jai', 'bouboule send you a like and you\'re like him before so this is a match', 0, '2019-06-11 11:09:07'),
-(280, 'jai', 'bouboule send you a like', 0, '2019-06-11 11:09:46'),
-(281, 'jai', 'bouboule send you a like', 0, '2019-06-11 11:10:42'),
+(277, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 11:09:05'),
+(278, 'jai', 'bouboule send you a like', 1, '2019-06-11 11:09:07'),
+(279, 'jai', 'bouboule send you a like and you\'re like him before so this is a match', 1, '2019-06-11 11:09:07'),
+(280, 'jai', 'bouboule send you a like', 1, '2019-06-11 11:09:46'),
+(281, 'jai', 'bouboule send you a like', 1, '2019-06-11 11:10:42'),
 (282, 'metentis', 'bouboule visit you\'re profil', 1, '2019-06-11 11:13:06'),
-(283, 'jai', 'bouboule visit you\'re profil', 0, '2019-06-11 11:13:20'),
-(284, 'jai', 'bouboule visit you\'re profil', 0, '2019-06-11 11:14:12'),
-(285, 'jai', 'bouboule visit you\'re profil', 0, '2019-06-11 11:14:12'),
-(286, 'jai', 'bouboule visit you\'re profil', 0, '2019-06-11 11:14:52'),
-(287, 'jai', 'bouboule visit you\'re profil', 0, '2019-06-11 11:16:51'),
+(283, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 11:13:20'),
+(284, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 11:14:12'),
+(285, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 11:14:12'),
+(286, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 11:14:52'),
+(287, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 11:16:51'),
 (288, 'metentis', 'bouboule visit you\'re profil', 1, '2019-06-11 11:19:29'),
 (289, 'metentis', 'bouboule send you a like', 1, '2019-06-11 11:19:31'),
 (290, 'metentis', 'bouboule visit you\'re profil', 1, '2019-06-11 11:25:47'),
 (291, 'metentis', 'bouboule send you a like', 1, '2019-06-11 11:25:48'),
 (292, 'metentis', 'bouboule send you a like', 1, '2019-06-11 11:25:57'),
-(293, 'jai', 'bouboule visit you\'re profil', 0, '2019-06-11 11:26:02'),
-(294, 'jai', 'bouboule send you a like', 0, '2019-06-11 11:26:03'),
+(293, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 11:26:02'),
+(294, 'jai', 'bouboule send you a like', 1, '2019-06-11 11:26:03'),
 (295, 'metentis', 'bouboule visit you\'re profil', 1, '2019-06-11 11:27:41'),
 (296, 'metentis', 'bouboule send you a like', 1, '2019-06-11 11:27:42'),
-(297, 'jai', 'bouboule visit you\'re profil', 0, '2019-06-11 11:27:54'),
-(298, 'jai', 'bouboule send you a like', 0, '2019-06-11 11:27:56'),
-(299, 'jai', 'bouboule send you a unlike', 0, '2019-06-11 11:27:59'),
-(300, 'jai', 'bouboule doesn\'t like you anymore', 0, '2019-06-11 11:27:59'),
+(297, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 11:27:54'),
+(298, 'jai', 'bouboule send you a like', 1, '2019-06-11 11:27:56'),
+(299, 'jai', 'bouboule send you a unlike', 1, '2019-06-11 11:27:59'),
+(300, 'jai', 'bouboule doesn\'t like you anymore', 1, '2019-06-11 11:27:59'),
 (301, 'metentis', 'bouboule visit you\'re profil', 1, '2019-06-11 11:36:59'),
 (302, 'tyr', 'bouboule visit you\'re profil', 0, '2019-06-11 11:44:17'),
 (303, 'tyr', 'bouboule visit you\'re profil', 0, '2019-06-11 11:45:21'),
-(304, 'jai', 'bouboule visit you\'re profil', 0, '2019-06-11 11:45:23'),
-(305, 'jai', 'bouboule visit you\'re profil', 0, '2019-06-11 11:45:24'),
+(304, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 11:45:23'),
+(305, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 11:45:24'),
 (306, 'metentis', 'bouboule visit you\'re profil', 1, '2019-06-11 11:45:25'),
 (307, 'tyr', 'bouboule visit you\'re profil', 0, '2019-06-11 12:16:53'),
 (308, 'tyr', 'bouboule visit you\'re profil', 0, '2019-06-11 12:16:53'),
 (309, 'HH', 'bouboule visit you\'re profil', 0, '2019-06-11 12:16:54'),
 (310, 'tyr', 'bouboule visit you\'re profil', 0, '2019-06-11 12:16:54'),
-(311, 'jai', 'bouboule visit you\'re profil', 0, '2019-06-11 12:16:56'),
+(311, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 12:16:56'),
 (312, 'metentis', 'bouboule visit you\'re profil', 1, '2019-06-11 12:16:56'),
-(313, 'bouboule', 'metentis visit you\'re profil', 0, '2019-06-11 13:27:18');
+(313, 'bouboule', 'metentis visit you\'re profil', 0, '2019-06-11 13:27:18'),
+(314, 'bouboule', 'test3 visit you\'re profil', 0, '2019-06-11 23:18:17'),
+(315, 'jai', 'test3 visit you\'re profil', 1, '2019-06-11 23:18:46'),
+(316, 'jai', 'test3 send you a like', 1, '2019-06-11 23:18:48'),
+(317, 'jai', 'test3 send you a like and you\'re like him before so this is a match', 1, '2019-06-11 23:18:48'),
+(318, 'jai', 'test3 send you a unlike', 1, '2019-06-11 23:18:56'),
+(319, 'jai', 'test3 doesn\'t like you anymore', 1, '2019-06-11 23:18:56'),
+(320, 'jai', 'test3 send you a like', 1, '2019-06-11 23:19:18'),
+(321, 'jai', 'test3 send you a like and you\'re like him before so this is a match', 1, '2019-06-11 23:19:18'),
+(322, 'jai', 'test3 send you a like', 1, '2019-06-11 23:20:35'),
+(323, 'metentis', 'batman visit you\'re profil', 1, '2019-06-11 23:21:15'),
+(324, 'metentis', 'batman send you a like', 1, '2019-06-11 23:21:21'),
+(325, 'metentis', 'batman send you a like and you\'re like him before so this is a match', 1, '2019-06-11 23:21:21'),
+(326, 'metentis', 'You are new message from batman', 0, '2019-06-11 23:28:36'),
+(327, 'bat test', 'You are new message from metentis', 1, '2019-06-11 23:28:46'),
+(328, 'bat test', 'You are new message from metentis', 1, '2019-06-11 23:29:13'),
+(329, 'jai', 'batman visit you\'re profil', 1, '2019-06-11 23:29:58'),
+(330, 'jai', 'batman visit you\'re profil', 1, '2019-06-11 23:30:03'),
+(331, 'bouboule', 'batman visit you\'re profil', 0, '2019-06-11 23:30:12'),
+(332, 'metentis', 'batman visit you\'re profil', 0, '2019-06-11 23:30:21'),
+(333, 'bat test', 'jai visit you\'re profil', 1, '2019-06-11 23:33:41'),
+(334, 'bat test', 'jai visit you\'re profil', 1, '2019-06-11 23:35:49'),
+(335, 'bat test', 'jai send you a like', 0, '2019-06-11 23:36:01'),
+(336, 'bat test', 'jai send you a like and you\'re like him before so this is a match', 0, '2019-06-11 23:36:01'),
+(337, 'bat test', 'jai send you a unlike', 0, '2019-06-11 23:36:09'),
+(338, 'bat test', 'jai doesn\'t like you anymore', 0, '2019-06-11 23:36:09');
 
 -- --------------------------------------------------------
 
@@ -436,14 +480,16 @@ INSERT INTO `notifications` (`id`, `notificationUser`, `notificationType`, `noti
 -- Structure de la table `picturesusers`
 --
 
-CREATE TABLE `picturesusers` (
-  `id` int(11) NOT NULL,
-  `userId` varchar(255) NOT NULL,
-  `picture` longtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+DROP TABLE IF EXISTS `picturesusers`;
+CREATE TABLE IF NOT EXISTS `picturesusers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `picture` longtext CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=190 DEFAULT CHARSET=latin1;
 
 --
--- Contenu de la table `picturesusers`
+-- Déchargement des données de la table `picturesusers`
 --
 
 INSERT INTO `picturesusers` (`id`, `userId`, `picture`) VALUES
@@ -453,7 +499,10 @@ INSERT INTO `picturesusers` (`id`, `userId`, `picture`) VALUES
 (183, '128', 'download.jpeg'),
 (184, '129', 'image4.jpg'),
 (185, '141', 'image4.jpg'),
-(186, '142', 'image4.jpg');
+(186, '142', 'FR.jpg'),
+(187, '143', 'FR.TR.jpg'),
+(188, '142', 'FR.jpg'),
+(189, '142', 'CD.jpg');
 
 -- --------------------------------------------------------
 
@@ -461,19 +510,21 @@ INSERT INTO `picturesusers` (`id`, `userId`, `picture`) VALUES
 -- Structure de la table `profil`
 --
 
-CREATE TABLE `profil` (
-  `id` int(11) NOT NULL,
-  `userName` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `lastName` varchar(255) NOT NULL,
-  `firstName` varchar(255) NOT NULL,
+DROP TABLE IF EXISTS `profil`;
+CREATE TABLE IF NOT EXISTS `profil` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `lastName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `firstName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `confirmKey` bigint(20) NOT NULL,
-  `confirmKeyOk` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `confirmKeyOk` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=144 DEFAULT CHARSET=latin1;
 
 --
--- Contenu de la table `profil`
+-- Déchargement des données de la table `profil`
 --
 
 INSERT INTO `profil` (`id`, `userName`, `password`, `email`, `lastName`, `firstName`, `confirmKey`, `confirmKeyOk`) VALUES
@@ -488,7 +539,8 @@ INSERT INTO `profil` (`id`, `userName`, `password`, `email`, `lastName`, `firstN
 (136, 'test3', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'test3@gmail.fr', 'test3', 'test3', 2376701668198, 1),
 (137, 'test4', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'test4@gmail.com', 'test4', 'test4', 6037373664254, 1),
 (139, 'coucou', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'coucoucou@gmail.com', 'coucou', 'coucou', 6981057521520, 1),
-(142, 'batman', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'sylvain.boeuf@free.fr', 'Wayne', 'Bruce', 7960381791630, 1);
+(142, 'bat test', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'sylvain.boeuf@gmail.fr', 'Wayne', 'Bruce', 7960381791630, 1),
+(143, 'the man of steel', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'sylvain.boeuf@free.fr', 'kent', 'Clark', 8318236214024, 1);
 
 -- --------------------------------------------------------
 
@@ -496,14 +548,16 @@ INSERT INTO `profil` (`id`, `userName`, `password`, `email`, `lastName`, `firstN
 -- Structure de la table `profilmatch`
 --
 
-CREATE TABLE `profilmatch` (
-  `id` int(11) NOT NULL,
-  `firstPerson` varchar(255) NOT NULL,
-  `secondPerson` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `profilmatch`;
+CREATE TABLE IF NOT EXISTS `profilmatch` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `firstPerson` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `secondPerson` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 
 --
--- Contenu de la table `profilmatch`
+-- Déchargement des données de la table `profilmatch`
 --
 
 INSERT INTO `profilmatch` (`id`, `firstPerson`, `secondPerson`) VALUES
@@ -512,7 +566,9 @@ INSERT INTO `profilmatch` (`id`, `firstPerson`, `secondPerson`) VALUES
 (14, 'jai', 'tyr'),
 (15, 'jai', 'HH'),
 (16, 'metentis', 'jai'),
-(17, 'bouboule', 'metentis');
+(17, 'bouboule', 'metentis'),
+(20, 'test3', 'jai'),
+(21, 'bat test', 'metentis');
 
 -- --------------------------------------------------------
 
@@ -520,157 +576,43 @@ INSERT INTO `profilmatch` (`id`, `firstPerson`, `secondPerson`) VALUES
 -- Structure de la table `userinfos`
 --
 
-CREATE TABLE `userinfos` (
-  `id` int(11) NOT NULL,
-  `userName` varchar(255) NOT NULL,
+DROP TABLE IF EXISTS `userinfos`;
+CREATE TABLE IF NOT EXISTS `userinfos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `age` int(11) DEFAULT NULL,
   `biography` text,
-  `gender` varchar(255) NOT NULL DEFAULT 'Male',
-  `orientation` varchar(255) NOT NULL DEFAULT 'Bisexuelle',
+  `gender` text,
+  `orientation` text,
   `listInterest` text,
   `userLocation` text,
   `userApproximateLocation` text,
   `userAddress` text,
   `userApproximateCity` text,
-  `populareScore` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `populareScore` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 
 --
--- Contenu de la table `userinfos`
+-- Déchargement des données de la table `userinfos`
 --
 
 INSERT INTO `userinfos` (`id`, `userName`, `age`, `biography`, `gender`, `orientation`, `listInterest`, `userLocation`, `userApproximateLocation`, `userAddress`, `userApproximateCity`, `populareScore`) VALUES
-(1, 'metentis', 27, 'plus maintenannt', 'Femme', 'Homme', 'null#Movie#data processing#NigthParty#Sport#Manga', '48.80921180000001, 2.2395904', '48.8574, 2.3795', '89A Rue de Paris, 92190 Meudon, France', 'Paris', 100),
-(2, 'jai', 22, 'jcavjlerabv', 'Male', 'Homme', 'null#Movie#Manga#Sport', '48.812461000000006, 2.246998', '48.8138, 2.235', '12BIS Rue du Docteur Vuillième, 92190 Meudon, France', 'Meudon', 50),
+(1, 'metentis', 27, 'plus maintenannt', 'Femme', 'Homme', 'null#Movie#data processing#NigthParty#Sport#Manga', '48.80921180000001, 2.2395904', '48.8138, 2.235', '89A Rue de Paris, 92190 Meudon, France', 'Meudon', 100),
+(2, 'jai', 22, 'jcavjlerabv', 'Male', 'Homme', 'null#Movie#Manga#Sport', '48.80921180000001, 2.2395904', '48.8138, 2.235', '89A Rue de Paris, 92190 Meudon, France', 'Meudon', 60),
 (3, 'bouboule', 29, 'vhkrueiubv', 'Male', 'Femme', 'null#data processing#NigthParty#Sport', '48.8079933, 2.2396035999999997', '48.8574, 2.3795', '2bis Rue Servien, 92190 Meudon, France', 'Paris', 0),
 (6, 'tyr', 23, 'vsdvhuy', 'Male', 'Femme', 'null#Movie#Manga#Sport#NigthParty#data processing', '48.8079933, 2.2396035999999997', '48.8138, 2.235', '2bis Rue Servien, 92190 Meudon, France', 'Meudon', 0),
 (7, 'HH', 30, 'null', 'Male', 'Homme', 'null#Manga#Sport', '48.8042, 2.2810200000000123', '48.8138, 2.235', '46 Rue Jean Jaurès, 92320 Châtillon, France', 'Meudon', 0),
 (8, 'le roi des math', 39, 'ewfthyeg', 'Male', 'Homme', 'null#data processing#NigthParty#Sport#Manga#Movie', '48.8079933, 2.2396035999999997', '48.8138, 2.235', '2bis Rue Servien, 92190 Meudon, France', 'Meudon', 0),
 (9, 'test', 50, 'ca bug', 'Femme', 'Femme', 'null#Sport#NigthParty', '48.8964, 2.3184499999999844', '48.8138, 2.235', '96 Boulevard Bessières, Paris 17e Arrondissement, France', 'Meudon', 0),
 (10, 'test2', 60, 'testtsetsets', 'Male', 'Femme', 'null#Manga#NigthParty', '48.8079933, 2.2396035999999997', '48.8138, 2.235', '2bis Rue Servien, 92190 Meudon, France', 'Meudon', 0),
-(12, 'test3', 70, NULL, 'Male', 'Bisexuelle', NULL, '48.8079933, 2.2396035999999997', '48.8138, 2.235', '2bis Rue Servien, 92190 Meudon, France', 'Meudon', 0),
+(12, 'test3', 70, '', 'Femme', 'Femme', 'null', '48.812498899999994, 2.24694', '48.8138, 2.235', '12BIS Rue du Docteur Vuillième, 92190 Meudon, France', 'Meudon', 0),
 (13, 'test4', 10, 'htrhdghjydnjuyrj', 'Male', 'Bisexuelle', 'null#Manga#Sport', '48.8079933, 2.2396035999999997', '48.8138, 2.235', '2bis Rue Servien, 92190 Meudon, France', 'Meudon', 0),
-(15, 'coucou', 46, NULL, 'Male', 'Bisexuelle', NULL, '48.812550200000004, 2.2469897999999997', '48.8138, 2.235', '12BIS Rue du Docteur Vuillième, 92190 Meudon, France', 'Meudon', 0),
-(18, 'batman', 0, 'null', 'Male', 'Bisexuelle', 'null#Sport#data processing#NigthParty', NULL, '48.8574, 2.3795', NULL, 'Paris', 0);
+(15, 'coucou', 46, '', 'Male', 'Femme', 'null#Sport', '48.812498899999994, 2.24694', '48.8138, 2.235', '12BIS Rue du Docteur Vuillième, 92190 Meudon, France', 'Meudon', 0),
+(18, 'bat test', 0, 'null', 'Male', 'Femme', 'null#Sport#data processing#NigthParty', '48.80921180000001, 2.2395904', '48.8138, 2.235', '89A Rue de Paris, 92190 Meudon, France', 'Meudon', -100),
+(19, 'the man of steel', 35, 'i\'m superman yeah !!!', 'Femme', 'Homme', 'null#Manga#Sport#Movie', '48.8127305, 2.2468664', '48.8138, 2.235', '8 Rue du Docteur Vuillième, 92190 Meudon, France', 'Meudon', 0);
+COMMIT;
 
---
--- Index pour les tables exportées
---
-
---
--- Index pour la table `fakeuser`
---
-ALTER TABLE `fakeuser`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `inlineuser`
---
-ALTER TABLE `inlineuser`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `likeuser`
---
-ALTER TABLE `likeuser`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `listblockprofil`
---
-ALTER TABLE `listblockprofil`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `messages`
---
-ALTER TABLE `messages`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `notifications`
---
-ALTER TABLE `notifications`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `picturesusers`
---
-ALTER TABLE `picturesusers`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `profil`
---
-ALTER TABLE `profil`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `profilmatch`
---
-ALTER TABLE `profilmatch`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `userinfos`
---
-ALTER TABLE `userinfos`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT pour les tables exportées
---
-
---
--- AUTO_INCREMENT pour la table `fakeuser`
---
-ALTER TABLE `fakeuser`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT pour la table `inlineuser`
---
-ALTER TABLE `inlineuser`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
---
--- AUTO_INCREMENT pour la table `likeuser`
---
-ALTER TABLE `likeuser`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
---
--- AUTO_INCREMENT pour la table `listblockprofil`
---
-ALTER TABLE `listblockprofil`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
---
--- AUTO_INCREMENT pour la table `messages`
---
-ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
---
--- AUTO_INCREMENT pour la table `notifications`
---
-ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=314;
---
--- AUTO_INCREMENT pour la table `picturesusers`
---
-ALTER TABLE `picturesusers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=187;
---
--- AUTO_INCREMENT pour la table `profil`
---
-ALTER TABLE `profil`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=143;
---
--- AUTO_INCREMENT pour la table `profilmatch`
---
-ALTER TABLE `profilmatch`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
---
--- AUTO_INCREMENT pour la table `userinfos`
---
-ALTER TABLE `userinfos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

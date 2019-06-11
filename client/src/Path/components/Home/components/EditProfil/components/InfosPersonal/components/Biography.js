@@ -4,9 +4,10 @@ import PropTypes from "prop-types"
 const Biography = ({ value, onChangeValue }) => (
     <div>
         <textarea
+            placeholder="Put your summary here !!!"
             rows={ 10 }
             cols={ 50 }
-            value={ value || "" }
+            value={ (value === null) ? "" : value }
             onChange={ (e) => onChangeValue(e, "biography") }
         />
     </div>

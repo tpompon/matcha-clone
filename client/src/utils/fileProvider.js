@@ -130,6 +130,7 @@ export const updateInfosProfil = (id, previousUserName, inputArray) => {
 }
 
 export const updateInfosPersonal = (infosPersonal) => {
+    console.log(infosPersonal)
     fetch("http://localhost:4000/users/updateInfosPersonal", optionsFetch(infosPersonal))
 }
 
@@ -319,15 +320,6 @@ export const calculDistance = (lat1, lon1, lat2, lon2) => {
         return distance
     }
 }
-
-/*
-const filterPopulareScore = (userName) => {
-    return fetch("http://localhost:4000/users/populareScore", optionsFetch({ profilName: userName }))
-        .then((response) => response.json())
-        .then((responseJson) => responseJson)
-        .catch((error) => console.log(error))
-}
-*/
 
 /*
 const escapeHtml = (text) => {

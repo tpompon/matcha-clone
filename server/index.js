@@ -10,7 +10,7 @@ const bodyParser = require("body-parser")
 const connection = mysql.createConnection({
 	host: "localhost",
 	user: "root",
-	password: "input305",
+	password: "",
 	database: "matcha",
 	multipleStatements: true,
 })
@@ -201,6 +201,7 @@ app.post("/users/confirmIdendity", (req, res) => {
 		if (error) {
 			return res.send(error)
 		} else {
+			console.log(results)
 			if (results.length > 0) {
 				const updateConfirmKeyOk = `UPDATE profil SET confirmKeyOk=1 WHERE (userName, confirmKey) IN (('${name}', ${key}))`
 				connection.query(updateConfirmKeyOk, (error, results) => {
@@ -257,7 +258,8 @@ app.post("/users/updateInfosPersonal", (req, res) => {
 	const {
 		age, orientation, gender, biography, listInterest, userName,
 	} = req.body
-	const updateUserInfos = `UPDATE userinfos SET age='${age}', orientation='${orientation}', gender='${gender}', biography='${biography}', listInterest='${listInterest}' WHERE userName='${userName}'`
+	const text = (biography === null) ? "" : biography
+	const updateUserInfos = `UPDATE userinfos SET age=${age}, orientation='${orientation}', gender='${gender}', biography='${text.replace(/'/g, "\\'")}', listInterest='${listInterest}' WHERE userName='${userName}'`
 	connection.query(updateUserInfos, (error, results) => {
 		if (error) {
 			return res.send(error)
