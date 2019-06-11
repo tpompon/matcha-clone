@@ -10,7 +10,7 @@ const bodyParser = require("body-parser")
 const connection = mysql.createConnection({
 	host: "localhost",
 	user: "root",
-	password: "",
+	password: "input305",
 	database: "matcha",
 	multipleStatements: true,
 })
@@ -104,7 +104,7 @@ app.post("/users/checkLogin", (req, res) => {
 
 app.post("/users/getUserProfil", (req, res) => {
 	const { id } = req.body
-	const selectDataProfil = `SELECT p.*, u.age, u.biography, u.listInterest, u.gender, u.orientation, u.userAddress, u.userLocation, u.userApproximateLocation FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.id='${id}'`
+	const selectDataProfil = `SELECT p.*, u.age, u.biography, u.listInterest, u.gender, u.orientation, u.userAddress, u.userLocation, u.userApproximateLocation, u.populareScore FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.id='${id}'`
 	connection.query(selectDataProfil, (error, results) => {
 		if (error) {
 			return res.send(error)
@@ -303,6 +303,7 @@ app.post("/users/likeOrUnlikeProfil", (req, res) => {
 						if (error) {
 							return res.send(error)
 						} else {
+							populareScore(profilName, valueLike)
 							if (results.length > 0 && results[0].likeUser === 1 && valueLike === 1) {
 								return res.send("It's a match")
 							} else {
@@ -363,7 +364,7 @@ app.post("/users/deleteMatch", (req, res) => {
 
 app.post("/users/listBlockProfil", (req, res) => {
 	const { userName } = req.body
-	const listBlock = `SELECT p.*, u.age, u.biography, u.gender, u.orientation, u.listInterest, u.userAddress, u.userLocation, u.userApproximateLocation FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.userName NOT IN (SELECT blockProfil FROM listblockprofil WHERE user='${userName}') AND p.userName<>'${userName}'`
+	const listBlock = `SELECT p.*, u.age, u.biography, u.gender, u.orientation, u.listInterest, u.userAddress, u.userLocation, u.userApproximateLocation, u.populareScore FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.userName NOT IN (SELECT blockProfil FROM listblockprofil WHERE user='${userName}') AND p.userName<>'${userName}'`
 	connection.query(listBlock, (error, results) => {
 		if (error) {
 			return res.send(error)
@@ -411,7 +412,7 @@ app.post("/users/deblockUser", (req, res) => {
 
 app.post("/users/getAllOtherDataOfProfil", (req, res) => {
 	const { userName, profilName } = req.body
-	let sql = `SELECT p.*, u.age, u.biography, u.gender, u.orientation, u.listInterest, u.userAddress FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.userName='${profilName}';`
+	let sql = `SELECT p.*, u.age, u.biography, u.gender, u.orientation, u.listInterest, u.userAddress, u.populareScore FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.userName='${profilName}';`
 	sql += `SELECT likeUser FROM likeuser WHERE (userName, profilName) IN (('${profilName}', '${userName}'));`
 	sql += `SELECT fakeUser FROM fakeuser WHERE fakeUser='${profilName}';`
 	sql += `SELECT inline, DATE_FORMAT(date, "%m-%d-%y %H:%i:%s") as date FROM inlineuser WHERE user='${profilName}'`
@@ -437,14 +438,24 @@ app.post("/users/getAllOtherDataOfProfil", (req, res) => {
 
 app.post("/users/getListMatch", (req, res) => {
 	const { userName } = req.body
-	const getList = `SELECT CONCAT(firstPerson, secondPerson) AS name FROM profilmatch WHERE firstPerson='${userName}' OR secondPerson='${userName}'`
+	let getList = `SELECT CONCAT(firstPerson, secondPerson) AS name FROM profilmatch WHERE firstPerson='${userName}' OR secondPerson='${userName}';`
+	getList += `SELECT blockProfil FROM listblockprofil WHERE user='${userName}'`
 	connection.query(getList, (error, results) => {
 		if (error) {
 			return res.send(error)
 		} else {
 			const getListMatch = []
-			results.forEach((name) => {
-				getListMatch.push(name.name.replace(userName, ""))
+			results[0].forEach((name) => {
+				const profil = name.name.replace(userName, "")
+				let block = 0
+				results[1].forEach((blockUser) => {
+					if (blockUser.blockProfil === profil) {
+						block = 1
+					}
+				})
+				if (block === 0) {
+					getListMatch.push(profil)
+				}
 			})
 			return res.json({ listMatch: getListMatch })
 		}
@@ -593,6 +604,33 @@ app.post("/users/populareScore", (req, res) => {
 		}
 	})
 })
+
+const populareScore = (profilName, like) => {
+	const selectScore = `SELECT likeUser FROM likeuser WHERE profilName='${profilName}'`
+	connection.query(selectScore, (error, results) => {
+		if (error) {
+			return
+		} else {
+			const valueLike = (1 / results.length) * 100
+			let populareScore = 0
+			results.forEach((like) => {
+				if (like.likeUser === 1) {
+					populareScore += valueLike
+				} else {
+					populareScore -= valueLike
+				}
+			})
+			const insertPopulareScore = `UPDATE userinfos SET populareScore=${populareScore} WHERE userName='${profilName}';`
+			connection.query(insertPopulareScore, (error, results) => {
+				if (error) {
+					return false
+				} else {
+					return true
+				}
+			})
+		}
+	})
+}
 
 app.listen(4000, () => {
 	console.log(`Server is launch on port 4000`)

@@ -2,7 +2,7 @@ import React, { Component } from "react"
 
 import ChatWithUser from "./components/ChatWithUser"
 
-import { getListMatch, blockList } from "utils/fileProvider"
+import { getListMatch } from "utils/fileProvider"
 
 class Chat extends Component {
 
@@ -17,40 +17,9 @@ class Chat extends Component {
     componentWillMount() {
         const { userName } = this.props
         getListMatch(userName)
-            .then((list) => {
-                blockList(userName)
-                    .then((blockListUserName) => {
-                        const listMatch = []
-                        let userBlock
-                        list.listMatch.forEach((name) => {
-                            userBlock = 0
-                            blockListUserName.forEach((userName) => {
-                                if (name === userName) {
-                                    userBlock = 1
-                                }
-                            })
-                            if (userBlock === 0) {
-                                listMatch.push(name)
-                            }
-                        })
-                        this.setState({ listMatch })
-                    })
-                    .catch((error) => console.log(error))
-            })
+            .then((list) => this.setState({ listMatch: list.listMatch }))
             .catch((error) => console.log(error))
     }
-
-    // Maybe it's useless, i take a decision later
-    /*
-    newChat = (match) => {
-         const { chooseYourMatch } = this.state
-         if (match === chooseYourMatch) {
-             this.setState({ chooseYourMatch: null })
-         } else {
-             this.setState({ chooseYourMatch: match })
-         }
-     }
-     */
 
     render() {
         const { userName } = this.props

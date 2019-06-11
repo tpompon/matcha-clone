@@ -26,8 +26,9 @@ class LikeUser extends Component {
     getImages = (id) => {
         getPicturesUser(id)
             .then((response) => {
-                if (response.pictures.length > 0)
-                this.setState({ isLikable: true })
+                if (response.pictures.length > 0) {
+                    this.setState({ isLikable: true })
+                }
             })
             .catch((error) => console.log(error))
     }

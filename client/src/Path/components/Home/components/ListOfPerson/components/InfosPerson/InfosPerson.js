@@ -37,11 +37,11 @@ class InfosPerson extends Component {
         const {
             id, userName, lastName, firstName, biography,
             listInterest, gender, orientation, likeUser,
-            fakeUser, inline, date, age,
+            fakeUser, inline, date, age, populareScore,
         } = dataPerson
         const dataProfil = { userName, lastName, firstName }
         const dataPersonal = {
-            age, biography, listInterest, gender, orientation,
+            age, biography, listInterest, gender, orientation, populareScore,
         }
         return (
             <div>

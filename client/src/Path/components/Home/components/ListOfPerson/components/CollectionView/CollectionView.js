@@ -23,6 +23,8 @@ class CollectionView extends Component {
             ageMax: "",
             distanceMin: "",
             distanceMax: "",
+            populareScoreMin: "",
+            populareScoreMax: "",
         }
     }
 
@@ -36,6 +38,7 @@ class CollectionView extends Component {
         let newListPerson = this.filterAge(listPerson)
         newListPerson = this.filterLocation(newListPerson)
         newListPerson = this.filterTag(newListPerson)
+        newListPerson = this.filterPopularScore(newListPerson)
         this.setState({ listProfil: newListPerson })
     }
 
@@ -104,10 +107,25 @@ class CollectionView extends Component {
         return newListPerson
     }
 
+    filterPopularScore = (array) => {
+        const { populareScoreMin, populareScoreMax } = this.state
+        if (populareScoreMin === "" || populareScoreMax === "") {
+            return array
+        }
+        const newListPerson = []
+        array.forEach((data) => {
+            if (populareScoreMin <= data.populareScore && populareScoreMax >= data.populareScore) {
+                newListPerson.push(data)
+            }
+        })
+        return newListPerson
+    }
+
     render() {
         const { chooseDataPerson } = this.props
         const {
-            listProfil, ageMin, ageMax, distanceMin, distanceMax,
+            listProfil, ageMin, ageMax, distanceMin, distanceMax, listTag,
+            populareScoreMin, populareScoreMax,
         } = this.state
         return (
             <div>
@@ -117,12 +135,16 @@ class CollectionView extends Component {
                 <input type="number" placeholder="distanceMin" value={ distanceMin } onChange={ (e) => this.setState({ distanceMin: e.target.value }) } />
                 <input type="number" placeholder="distanceMax" value={ distanceMax } onChange={ (e) => this.setState({ distanceMax: e.target.value }) } />
                 <button onClick={ () => this.filterList() }>Filter distance</button>
+                <input type="number" placeholder="Score min" value={ populareScoreMin } onChange={ (e) => this.setState({ populareScoreMin: e.target.value }) } />
+                <input type="number" placeholder="Score max" value={ populareScoreMax } onChange={ (e) => this.setState({ populareScoreMax: e.target.value }) } />
+                <button onClick={ () => this.filterList() }>Filter populare score</button>
                 <div>
                     {
                         listTagArray.map((tag) => (
                             <button
                                 key={ `tag-${tag}` }
                                 onClick={ () => this.chooseTag(tag) }
+                                style={ { color: (listTag.indexOf(tag) !== -1) ? "red" : null } }
                             >
                                 { tag }
                             </button>

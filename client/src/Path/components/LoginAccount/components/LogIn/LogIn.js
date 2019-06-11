@@ -30,7 +30,7 @@ class LogIn extends Component {
         const { inputArray } = this.state
         checkLogIn(inputArray)
             .then((response) => {
-                if (response !== 0) {
+                if (response !== undefined) {
                     userIsLog(response.userName)
                     history.push("/", { dataUser: { ...response } })
                 } else {

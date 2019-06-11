@@ -4,7 +4,7 @@ const Age = ({ onChangeValue, age }) => (
     <input
         onChange={ (e) => onChangeValue(e, "age") }
         placeholder="Put your age here !"
-        value={ age }
+        value={ (age === null) ? "" : age }
         type="number"
     />
 )
