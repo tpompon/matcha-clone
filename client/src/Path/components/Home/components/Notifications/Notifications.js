@@ -16,8 +16,8 @@ class Notifications extends Component {
                 {
                     (notificationsArray !== null)
                         ? (
-                            notificationsArray.map((notification) => (
-                                <p key={ `notification-${notification.id}` }>{ notification.notificationType }</p>
+                            notificationsArray.map((notification, index) => (
+                                <p key={ `notification-${notification.id}` }>{ `${notificationsArray.length - index}: ${notification.notificationType}` }</p>
                             ))
                         )
                         : `No new notifications for you`

@@ -60,7 +60,6 @@ class CreateAccount extends Component {
                         )
                         : null
                 }
-                <button onClick={ () => this.toggleShowConfirmKey() }>Confirm your key</button>
             </div>
         )
     }

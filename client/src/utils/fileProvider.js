@@ -130,7 +130,6 @@ export const updateInfosProfil = (id, previousUserName, inputArray) => {
 }
 
 export const updateInfosPersonal = (infosPersonal) => {
-    console.log(infosPersonal)
     fetch("http://localhost:4000/users/updateInfosPersonal", optionsFetch(infosPersonal))
 }
 
@@ -145,7 +144,7 @@ export const likeOrUnkikeUser = (user, profilName, valueLike) => {
     fetch("http://localhost:4000/users/likeOrUnlikeProfil", optionsFetch({ user, profilName, valueLike }))
         .then((response) => response.text())
         .then((responseText) => {
-            if (responseText) {
+            if (responseText === "match") {
                 fetch("http://localhost:4000/users/profilMatch", optionsFetch({ user, profilName }))
                     .then((response) => response.text())
                     .then((res) => {

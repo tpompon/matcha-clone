@@ -34,7 +34,7 @@ class LogIn extends Component {
                     userIsLog(response.userName)
                     history.push("/", { dataUser: { ...response } })
                 } else {
-                    alert("Mauvais nom d'utilisateur ou mauvais mot de passe !!!")
+                    alert("Wrong userName or password or the user is already log !!!")
                 }
             })
             .catch((error) => console.log(error))

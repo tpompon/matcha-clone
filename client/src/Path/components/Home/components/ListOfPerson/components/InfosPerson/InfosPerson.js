@@ -68,13 +68,14 @@ class InfosPerson extends Component {
                                 <button onClick={ () => this.onClick() }>
                                     Block this profil
                                 </button>
-                                <button onClick={ () => reportingFakeProfil(userName) }>
-                                    Report this user like a fake profil
-                                </button>
                                 {
                                     (fakeUser !== undefined)
                                         ? "This profil is potentially a fake Profil"
-                                        : null
+                                        : (
+                                            <button onClick={ () => reportingFakeProfil(userName) }>
+                                                Report this user like a fake profil
+                                            </button>
+                                        )
                                 }
                                 <button onClick={ () => getPopularScoreOfProfil(userName) }>Popular score</button>
                             </div>

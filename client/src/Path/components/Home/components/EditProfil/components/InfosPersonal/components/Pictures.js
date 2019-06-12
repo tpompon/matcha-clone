@@ -48,6 +48,11 @@ class Pictures extends Component {
         e.preventDefault()
         const { userId, userName } = this.props
         const { picturesFiles, picturesArray } = this.state
+        if (picturesFiles[index].file.type !== "image/jpeg" &&  picturesFiles[index].file.type !== "image/png"
+                && picturesFiles[index].file.type !== "image/jpg") {
+                    alert("Sorry, only files jpeg, jpg and png are allowed")
+                    return
+                }
         if (picturesFiles[index].imagePreviewUrl) {
             fetch("http://localhost:4000/users/editProfil/sendPictures", {
                 headers: {
