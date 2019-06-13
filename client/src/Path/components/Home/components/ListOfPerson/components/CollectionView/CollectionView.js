@@ -19,34 +19,48 @@ class CollectionView extends Component {
         this.state = {
             listProfil: null,
             listTag: "",
-            ageMin: "",
-            ageMax: "",
-            distanceMin: "",
-            distanceMax: "",
-            populareScoreMin: "",
-            populareScoreMax: "",
+            ageMin: 10,
+            ageMax: 50,
+            distanceMin: 0,
+            distanceMax: 30,
+            populareScoreMin: 30,
+            populareScoreMax: 70,
         }
     }
 
     componentWillMount() {
         const { listPerson } = this.props
-        this.setState({ listProfil: listPerson })
+        this.filterList(listPerson)
     }
 
     componentWillReceiveProps(nextProps) {
         const { listPerson } = nextProps
         if (this.props.listPerson !== listPerson) {
-            this.setState({ listProfil: listPerson })
+            this.filterList(listPerson)
         }
     }
 
-    filterList = () => {
-        const { listPerson } = this.props
-        let newListPerson = this.filterAge(listPerson)
+    filterList = (listPerson) => {
+        let newListPerson = this.filterOrientation(listPerson)
+        newListPerson = this.filterAge(newListPerson)
         newListPerson = this.filterLocation(newListPerson)
         newListPerson = this.filterTag(newListPerson)
         newListPerson = this.filterPopularScore(newListPerson)
         this.setState({ listProfil: newListPerson })
+    }
+
+    filterOrientation = (array) => {
+        const { orientation } = this.props.dataUser
+        if (orientation === "Bisexuelle") {
+            return array
+        }
+        const newListPerson = []
+        array.forEach((data) => {
+            if (data.gender === orientation) {
+                newListPerson.push(data)
+            }
+        })
+        return array
     }
 
     filterAge = (array) => {
@@ -129,7 +143,7 @@ class CollectionView extends Component {
     }
 
     render() {
-        const { chooseDataPerson } = this.props
+        const { chooseDataPerson, listPerson } = this.props
         const {
             listProfil, ageMin, ageMax, distanceMin, distanceMax, listTag,
             populareScoreMin, populareScoreMax,
@@ -138,13 +152,13 @@ class CollectionView extends Component {
             <div>
                 <input type="number" placeholder="ageMin" value={ ageMin } onChange={ (e) => this.setState({ ageMin: e.target.value }) } />
                 <input type="number" placeholder="ageMax" value={ ageMax } onChange={ (e) => this.setState({ ageMax: e.target.value }) } />
-                <button onClick={ () => this.filterList() }>Filter age</button>
+                <button onClick={ () => this.filterList(listPerson) }>Filter age</button>
                 <input type="number" placeholder="distanceMin" value={ distanceMin } onChange={ (e) => this.setState({ distanceMin: e.target.value }) } />
                 <input type="number" placeholder="distanceMax" value={ distanceMax } onChange={ (e) => this.setState({ distanceMax: e.target.value }) } />
-                <button onClick={ () => this.filterList() }>Filter distance</button>
+                <button onClick={ () => this.filterList(listPerson) }>Filter distance</button>
                 <input type="number" placeholder="Score min" value={ populareScoreMin } onChange={ (e) => this.setState({ populareScoreMin: e.target.value }) } />
                 <input type="number" placeholder="Score max" value={ populareScoreMax } onChange={ (e) => this.setState({ populareScoreMax: e.target.value }) } />
-                <button onClick={ () => this.filterList() }>Filter populare score</button>
+                <button onClick={ () => this.filterList(listPerson) }>Filter populare score</button>
                 <div>
                     {
                         listTagArray.map((tag) => (

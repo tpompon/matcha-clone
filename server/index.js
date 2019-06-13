@@ -10,7 +10,7 @@ const bodyParser = require("body-parser")
 const connection = mysql.createConnection({
 	host: "localhost",
 	user: "root",
-	password: "input305",
+	password: "",
 	database: "matcha",
 	multipleStatements: true,
 })
