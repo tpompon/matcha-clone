@@ -33,6 +33,13 @@ class CollectionView extends Component {
         this.setState({ listProfil: listPerson })
     }
 
+    componentWillReceiveProps(nextProps) {
+        const { listPerson } = nextProps
+        if (this.props.listPerson !== listPerson) {
+            this.setState({ listProfil: listPerson })
+        }
+    }
+
     filterList = () => {
         const { listPerson } = this.props
         let newListPerson = this.filterAge(listPerson)

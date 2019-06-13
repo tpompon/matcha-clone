@@ -3,7 +3,7 @@ import React, { Component } from "react"
 import CollectionView from "./components/CollectionView"
 import InfosPerson from "./components/InfosPerson"
 
-import { blockList, getAllOtherDataOfProfil, visitProfil } from "utils/fileProvider"
+import { blockList, getAllOtherDataOfProfil, visitProfil, blockProfil } from "utils/fileProvider"
 
 const styles = {
     container: {
@@ -28,12 +28,14 @@ class ListOfPerson extends Component {
     }
 
     componentWillMount() {
-        this.getListUser()
-    }
-
-    getListUser = () => {
         const { dataUser } = this.props
         blockList(dataUser.userName)
+            .then((response) => this.setState({ listPerson: response.blockList }))
+            .catch((error) => console.log(error))
+    }
+
+    getListUser = (userName, profilName) => {
+        blockProfil(userName, profilName)
             .then((response) => this.setState({ listPerson: response.blockList }))
             .catch((error) => console.log(error))
     }

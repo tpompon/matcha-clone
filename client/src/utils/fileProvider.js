@@ -28,15 +28,6 @@ const transformArrayInObject = (array) => {
     return dataObject
 }
 
-export const getUsers = () => {
-    return fetch("http://localhost:4000/users")
-        .then((response) => response.json())
-        .then((responseJson) => responseJson)
-        .catch((error) => {
-            console.log(error)
-        })
-}
-
 export const getUserProfil = (id) => {
     return fetch("http://localhost:4000/users/getUserProfil", optionsFetch({ id }))
         .then((response) => response.json())
@@ -92,8 +83,8 @@ export const checkLogIn = (inputArray) => {
 
 export const checkKey = (name, key) => {
     return fetch(`http://localhost:4000/users/confirmIdendity`, optionsFetch({ key, name }))
-        .then((response) => response.text())
-        .then((responseText) => (responseText === "1") ? 1 : 0)
+        .then((response) => response.json())
+        .then((responseJson) => { console.log(responseJson);return responseJson })
         .catch((error) => console.log(error))
 }
 
@@ -184,7 +175,10 @@ export const getAllOtherDataOfProfil = (userName, profilName) => {
 }
 
 export const blockProfil = (userName, profilBlock) => {
-    fetch("http://localhost:4000/users/blockProfil", optionsFetch({ userName, profilBlock }))
+    return fetch("http://localhost:4000/users/blockProfil", optionsFetch({ userName, profilBlock }))
+        .then((response) => response.json())
+        .then((responseJson) => responseJson)
+        .catch((error) => console.log(error))
 } 
 
 export const deblockUser = (userName, userDeblocked) => {
@@ -265,11 +259,14 @@ export const setNewLocation = (userName, newLocation) => {
             key: apiKey,
             q: newLocation,
         })
+        /*
         .then((response) => fetch("http://localhost:4000/users/getUserLocation", optionsFetch({
             userAdress: response.results[0].formatted,
             coords: `${response.results[0].geometry.lat}, ${response.results[0].geometry.lng}`,
             userName,
         })))
+        */
+       .then((response) => console.log(response))
         .catch((error) => console.log(error))
 }
 

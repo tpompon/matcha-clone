@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { withRouter } from "react-router-dom"
 
-import { checkKey, getUsers, userIsLog } from "utils/fileProvider"
+import { checkKey, userIsLog } from "utils/fileProvider"
 
 const styles = {
     popup: {
@@ -37,19 +37,11 @@ class ConfirmKey extends Component {
         const { userName, history } = this.props
         const { valueKey } = this.state
         checkKey(userName, Number(valueKey))
-            .then((responseCheckKey) => {
-                if (responseCheckKey === 1) {
-                    getUsers()
-                        .then((listUser) => {
-                            listUser.data.forEach((dataUser) => {
-                                if (userName === dataUser.userName) {
-                                    userIsLog(userName)
-                                    history.push("/", { dataUser })
-                                }
-                            })
-                        })
-                        .catch((error) => console.log(error))
-                } else {
+            .then((response) => {
+                if (response.dataUser !== undefined && response.dataUser.userName === userName) {
+                    userIsLog(userName)
+                    history.push("/", { dataUser: response.dataUser })
+                } else if (response.results !== undefined && response.results === false) {
                     alert("Wrong key")
                 }
             })
@@ -63,7 +55,7 @@ class ConfirmKey extends Component {
             <div style={ styles.popup }>
                 <div style={ styles.popupInner }>
                     <input
-                        type="text"
+                        type="number"
                         value={ valueKey }
                         onChange={ (e) => this.setState({ valueKey: e.target.value }) }
                         placeholder="Put your key here"

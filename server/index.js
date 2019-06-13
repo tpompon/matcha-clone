@@ -61,21 +61,7 @@ const saveImage = (dataPicture, userId, namePicture) => {
 }
 
 const addNotification = (from, to, message) => {
-	/*
-	const verifyIsProfilNotBlocked = `SELECT * FROM listblockprofil WHERE user='${to}' AND blockProfil='${from}'`
-	connection.query(verifyIsProfilNotBlocked, (error, results) => {
-		if (error) {
-			return
-		} else {
-			if (results.length > 0) {
-				return
-			}
-			const sqlInsertNotification =  `INSERT INTO notifications (notificationUser, notificationType, date) VALUES ('${to}', '${message.replace(/'/g, "\\'")}', NOW());`
-			return sqlInsertNotification
-		}
-	})
-	*/
-	const sqlInsertNotification =  `INSERT INTO notifications (notificationUser, notificationType, date) VALUES ('${to}', '${message.replace(/'/g, "\\'")}', NOW());`
+	const sqlInsertNotification =  `INSERT INTO notifications (notificationUser, notificationType, date) SELECT '${to}', '${message.replace(/'/g, "\\'")}', NOW() WHERE NOT EXISTS (SELECT user FROM listblockprofil WHERE user='${to}' AND blockProfil='${from}')`
 	return sqlInsertNotification
 }
 
@@ -216,17 +202,18 @@ app.post("/users/confirmIdendity", (req, res) => {
 			return res.send(error)
 		} else {
 			if (results.length > 0) {
-				const updateConfirmKeyOk = `UPDATE profil SET confirmKeyOk=1 WHERE (userName, confirmKey) IN (('${name}', ${key}))`
+				let updateConfirmKeyOk = `UPDATE profil SET confirmKeyOk=1 WHERE (userName, confirmKey) IN (('${name}', ${key}));`
+				updateConfirmKeyOk += `INSERT INTO inlineuser (user, inline, date) VALUES ('${name}', 1, NOW());`
+				updateConfirmKeyOk += `SELECT p.*, u.age, u.biography, u.gender, u.orientation, u.listInterest, u.userAddress, u.populareScore FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.userName='${name}'`
 				connection.query(updateConfirmKeyOk, (error, results) => {
 					if (error) {
 						return res.send(error)
 					} else {
-						insertUserInInlineTable(name)
-						return res.send("1")
+						return res.json({ dataUser: results[2][0] })
 					}
 				})
 			} else {
-				return res.send("0")
+				return res.json({ results: false })
 			}
 		}
 	})
@@ -405,12 +392,13 @@ app.post("/users/getBlockList", (req, res) => {
 app.post("/users/blockProfil", (req, res) => {
 	const { userName, profilBlock } = req.body
 	let blockProfil = `INSERT INTO listblockprofil (user, blockProfil) VALUES('${userName}', '${profilBlock}');`
-	blockProfil = `DELETE FROM profilmatch WHERE (firstPerson='${userName}' AND secondPerson='${profilBlock}') OR (firstPerson='${profilBlock}' AND secondPerson='${userName}')`
+	blockProfil += `DELETE FROM profilmatch WHERE (firstPerson='${userName}' AND secondPerson='${profilBlock}') OR (firstPerson='${profilBlock}' AND secondPerson='${userName}');`
+	blockProfil += `SELECT p.*, u.age, u.biography, u.gender, u.orientation, u.listInterest, u.userAddress, u.userLocation, u.userApproximateLocation, u.populareScore FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.userName NOT IN (SELECT blockProfil FROM listblockprofil WHERE user='${userName}') AND p.userName<>'${userName}'`
 	connection.query(blockProfil, (error, results) => {
 		if (error) {
 			return res.send(error)
 		} else {
-			return res.send(`${profilBlock} is blocked.`)
+			return res.json({ blockList: results[2] })
 		}
 	})
 })
@@ -567,7 +555,7 @@ app.post("/users/userIsDelog", (req, res) => {
 
 app.post("/users/reportingFakeProfil", (req, res) => {
 	const { profilName } = req.body
-	const reportingFakeProfil = `INSERT INTO fakeuser (fakeUser) SELECT '${profilName}' FROM fakeuser WHERE NOT EXISTS ( SELECT fakeUser FROM fakeuser WHERE fakeUser='${profilName}') LIMIT 1`
+	const reportingFakeProfil = `INSERT INTO fakeuser (fakeUser) SELECT '${profilName}' FROM profil WHERE NOT EXISTS (SELECT fakeUser FROM fakeuser WHERE fakeUser='${profilName}') LIMIT 1`
 	connection.query(reportingFakeProfil, (error, results) => {
 		if (error) {
 			return res.send(error)
@@ -645,17 +633,6 @@ const populareScore = (profilName, like) => {
 					return true
 				}
 			})
-		}
-	})
-}
-
-const insertUserInInlineTable = (userName) => {
-	const insert = `INSERT INTO inlineuser (user, inline) VALUES ('${userName}', 1)`
-	connection.query(insert, (error, results) => {
-		if (error) {
-			return error
-		} else {
-
 		}
 	})
 }

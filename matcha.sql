@@ -1,15 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.4
--- https://www.phpmyadmin.net/
+-- version 4.5.5.1
+-- http://www.phpmyadmin.net
 --
--- Hôte : 127.0.0.1:3306
--- Généré le :  mar. 11 juin 2019 à 21:52
--- Version du serveur :  5.7.24
--- Version de PHP :  7.2.14
+-- Client :  localhost:3306
+-- Généré le :  Jeu 13 Juin 2019 à 04:50
+-- Version du serveur :  5.6.29
+-- Version de PHP :  5.6.20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -28,22 +26,19 @@ SET time_zone = "+00:00";
 -- Structure de la table `fakeuser`
 --
 
-DROP TABLE IF EXISTS `fakeuser`;
-CREATE TABLE IF NOT EXISTS `fakeuser` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `fakeUser` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+CREATE TABLE `fakeuser` (
+  `id` int(11) NOT NULL,
+  `fakeUser` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Déchargement des données de la table `fakeuser`
+-- Contenu de la table `fakeuser`
 --
 
 INSERT INTO `fakeuser` (`id`, `fakeUser`) VALUES
-(1, 'HH'),
-(2, 'tyr'),
-(3, 'metentis'),
-(4, 'metentis');
+(32, 'metentis'),
+(33, 'tyr'),
+(34, 'test');
 
 -- --------------------------------------------------------
 
@@ -51,26 +46,31 @@ INSERT INTO `fakeuser` (`id`, `fakeUser`) VALUES
 -- Structure de la table `inlineuser`
 --
 
-DROP TABLE IF EXISTS `inlineuser`;
-CREATE TABLE IF NOT EXISTS `inlineuser` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `inlineuser` (
+  `id` int(11) NOT NULL,
   `user` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `inline` int(11) NOT NULL DEFAULT '0',
-  `date` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+  `date` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Déchargement des données de la table `inlineuser`
+-- Contenu de la table `inlineuser`
 --
 
 INSERT INTO `inlineuser` (`id`, `user`, `inline`, `date`) VALUES
-(1, 'metentis', 0, '2019-06-11 23:33:31'),
-(2, 'jai', 0, '2019-06-11 23:40:03'),
+(1, 'metentis', 0, '2019-06-13 11:00:39'),
+(2, 'jai', 0, '2019-06-12 14:20:28'),
 (3, 'HH', 0, '2019-06-09 00:13:25'),
 (4, 'tyr', 0, '2019-06-09 00:12:53'),
-(5, 'bouboule', 1, '2019-06-11 10:23:36'),
-(6, 'le roi des math', 0, '2019-06-09 00:13:39');
+(5, 'bouboule', 0, '2019-06-12 14:10:16'),
+(6, 'le roi des math', 0, '2019-06-09 00:13:39'),
+(7, 'test5', 0, '2019-06-12 11:11:43'),
+(8, 'test6', 0, '2019-06-12 11:12:31'),
+(9, 'test9', 0, '2019-06-13 11:07:30'),
+(10, 'test11', 1, '2019-06-13 11:09:52'),
+(11, 'test12', 0, '2019-06-13 11:11:26'),
+(12, 'test15', 1, '2019-06-13 11:16:12'),
+(13, 'test16', 1, '2019-06-13 11:18:25');
 
 -- --------------------------------------------------------
 
@@ -78,17 +78,15 @@ INSERT INTO `inlineuser` (`id`, `user`, `inline`, `date`) VALUES
 -- Structure de la table `likeuser`
 --
 
-DROP TABLE IF EXISTS `likeuser`;
-CREATE TABLE IF NOT EXISTS `likeuser` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `likeuser` (
+  `id` int(11) NOT NULL,
   `userName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `profilName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `likeUser` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8;
+  `likeUser` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Déchargement des données de la table `likeuser`
+-- Contenu de la table `likeuser`
 --
 
 INSERT INTO `likeuser` (`id`, `userName`, `profilName`, `likeUser`) VALUES
@@ -118,7 +116,12 @@ INSERT INTO `likeuser` (`id`, `userName`, `profilName`, `likeUser`) VALUES
 (46, 'jai', 'HH', 1),
 (47, 'test3', 'jai', 1),
 (48, 'bat test', 'metentis', 1),
-(49, 'jai', 'bat test', -1);
+(49, 'jai', 'bat test', -1),
+(50, 'metentis', 'test', -1),
+(51, 'metentis', 'test2', 1),
+(52, 'metentis', 'test3', 1),
+(53, 'metentis', 'test4', 1),
+(54, 'test4', 'metentis', 1);
 
 -- --------------------------------------------------------
 
@@ -126,21 +129,19 @@ INSERT INTO `likeuser` (`id`, `userName`, `profilName`, `likeUser`) VALUES
 -- Structure de la table `listblockprofil`
 --
 
-DROP TABLE IF EXISTS `listblockprofil`;
-CREATE TABLE IF NOT EXISTS `listblockprofil` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `listblockprofil` (
+  `id` int(11) NOT NULL,
   `user` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `blockProfil` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+  `blockProfil` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Déchargement des données de la table `listblockprofil`
+-- Contenu de la table `listblockprofil`
 --
 
 INSERT INTO `listblockprofil` (`id`, `user`, `blockProfil`) VALUES
-(8, 'metentis', 'bouboule'),
-(9, 'bat test', 'jai');
+(67, 'metentis', 'tyr'),
+(68, 'metentis', 'HH');
 
 -- --------------------------------------------------------
 
@@ -148,33 +149,22 @@ INSERT INTO `listblockprofil` (`id`, `user`, `blockProfil`) VALUES
 -- Structure de la table `messages`
 --
 
-DROP TABLE IF EXISTS `messages`;
-CREATE TABLE IF NOT EXISTS `messages` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `messages` (
+  `id` int(11) NOT NULL,
   `fromUser` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `toUser` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `message` text,
-  `date` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8;
+  `date` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Déchargement des données de la table `messages`
+-- Contenu de la table `messages`
 --
 
 INSERT INTO `messages` (`id`, `fromUser`, `toUser`, `message`, `date`) VALUES
-(53, 'metentis', 'jai', 'autiste', '2019-05-27 11:46:51'),
-(54, 'jai', 'metentis', 'test', '2019-05-27 12:16:14'),
-(55, 'jai', 'metentis', 'testons ca ', '2019-05-27 12:23:56'),
-(56, 'jai', 'tyr', 'test', '2019-06-05 13:08:52'),
-(57, 'jai', 'tyr', 'perfect', '2019-06-05 13:09:00'),
-(58, 'jai', 'HH', 'voyons voir ca', '2019-06-05 14:08:03'),
-(59, 'HH', 'jai', 'ca marche au poil', '2019-06-05 14:08:11'),
-(60, 'metentis', 'jai', 'cdhsziu', '2019-06-09 17:05:06'),
-(61, 'jai', 'metentis', 'coucou', '2019-06-09 17:05:50'),
-(62, 'bat test', 'metentis', 'test', '2019-06-11 23:28:36'),
-(63, 'metentis', 'bat test', 'test avec des \' \" !!!', '2019-06-11 23:28:46'),
-(64, 'metentis', 'bat test', '<script>alert(\"coucou\")</script>', '2019-06-11 23:29:13');
+(65, 'metentis', 'jai', 'coucou', '2019-06-12 13:26:48'),
+(66, 'metentis', 'jai', 'test', '2019-06-12 13:26:51'),
+(67, 'metentis', 'jai', 'test"\'', '2019-06-12 13:27:09');
 
 -- --------------------------------------------------------
 
@@ -182,297 +172,101 @@ INSERT INTO `messages` (`id`, `fromUser`, `toUser`, `message`, `date`) VALUES
 -- Structure de la table `notifications`
 --
 
-DROP TABLE IF EXISTS `notifications`;
-CREATE TABLE IF NOT EXISTS `notifications` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `notifications` (
+  `id` int(11) NOT NULL,
   `notificationUser` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `notificationType` text NOT NULL,
   `notificationRead` int(11) NOT NULL DEFAULT '0',
-  `date` datetime NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=339 DEFAULT CHARSET=utf8;
+  `date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Déchargement des données de la table `notifications`
+-- Contenu de la table `notifications`
 --
 
 INSERT INTO `notifications` (`id`, `notificationUser`, `notificationType`, `notificationRead`, `date`) VALUES
-(63, 'jai', 'You are new message from metentis', 1, '2019-05-27 11:46:51'),
-(64, 'metentis', 'You are new message from jainko', 1, '2019-05-27 12:16:14'),
-(65, 'metentis', 'You are new message from jainko', 1, '2019-05-27 12:23:56'),
-(66, 'le roi des math', 'metentis visit youre profil', 0, '2019-05-27 12:25:01'),
-(67, 'jai', 'metentis visit youre profil', 1, '2019-05-27 12:34:53'),
-(68, 'tyr', 'jainko visit youre profil', 0, '2019-05-27 13:35:25'),
-(69, 'tyr', 'jainko visit youre profil', 0, '2019-05-27 13:36:12'),
-(70, 'metentis', 'jainko visit youre profil', 1, '2019-05-27 13:42:14'),
-(71, 'metentis', 'jainko visit youre profil', 1, '2019-05-27 13:42:40'),
-(72, 'bouboule', 'jainko visit youre profil', 1, '2019-05-27 13:42:42'),
-(73, 'tyr', 'jainko visit youre profil', 0, '2019-05-27 13:42:43'),
-(74, 'metentis', 'jainko visit youre profil', 1, '2019-05-27 13:42:44'),
-(75, 'bouboule', 'jainko visit youre profil', 1, '2019-05-27 13:51:33'),
-(76, 'tyr', 'jainko visit youre profil', 0, '2019-05-27 13:51:35'),
-(77, 'HH', 'jainko visit youre profil', 1, '2019-05-27 13:51:36'),
-(78, 'le roi des math', 'jainko visit youre profil', 0, '2019-05-27 13:51:36'),
-(79, 'metentis', 'jainko visit youre profil', 1, '2019-05-27 13:51:38'),
-(80, 'metentis', 'jainko visit youre profil', 1, '2019-05-27 13:52:39'),
-(81, 'jai', 'metentis visit youre profil', 1, '2019-05-27 13:53:08'),
-(82, 'metentis', 'jainko visit youre profil', 1, '2019-05-27 13:53:37'),
-(83, 'jai', 'metentis visit youre profil', 1, '2019-05-27 13:55:25'),
-(84, 'jai', 'metentis visit youre profil', 1, '2019-05-27 14:09:54'),
-(85, 'metentis', 'jainko visit youre profil', 1, '2019-05-27 14:16:26'),
-(86, 'bouboule', 'jainko visit youre profil', 1, '2019-05-27 14:16:42'),
-(87, 'tyr', 'jainko visit youre profil', 0, '2019-05-27 14:17:55'),
-(88, 'metentis', 'jainko visit youre profil', 1, '2019-05-27 14:20:00'),
-(89, 'bouboule', 'jainko visit youre profil', 1, '2019-05-27 14:20:04'),
-(90, 'metentis', 'jainko visit youre profil', 1, '2019-05-27 14:21:17'),
-(91, 'jai', 'metentis visit youre profil', 1, '2019-05-27 14:21:29'),
-(92, 'jai', 'metentis send you a unlike', 1, '2019-05-27 14:21:31'),
-(93, 'jai', 'metentis doesnt like you anymore', 1, '2019-05-27 14:21:31'),
-(94, 'jai', 'metentis send you a like', 1, '2019-05-27 14:21:40'),
-(95, 'jai', 'metentis send you a like and youre like him before so this is a match', 1, '2019-05-27 14:21:40'),
-(96, 'jai', 'metentis visit youre profil', 1, '2019-05-27 14:39:57'),
-(97, 'jai', 'metentis send you a unlike', 1, '2019-05-27 14:39:58'),
-(98, 'jai', 'metentis doesnt like you anymore', 1, '2019-05-27 14:39:58'),
-(99, 'jai', 'metentis visit youre profil', 1, '2019-05-27 14:40:12'),
-(100, 'metentis', 'jainko visit youre profil', 1, '2019-05-27 14:40:21'),
-(101, 'bouboule', 'jainko visit youre profil', 1, '2019-05-27 14:41:11'),
-(102, 'metentis', 'jainko visit youre profil', 1, '2019-05-27 14:41:12'),
-(103, 'tyr', 'metentis visit youre profil', 0, '2019-05-27 16:51:26'),
-(104, 'jai', 'metentis visit youre profil', 1, '2019-05-27 16:52:03'),
-(105, 'HH', 'metentis visit youre profil', 1, '2019-05-27 17:04:02'),
-(106, 'bouboule', 'metentis visit youre profil', 1, '2019-05-27 17:04:24'),
-(107, 'HH', 'metentis visit youre profil', 1, '2019-05-27 17:04:25'),
-(108, 'HH', 'metentis visit youre profil', 1, '2019-05-27 17:05:15'),
-(109, 'HH', 'metentis visit youre profil', 1, '2019-05-27 17:05:50'),
-(110, 'HH', 'metentis visit youre profil', 1, '2019-05-27 17:06:33'),
-(111, 'bouboule', 'metentis visit youre profil', 1, '2019-05-27 17:08:38'),
-(112, 'HH', 'metentis visit youre profil', 1, '2019-05-27 17:10:58'),
-(113, 'tyr', 'metentis visit youre profil', 0, '2019-05-27 17:11:00'),
-(114, 'HH', 'metentis visit youre profil', 1, '2019-05-27 17:11:01'),
-(115, 'le roi des math', 'metentis visit youre profil', 0, '2019-05-27 17:11:01'),
-(116, 'tyr', 'metentis visit youre profil', 0, '2019-05-27 17:11:02'),
-(117, 'HH', 'metentis visit youre profil', 1, '2019-05-27 17:11:02'),
-(118, 'jai', 'metentis visit youre profil', 1, '2019-05-27 17:24:42'),
-(119, 'jai', 'metentis visit youre profil', 1, '2019-05-27 17:51:51'),
-(120, 'jai', 'metentis visit youre profil', 1, '2019-05-27 17:56:15'),
-(121, 'bouboule', 'metentis visit youre profil', 1, '2019-05-27 17:57:02'),
-(122, 'bouboule', 'metentis visit youre profil', 1, '2019-05-27 18:01:35'),
-(123, 'jai', 'metentis visit youre profil', 1, '2019-05-27 18:12:29'),
-(124, 'jai', 'metentis visit youre profil', 1, '2019-05-27 18:12:58'),
-(125, 'jai', 'metentis visit youre profil', 1, '2019-05-27 18:13:46'),
-(126, 'jai', 'metentis visit youre profil', 1, '2019-05-27 18:14:26'),
-(127, 'jai', 'metentis visit youre profil', 1, '2019-05-27 18:15:49'),
-(128, 'jai', 'metentis visit youre profil', 1, '2019-05-27 18:16:30'),
-(129, 'jai', 'metentis visit youre profil', 1, '2019-05-27 18:17:11'),
-(130, 'jai', 'metentis visit youre profil', 1, '2019-05-27 18:18:24'),
-(131, 'jai', 'metentis visit youre profil', 1, '2019-06-04 11:08:37'),
-(132, 'bouboule', 'metentis visit youre profil', 1, '2019-06-04 11:08:38'),
-(133, 'tyr', 'metentis visit youre profil', 0, '2019-06-04 11:08:38'),
-(134, 'jai', 'metentis visit youre profil', 1, '2019-06-04 11:17:01'),
-(135, 'bouboule', 'metentis visit youre profil', 1, '2019-06-04 11:17:02'),
-(136, 'tyr', 'metentis visit youre profil', 0, '2019-06-04 11:17:03'),
-(137, 'HH', 'metentis visit youre profil', 1, '2019-06-04 11:17:04'),
-(138, 'le roi des math', 'metentis visit youre profil', 0, '2019-06-04 11:17:04'),
-(139, 'HH', 'metentis visit youre profil', 1, '2019-06-04 11:17:05'),
-(140, 'tyr', 'metentis visit youre profil', 0, '2019-06-04 11:17:05'),
-(141, 'bouboule', 'metentis visit youre profil', 1, '2019-06-04 11:17:06'),
-(142, 'jai', 'metentis visit youre profil', 1, '2019-06-04 11:17:08'),
-(143, 'bouboule', 'metentis visit youre profil', 1, '2019-06-04 11:30:57'),
-(144, 'bouboule', 'metentis visit youre profil', 1, '2019-06-04 11:32:29'),
-(145, 'bouboule', 'metentis visit youre profil', 1, '2019-06-04 11:32:58'),
-(146, 'bouboule', 'metentis visit youre profil', 1, '2019-06-04 11:37:24'),
-(147, 'jai', 'metentis visit youre profil', 1, '2019-06-04 11:38:36'),
-(148, 'bouboule', 'metentis visit youre profil', 1, '2019-06-04 11:39:21'),
-(149, 'jai', 'metentis visit youre profil', 1, '2019-06-04 11:45:39'),
-(150, 'bouboule', 'metentis visit youre profil', 1, '2019-06-04 11:45:56'),
-(151, 'jai', 'metentis visit youre profil', 1, '2019-06-04 12:35:09'),
-(152, 'HH', 'metentis visit youre profil', 1, '2019-06-04 12:47:12'),
-(153, 'test3', 'metentis visit youre profil', 0, '2019-06-04 12:56:14'),
-(154, 'test2', 'metentis visit youre profil', 0, '2019-06-04 12:56:16'),
-(155, 'test3', 'metentis visit youre profil', 0, '2019-06-04 12:56:18'),
-(156, 'jai', 'metentis visit youre profil', 1, '2019-06-04 12:56:21'),
-(157, 'bouboule', 'metentis visit youre profil', 1, '2019-06-04 12:56:30'),
-(158, 'bouboule', 'metentis visit youre profil', 1, '2019-06-04 12:56:35'),
-(159, 'tyr', 'metentis visit youre profil', 0, '2019-06-04 14:18:10'),
-(160, 'bouboule', 'metentis visit youre profil', 1, '2019-06-04 14:18:11'),
-(161, 'HH', 'metentis visit youre profil', 1, '2019-06-04 14:18:12'),
-(162, 'bouboule', 'metentis visit youre profil', 1, '2019-06-04 14:19:13'),
-(163, 'le roi des math', 'metentis visit youre profil', 0, '2019-06-04 19:54:42'),
-(164, 'bouboule', 'jainko visit you\'re profil', 1, '2019-06-05 12:53:49'),
-(165, 'bouboule', 'jainko visit you\'re profil', 1, '2019-06-05 12:53:51'),
-(166, 'bouboule', 'jainko visit you\'re profil', 1, '2019-06-05 12:55:52'),
-(167, 'metentis', 'jainko visit you\'re profil', 1, '2019-06-05 12:58:37'),
-(168, 'metentis', 'jainko visit you\'re profil', 1, '2019-06-05 13:00:05'),
-(169, 'metentis', 'jainko visit you\'re profil', 1, '2019-06-05 13:01:20'),
-(170, 'metentis', 'jainko visit you\'re profil', 1, '2019-06-05 13:01:48'),
-(171, 'bouboule', 'jainko visit you\'re profil', 1, '2019-06-05 13:01:48'),
-(172, 'tyr', 'jainko visit you\'re profil', 0, '2019-06-05 13:01:49'),
-(173, 'le roi des math', 'jainko visit you\'re profil', 0, '2019-06-05 13:01:49'),
-(174, 'metentis', 'jainko visit you\'re profil', 1, '2019-06-05 13:01:51'),
-(175, 'tyr', 'You are new message from jainko', 0, '2019-06-05 13:08:52'),
-(176, 'tyr', 'You are new message from jainko', 0, '2019-06-05 13:09:00'),
-(177, 'metentis', 'jainko visit you\'re profil', 1, '2019-06-05 13:20:59'),
-(178, 'bouboule', 'jainko visit you\'re profil', 1, '2019-06-05 13:21:06'),
-(179, 'tyr', 'jainko visit you\'re profil', 0, '2019-06-05 13:21:09'),
-(180, 'metentis', 'jainko visit you\'re profil', 1, '2019-06-05 13:21:12'),
-(181, 'tyr', 'jainko visit you\'re profil', 0, '2019-06-05 13:21:13'),
-(182, 'HH', 'You are new message from jainko', 1, '2019-06-05 14:08:03'),
-(183, 'jai', 'You are new message from HH', 1, '2019-06-05 14:08:11'),
-(184, 'jai', 'HH visit you\'re profil', 1, '2019-06-05 14:09:21'),
-(185, 'metentis', 'HH visit you\'re profil', 1, '2019-06-05 14:09:38'),
-(186, 'tyr', 'jainko visit you\'re profil', 0, '2019-06-05 14:10:50'),
-(187, 'jai', 'HH visit you\'re profil', 1, '2019-06-05 14:11:09'),
-(188, 'HH', 'jainko visit you\'re profil', 1, '2019-06-05 14:11:14'),
-(189, 'jai', 'HH visit you\'re profil', 1, '2019-06-05 14:11:20'),
-(190, 'jai', 'metentis visit you\'re profil', 1, '2019-06-07 09:54:45'),
-(191, 'jai', 'metentis visit you\'re profil', 1, '2019-06-07 10:21:04'),
-(192, 'jai', 'metentis visit you\'re profil', 1, '2019-06-07 10:26:15'),
-(193, 'jai', 'metentis visit you\'re profil', 1, '2019-06-07 10:27:25'),
-(194, 'bouboule', 'metentis visit you\'re profil', 1, '2019-06-07 10:27:27'),
-(195, 'tyr', 'metentis visit you\'re profil', 0, '2019-06-07 10:27:28'),
-(196, 'HH', 'metentis visit you\'re profil', 1, '2019-06-07 10:27:28'),
-(197, 'metentis', 'metentis visit you\'re profil', 1, '2019-06-07 10:27:30'),
-(198, 'jai', 'metentis visit you\'re profil', 1, '2019-06-09 17:02:41'),
-(199, 'jai', 'metentis visit you\'re profil', 1, '2019-06-09 17:04:37'),
-(200, 'jai', 'metentis send you a like', 1, '2019-06-09 17:04:47'),
-(201, 'jai', 'metentis send you a like and you\'re like him before so this is a match', 1, '2019-06-09 17:04:48'),
-(202, 'jai', 'You are new message from metentis', 1, '2019-06-09 17:05:06'),
-(203, 'metentis', 'You are new message from jai', 1, '2019-06-09 17:05:50'),
-(204, 'bouboule', 'metentis visit you\'re profil', 1, '2019-06-09 17:06:23'),
-(205, 'jai', 'metentis visit you\'re profil', 1, '2019-06-09 17:06:33'),
-(206, 'test3', 'metentis visit you\'re profil', 0, '2019-06-09 17:49:27'),
-(207, 'test3', 'metentis visit you\'re profil', 0, '2019-06-09 17:49:28'),
-(208, 'test3', 'metentis visit you\'re profil', 0, '2019-06-09 17:49:29'),
-(209, 'test2', 'metentis visit you\'re profil', 0, '2019-06-09 17:49:51'),
-(210, 'tyr', 'jai visit you\'re profil', 0, '2019-06-09 17:54:48'),
-(211, 'le roi des math', 'jai visit you\'re profil', 0, '2019-06-09 17:54:51'),
-(212, 'test', 'jai visit you\'re profil', 0, '2019-06-09 17:54:54'),
-(213, 'metentis', 'jai visit you\'re profil', 1, '2019-06-09 17:55:02'),
-(214, 'undefined', 'metentis visit you\'re profil', 0, '2019-06-09 22:26:15'),
-(215, 'metentis', 'metentis visit you\'re profil', 1, '2019-06-09 22:34:08'),
-(216, 'metentis', 'metentis visit you\'re profil', 1, '2019-06-09 22:38:25'),
-(217, 'jai', 'metentis visit you\'re profil', 1, '2019-06-09 22:39:22'),
-(218, 'test3', 'metentis visit you\'re profil', 0, '2019-06-09 23:06:10'),
-(219, 'jai', 'metentis visit you\'re profil', 1, '2019-06-09 23:10:48'),
-(220, 'jai', 'metentis visit you\'re profil', 1, '2019-06-10 11:11:22'),
-(221, 'bouboule', 'metentis visit you\'re profil', 1, '2019-06-10 11:11:23'),
-(222, 'test', 'metentis visit you\'re profil', 0, '2019-06-10 22:53:36'),
-(223, 'test', 'metentis visit you\'re profil', 0, '2019-06-10 22:53:38'),
-(224, 'test', 'metentis visit you\'re profil', 0, '2019-06-10 22:53:38'),
-(225, 'test', 'metentis visit you\'re profil', 0, '2019-06-10 22:53:39'),
-(226, 'test', 'metentis visit you\'re profil', 0, '2019-06-10 23:18:38'),
-(227, 'test', 'metentis visit you\'re profil', 0, '2019-06-10 23:18:38'),
-(228, 'test4', 'metentis visit you\'re profil', 0, '2019-06-10 23:18:50'),
-(229, 'test', 'metentis visit you\'re profil', 0, '2019-06-10 23:18:52'),
-(230, 'bouboule', 'metentis visit you\'re profil', 1, '2019-06-10 23:19:02'),
-(231, 'tyr', 'metentis visit you\'re profil', 0, '2019-06-10 23:19:03'),
-(232, 'tyr', 'metentis visit you\'re profil', 0, '2019-06-10 23:32:18'),
-(233, 'test', 'metentis visit you\'re profil', 0, '2019-06-11 10:07:47'),
-(234, 'bouboule', 'metentis visit you\'re profil', 1, '2019-06-11 10:10:24'),
-(235, 'tyr', 'metentis visit you\'re profil', 0, '2019-06-11 10:10:29'),
-(236, 'HH', 'metentis visit you\'re profil', 0, '2019-06-11 10:10:31'),
-(237, 'le roi des math', 'metentis visit you\'re profil', 0, '2019-06-11 10:10:32'),
-(238, 'le roi des math', 'metentis visit you\'re profil', 0, '2019-06-11 10:11:08'),
-(239, 'bouboule', 'metentis visit you\'re profil', 1, '2019-06-11 10:12:49'),
-(240, 'HH', 'metentis visit you\'re profil', 0, '2019-06-11 10:13:19'),
-(241, 'le roi des math', 'metentis visit you\'re profil', 0, '2019-06-11 10:13:26'),
-(242, 'test', 'metentis visit you\'re profil', 0, '2019-06-11 10:14:34'),
-(243, 'test', 'metentis visit you\'re profil', 0, '2019-06-11 10:14:34'),
-(244, 'bouboule', 'metentis visit you\'re profil', 1, '2019-06-11 10:15:10'),
-(245, 'test2', 'metentis visit you\'re profil', 0, '2019-06-11 10:15:39'),
-(246, 'tyr', 'metentis visit you\'re profil', 0, '2019-06-11 10:16:45'),
-(247, 'bouboule', 'metentis visit you\'re profil', 1, '2019-06-11 10:16:45'),
-(248, 'bouboule', 'metentis visit you\'re profil', 1, '2019-06-11 10:17:35'),
-(249, 'bouboule', 'metentis visit you\'re profil', 0, '2019-06-11 10:21:01'),
-(250, 'jai', 'metentis visit you\'re profil', 1, '2019-06-11 10:21:37'),
-(251, 'bouboule', 'metentis visit you\'re profil', 0, '2019-06-11 10:21:38'),
-(252, 'bouboule', 'metentis send you a like', 0, '2019-06-11 10:21:40'),
-(253, 'bouboule', 'metentis send you a like and you\'re like him before so this is a match', 0, '2019-06-11 10:21:40'),
-(254, 'bouboule', 'metentis send you a unlike', 0, '2019-06-11 10:21:55'),
-(255, 'bouboule', 'metentis doesn\'t like you anymore', 0, '2019-06-11 10:21:55'),
-(256, 'bouboule', 'metentis visit you\'re profil', 0, '2019-06-11 10:22:32'),
-(257, 'tyr', 'metentis visit you\'re profil', 0, '2019-06-11 10:22:54'),
-(258, 'HH', 'metentis visit you\'re profil', 0, '2019-06-11 10:23:02'),
-(259, 'tyr', 'metentis visit you\'re profil', 0, '2019-06-11 10:23:10'),
-(260, 'bouboule', 'metentis visit you\'re profil', 0, '2019-06-11 10:23:23'),
-(261, 'tyr', 'bouboule visit you\'re profil', 0, '2019-06-11 10:23:33'),
-(262, 'tyr', 'metentis visit you\'re profil', 0, '2019-06-11 10:29:07'),
-(263, 'tyr', 'metentis visit you\'re profil', 0, '2019-06-11 10:29:44'),
-(264, 'tyr', 'metentis visit you\'re profil', 0, '2019-06-11 10:30:24'),
-(265, 'jai', 'metentis visit you\'re profil', 1, '2019-06-11 10:31:49'),
-(266, 'bouboule', 'metentis visit you\'re profil', 0, '2019-06-11 10:31:49'),
-(267, 'tyr', 'metentis visit you\'re profil', 0, '2019-06-11 11:01:32'),
-(268, 'bouboule', 'metentis visit you\'re profil', 0, '2019-06-11 11:02:54'),
-(269, 'bouboule', 'metentis visit you\'re profil', 0, '2019-06-11 11:03:10'),
-(270, 'metentis', 'bouboule visit you\'re profil', 1, '2019-06-11 11:03:49'),
-(271, 'metentis', 'bouboule send you a like', 1, '2019-06-11 11:03:51'),
-(272, 'metentis', 'bouboule send you a like and you\'re like him before so this is a match', 1, '2019-06-11 11:03:51'),
-(273, 'metentis', 'bouboule visit you\'re profil', 1, '2019-06-11 11:07:53'),
-(274, 'metentis', 'bouboule send you a like', 1, '2019-06-11 11:07:55'),
-(275, 'metentis', 'bouboule visit you\'re profil', 1, '2019-06-11 11:08:59'),
-(276, 'metentis', 'bouboule send you a like', 1, '2019-06-11 11:09:01'),
-(277, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 11:09:05'),
-(278, 'jai', 'bouboule send you a like', 1, '2019-06-11 11:09:07'),
-(279, 'jai', 'bouboule send you a like and you\'re like him before so this is a match', 1, '2019-06-11 11:09:07'),
-(280, 'jai', 'bouboule send you a like', 1, '2019-06-11 11:09:46'),
-(281, 'jai', 'bouboule send you a like', 1, '2019-06-11 11:10:42'),
-(282, 'metentis', 'bouboule visit you\'re profil', 1, '2019-06-11 11:13:06'),
-(283, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 11:13:20'),
-(284, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 11:14:12'),
-(285, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 11:14:12'),
-(286, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 11:14:52'),
-(287, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 11:16:51'),
-(288, 'metentis', 'bouboule visit you\'re profil', 1, '2019-06-11 11:19:29'),
-(289, 'metentis', 'bouboule send you a like', 1, '2019-06-11 11:19:31'),
-(290, 'metentis', 'bouboule visit you\'re profil', 1, '2019-06-11 11:25:47'),
-(291, 'metentis', 'bouboule send you a like', 1, '2019-06-11 11:25:48'),
-(292, 'metentis', 'bouboule send you a like', 1, '2019-06-11 11:25:57'),
-(293, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 11:26:02'),
-(294, 'jai', 'bouboule send you a like', 1, '2019-06-11 11:26:03'),
-(295, 'metentis', 'bouboule visit you\'re profil', 1, '2019-06-11 11:27:41'),
-(296, 'metentis', 'bouboule send you a like', 1, '2019-06-11 11:27:42'),
-(297, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 11:27:54'),
-(298, 'jai', 'bouboule send you a like', 1, '2019-06-11 11:27:56'),
-(299, 'jai', 'bouboule send you a unlike', 1, '2019-06-11 11:27:59'),
-(300, 'jai', 'bouboule doesn\'t like you anymore', 1, '2019-06-11 11:27:59'),
-(301, 'metentis', 'bouboule visit you\'re profil', 1, '2019-06-11 11:36:59'),
-(302, 'tyr', 'bouboule visit you\'re profil', 0, '2019-06-11 11:44:17'),
-(303, 'tyr', 'bouboule visit you\'re profil', 0, '2019-06-11 11:45:21'),
-(304, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 11:45:23'),
-(305, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 11:45:24'),
-(306, 'metentis', 'bouboule visit you\'re profil', 1, '2019-06-11 11:45:25'),
-(307, 'tyr', 'bouboule visit you\'re profil', 0, '2019-06-11 12:16:53'),
-(308, 'tyr', 'bouboule visit you\'re profil', 0, '2019-06-11 12:16:53'),
-(309, 'HH', 'bouboule visit you\'re profil', 0, '2019-06-11 12:16:54'),
-(310, 'tyr', 'bouboule visit you\'re profil', 0, '2019-06-11 12:16:54'),
-(311, 'jai', 'bouboule visit you\'re profil', 1, '2019-06-11 12:16:56'),
-(312, 'metentis', 'bouboule visit you\'re profil', 1, '2019-06-11 12:16:56'),
-(313, 'bouboule', 'metentis visit you\'re profil', 0, '2019-06-11 13:27:18'),
-(314, 'bouboule', 'test3 visit you\'re profil', 0, '2019-06-11 23:18:17'),
-(315, 'jai', 'test3 visit you\'re profil', 1, '2019-06-11 23:18:46'),
-(316, 'jai', 'test3 send you a like', 1, '2019-06-11 23:18:48'),
-(317, 'jai', 'test3 send you a like and you\'re like him before so this is a match', 1, '2019-06-11 23:18:48'),
-(318, 'jai', 'test3 send you a unlike', 1, '2019-06-11 23:18:56'),
-(319, 'jai', 'test3 doesn\'t like you anymore', 1, '2019-06-11 23:18:56'),
-(320, 'jai', 'test3 send you a like', 1, '2019-06-11 23:19:18'),
-(321, 'jai', 'test3 send you a like and you\'re like him before so this is a match', 1, '2019-06-11 23:19:18'),
-(322, 'jai', 'test3 send you a like', 1, '2019-06-11 23:20:35'),
-(323, 'metentis', 'batman visit you\'re profil', 1, '2019-06-11 23:21:15'),
-(324, 'metentis', 'batman send you a like', 1, '2019-06-11 23:21:21'),
-(325, 'metentis', 'batman send you a like and you\'re like him before so this is a match', 1, '2019-06-11 23:21:21'),
-(326, 'metentis', 'You are new message from batman', 0, '2019-06-11 23:28:36'),
-(327, 'bat test', 'You are new message from metentis', 1, '2019-06-11 23:28:46'),
-(328, 'bat test', 'You are new message from metentis', 1, '2019-06-11 23:29:13'),
-(329, 'jai', 'batman visit you\'re profil', 1, '2019-06-11 23:29:58'),
-(330, 'jai', 'batman visit you\'re profil', 1, '2019-06-11 23:30:03'),
-(331, 'bouboule', 'batman visit you\'re profil', 0, '2019-06-11 23:30:12'),
-(332, 'metentis', 'batman visit you\'re profil', 0, '2019-06-11 23:30:21'),
-(333, 'bat test', 'jai visit you\'re profil', 1, '2019-06-11 23:33:41'),
-(334, 'bat test', 'jai visit you\'re profil', 1, '2019-06-11 23:35:49'),
-(335, 'bat test', 'jai send you a like', 0, '2019-06-11 23:36:01'),
-(336, 'bat test', 'jai send you a like and you\'re like him before so this is a match', 0, '2019-06-11 23:36:01'),
-(337, 'bat test', 'jai send you a unlike', 0, '2019-06-11 23:36:09'),
-(338, 'bat test', 'jai doesn\'t like you anymore', 0, '2019-06-11 23:36:09');
+(339, 'HH', 'metentis visit you\'re profil', 0, '2019-06-12 10:42:12'),
+(340, 'test4', 'metentis visit you\'re profil', 0, '2019-06-12 10:42:38'),
+(341, 'test', 'metentis visit you\'re profil', 1, '2019-06-12 10:44:12'),
+(342, 'test', 'metentis send you a like', 1, '2019-06-12 10:44:16'),
+(343, 'test', 'metentis send you a like and you\'re like him before so this is a match', 1, '2019-06-12 10:44:16'),
+(344, 'test2', 'metentis visit you\'re profil', 0, '2019-06-12 10:48:30'),
+(345, 'test2', 'metentis send you a like', 0, '2019-06-12 10:48:32'),
+(346, 'test2', 'metentis send you a like and you\'re like him before so this is a match', 0, '2019-06-12 10:48:32'),
+(347, 'test', 'metentis visit you\'re profil', 0, '2019-06-12 10:53:16'),
+(348, 'test', 'metentis send you a like', 0, '2019-06-12 10:53:21'),
+(349, 'test', 'metentis send you a unlike', 0, '2019-06-12 10:53:29'),
+(350, 'test', 'metentis doesn\'t like you anymore', 0, '2019-06-12 10:53:29'),
+(351, 'test', 'metentis send you a like', 0, '2019-06-12 10:53:40'),
+(352, 'test', 'metentis send you a like and you\'re like him before so this is a match', 0, '2019-06-12 10:53:40'),
+(353, 'test', 'metentis send you a unlike', 0, '2019-06-12 10:53:49'),
+(354, 'test', 'metentis doesn\'t like you anymore', 0, '2019-06-12 10:53:49'),
+(355, 'test3', 'metentis visit you\'re profil', 0, '2019-06-12 10:56:53'),
+(356, 'test3', 'metentis send you a like', 0, '2019-06-12 10:56:55'),
+(357, 'test3', 'metentis send you a like and you\'re like him before so this is a match', 0, '2019-06-12 10:56:55'),
+(358, 'test4', 'metentis visit you\'re profil', 0, '2019-06-12 10:58:35'),
+(359, 'test4', 'metentis send you a like', 0, '2019-06-12 10:58:37'),
+(360, 'metentis', 'test4 visit you\'re profil', 1, '2019-06-12 10:59:02'),
+(361, 'metentis', 'test4 send you a like', 1, '2019-06-12 10:59:03'),
+(362, 'metentis', 'test4 send you a like and you\'re like him before so this is a match', 1, '2019-06-12 10:59:03'),
+(363, 'test5', 'test4 visit you\'re profil', 0, '2019-06-12 11:10:08'),
+(364, 'test5', 'test4 visit you\'re profil', 0, '2019-06-12 11:10:10'),
+(365, 'bouboule', 'test4 visit you\'re profil', 1, '2019-06-12 11:10:30'),
+(366, 'jai', 'test4 visit you\'re profil', 1, '2019-06-12 11:10:31'),
+(367, 'tyr', 'test4 visit you\'re profil', 0, '2019-06-12 11:10:32'),
+(368, 'test5', 'test4 visit you\'re profil', 0, '2019-06-12 11:10:34'),
+(369, 'test5', 'test4 visit you\'re profil', 0, '2019-06-12 11:10:34'),
+(370, 'bat test', 'metentis visit you\'re profil', 0, '2019-06-12 13:08:28'),
+(371, 'bat test', 'metentis visit you\'re profil', 0, '2019-06-12 13:13:31'),
+(372, 'jai', 'metentis visit you\'re profil', 1, '2019-06-12 13:26:28'),
+(373, 'jai', 'You are new message from metentis', 1, '2019-06-12 13:26:48'),
+(374, 'jai', 'You are new message from metentis', 1, '2019-06-12 13:26:51'),
+(375, 'jai', 'metentis visit you\'re profil', 1, '2019-06-12 13:26:57'),
+(376, 'jai', 'You are new message from metentis', 1, '2019-06-12 13:27:09'),
+(377, 'metentis', 'jai visit you\'re profil', 1, '2019-06-12 14:02:31'),
+(378, 'tyr', 'jai visit you\'re profil', 0, '2019-06-12 14:02:38'),
+(379, 'bouboule', 'jai visit you\'re profil', 1, '2019-06-12 14:02:40'),
+(380, 'metentis', 'jai visit you\'re profil', 1, '2019-06-12 14:07:52'),
+(381, 'bouboule', 'jai visit you\'re profil', 1, '2019-06-12 14:07:52'),
+(382, 'tyr', 'jai visit you\'re profil', 0, '2019-06-12 14:11:27'),
+(383, 'HH', 'jai visit you\'re profil', 0, '2019-06-12 14:11:28'),
+(384, 'test2', 'jai visit you\'re profil', 0, '2019-06-12 14:11:30'),
+(385, 'test3', 'jai visit you\'re profil', 0, '2019-06-12 14:13:04'),
+(386, 'test3', 'jai visit you\'re profil', 0, '2019-06-12 14:13:05'),
+(387, 'the man of steel', 'jai visit you\'re profil', 0, '2019-06-12 14:13:38'),
+(388, 'tyr', 'jai visit you\'re profil', 0, '2019-06-12 14:16:42'),
+(389, 'tyr', 'jai visit you\'re profil', 0, '2019-06-12 14:16:49'),
+(390, 'HH', 'jai visit you\'re profil', 0, '2019-06-12 14:16:51'),
+(391, 'tyr', 'jai visit you\'re profil', 0, '2019-06-12 14:16:52'),
+(392, 'HH', 'jai visit you\'re profil', 0, '2019-06-12 14:16:54'),
+(393, 'tyr', 'jai visit you\'re profil', 0, '2019-06-12 14:16:55'),
+(394, 'le roi des math', 'jai visit you\'re profil', 0, '2019-06-12 14:17:08'),
+(395, 'metentis', 'jai visit you\'re profil', 1, '2019-06-12 14:17:27'),
+(396, 'bouboule', 'jai visit you\'re profil', 1, '2019-06-12 14:17:27'),
+(397, 'le roi des math', 'jai visit you\'re profil', 0, '2019-06-12 14:17:28'),
+(398, 'le roi des math', 'jai visit you\'re profil', 0, '2019-06-12 14:17:28'),
+(399, 'test', 'jai visit you\'re profil', 0, '2019-06-12 14:17:29'),
+(400, 'test2', 'jai visit you\'re profil', 0, '2019-06-12 14:17:30'),
+(401, 'HH', 'jai visit you\'re profil', 0, '2019-06-12 14:17:31'),
+(402, 'HH', 'jai visit you\'re profil', 0, '2019-06-12 14:17:31'),
+(403, 'bouboule', 'jai visit you\'re profil', 1, '2019-06-12 14:17:32'),
+(404, 'bouboule', 'jai visit you\'re profil', 1, '2019-06-12 14:19:16'),
+(405, 'metentis', 'jai visit you\'re profil', 1, '2019-06-12 14:19:19'),
+(406, 'tyr', 'jai visit you\'re profil', 0, '2019-06-12 14:19:20'),
+(407, 'bouboule', 'jai visit you\'re profil', 1, '2019-06-12 14:19:21'),
+(408, 'HH', 'jai visit you\'re profil', 0, '2019-06-12 14:19:21'),
+(409, 'metentis', 'jai visit you\'re profil', 1, '2019-06-12 14:19:23'),
+(410, 'test', 'jai visit you\'re profil', 0, '2019-06-12 14:19:24'),
+(411, 'HH', 'jai visit you\'re profil', 0, '2019-06-12 14:19:25'),
+(412, 'test4', 'metentis visit you\'re profil', 0, '2019-06-12 14:21:00'),
+(413, 'test3', 'metentis visit you\'re profil', 0, '2019-06-12 14:24:29'),
+(414, 'test4', 'metentis visit you\'re profil', 0, '2019-06-12 14:24:52'),
+(415, 'metentis', 'bouboule visit you\'re profil', 1, '2019-06-12 14:28:44'),
+(416, 'metentis', 'bouboule send you a like', 1, '2019-06-12 14:28:47'),
+(417, 'metentis', 'bouboule send you a unlike', 1, '2019-06-12 14:28:52'),
+(418, 'metentis', 'bouboule visit you\'re profil', 1, '2019-06-12 14:57:51'),
+(419, 'metentis', 'bouboule send you a like', 1, '2019-06-12 14:57:53'),
+(420, 'tyr', 'metentis visit you\'re profil', 0, '2019-06-13 08:41:18');
 
 -- --------------------------------------------------------
 
@@ -480,21 +274,19 @@ INSERT INTO `notifications` (`id`, `notificationUser`, `notificationType`, `noti
 -- Structure de la table `picturesusers`
 --
 
-DROP TABLE IF EXISTS `picturesusers`;
-CREATE TABLE IF NOT EXISTS `picturesusers` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `picturesusers` (
+  `id` int(11) NOT NULL,
   `userId` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `picture` longtext CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=190 DEFAULT CHARSET=latin1;
+  `picture` longtext CHARACTER SET utf8 COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Déchargement des données de la table `picturesusers`
+-- Contenu de la table `picturesusers`
 --
 
 INSERT INTO `picturesusers` (`id`, `userId`, `picture`) VALUES
-(179, '128', 'FR.jpg'),
-(180, '128', 'CD.jpg'),
+(179, '128', 'image3.jpg'),
+(180, '128', 'image.jpeg'),
 (181, '128', 'image2.jpeg'),
 (183, '128', 'download.jpeg'),
 (184, '129', 'image4.jpg'),
@@ -502,7 +294,13 @@ INSERT INTO `picturesusers` (`id`, `userId`, `picture`) VALUES
 (186, '142', 'FR.jpg'),
 (187, '143', 'FR.TR.jpg'),
 (188, '142', 'FR.jpg'),
-(189, '142', 'CD.jpg');
+(189, '142', 'CD.jpg'),
+(190, '137', 'image3.jpg'),
+(191, '136', 'image2.jpeg'),
+(192, '135', 'image4.jpg'),
+(193, '134', 'download.jpeg'),
+(194, '128', 'image4.jpg'),
+(195, '130', 'image4.jpg');
 
 -- --------------------------------------------------------
 
@@ -510,21 +308,19 @@ INSERT INTO `picturesusers` (`id`, `userId`, `picture`) VALUES
 -- Structure de la table `profil`
 --
 
-DROP TABLE IF EXISTS `profil`;
-CREATE TABLE IF NOT EXISTS `profil` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `profil` (
+  `id` int(11) NOT NULL,
   `userName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `lastName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `firstName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `confirmKey` bigint(20) NOT NULL,
-  `confirmKeyOk` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=144 DEFAULT CHARSET=latin1;
+  `confirmKeyOk` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Déchargement des données de la table `profil`
+-- Contenu de la table `profil`
 --
 
 INSERT INTO `profil` (`id`, `userName`, `password`, `email`, `lastName`, `firstName`, `confirmKey`, `confirmKeyOk`) VALUES
@@ -540,7 +336,17 @@ INSERT INTO `profil` (`id`, `userName`, `password`, `email`, `lastName`, `firstN
 (137, 'test4', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'test4@gmail.com', 'test4', 'test4', 6037373664254, 1),
 (139, 'coucou', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'coucoucou@gmail.com', 'coucou', 'coucou', 6981057521520, 1),
 (142, 'bat test', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'sylvain.boeuf@gmail.fr', 'Wayne', 'Bruce', 7960381791630, 1),
-(143, 'the man of steel', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'sylvain.boeuf@free.fr', 'kent', 'Clark', 8318236214024, 1);
+(143, 'the man of steel', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'sylvain.boeuf@free.fr', 'kent', 'Clark', 8318236214024, 1),
+(144, 'test5', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'test5@gmail.com', 'test5', 'test5', 7566931969138, 1),
+(145, 'test6', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'test6@gmail.com', 'test6', 'test6', 582266724213, 1),
+(146, 'test9', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'test9@gmail.com', 'test9', 'test9', 3488552820732, 1),
+(147, 'test10', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'test10@gmail.com', 'test10', 'test10', 7358031551689, 0),
+(148, 'test11', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'test11@gmail.fr', 'test11', 'test11', 9736868538874, 1),
+(149, 'test12', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'test12@gmail.fr', 'test12', 'test12', 4021348015825, 1),
+(150, 'test13', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'test13@gmail.fr', 'test13', 'test13', 6033169455479, 0),
+(151, 'test14', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'test14@gmail.com', 'test14', 'test14', 6190844112524, 0),
+(152, 'test15', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'test15@gmail.com', 'test15', 'test15', 5783414770008, 1),
+(153, 'test16', '88d093c646a6ab751441641f00f01bfbd9104c9a804e4a72e03c36eb4ca3247d', 'test16@gmail.com', 'test16', 'test16', 2569539059679, 1);
 
 -- --------------------------------------------------------
 
@@ -548,27 +354,22 @@ INSERT INTO `profil` (`id`, `userName`, `password`, `email`, `lastName`, `firstN
 -- Structure de la table `profilmatch`
 --
 
-DROP TABLE IF EXISTS `profilmatch`;
-CREATE TABLE IF NOT EXISTS `profilmatch` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `profilmatch` (
+  `id` int(11) NOT NULL,
   `firstPerson` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `secondPerson` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+  `secondPerson` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Déchargement des données de la table `profilmatch`
+-- Contenu de la table `profilmatch`
 --
 
 INSERT INTO `profilmatch` (`id`, `firstPerson`, `secondPerson`) VALUES
-(11, 'tyr', 'metentis'),
 (12, 'tyr', 'bouboule'),
 (14, 'jai', 'tyr'),
 (15, 'jai', 'HH'),
 (16, 'metentis', 'jai'),
-(17, 'bouboule', 'metentis'),
-(20, 'test3', 'jai'),
-(21, 'bat test', 'metentis');
+(20, 'test3', 'jai');
 
 -- --------------------------------------------------------
 
@@ -576,9 +377,8 @@ INSERT INTO `profilmatch` (`id`, `firstPerson`, `secondPerson`) VALUES
 -- Structure de la table `userinfos`
 --
 
-DROP TABLE IF EXISTS `userinfos`;
-CREATE TABLE IF NOT EXISTS `userinfos` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `userinfos` (
+  `id` int(11) NOT NULL,
   `userName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `age` int(11) DEFAULT NULL,
   `biography` text,
@@ -589,30 +389,151 @@ CREATE TABLE IF NOT EXISTS `userinfos` (
   `userApproximateLocation` text,
   `userAddress` text,
   `userApproximateCity` text,
-  `populareScore` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+  `populareScore` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Déchargement des données de la table `userinfos`
+-- Contenu de la table `userinfos`
 --
 
 INSERT INTO `userinfos` (`id`, `userName`, `age`, `biography`, `gender`, `orientation`, `listInterest`, `userLocation`, `userApproximateLocation`, `userAddress`, `userApproximateCity`, `populareScore`) VALUES
-(1, 'metentis', 27, 'plus maintenannt', 'Femme', 'Homme', 'null#Movie#data processing#NigthParty#Sport#Manga', '48.80921180000001, 2.2395904', '48.8138, 2.235', '89A Rue de Paris, 92190 Meudon, France', 'Meudon', 100),
-(2, 'jai', 22, 'jcavjlerabv', 'Male', 'Homme', 'null#Movie#Manga#Sport', '48.80921180000001, 2.2395904', '48.8138, 2.235', '89A Rue de Paris, 92190 Meudon, France', 'Meudon', 60),
+(1, 'metentis', 27, 'plus maintenannt', 'Femme', 'Homme', 'null#Movie#data processing#NigthParty#Sport#Manga', '48.80921180000001, 2.2395904', '48.8574, 2.3795', '89A Rue de Paris, 92190 Meudon, France', 'Paris', 100),
+(2, 'jai', 22, 'jcavjlerabv', 'Male', 'Homme', 'null#Movie#Manga#Sport', '48.80921180000001, 2.2395904', '48.8574, 2.3795', '89A Rue de Paris, 92190 Meudon, France', 'Paris', 60),
 (3, 'bouboule', 29, 'vhkrueiubv', 'Male', 'Femme', 'null#data processing#NigthParty#Sport', '48.8079933, 2.2396035999999997', '48.8574, 2.3795', '2bis Rue Servien, 92190 Meudon, France', 'Paris', 0),
 (6, 'tyr', 23, 'vsdvhuy', 'Male', 'Femme', 'null#Movie#Manga#Sport#NigthParty#data processing', '48.8079933, 2.2396035999999997', '48.8138, 2.235', '2bis Rue Servien, 92190 Meudon, France', 'Meudon', 0),
 (7, 'HH', 30, 'null', 'Male', 'Homme', 'null#Manga#Sport', '48.8042, 2.2810200000000123', '48.8138, 2.235', '46 Rue Jean Jaurès, 92320 Châtillon, France', 'Meudon', 0),
 (8, 'le roi des math', 39, 'ewfthyeg', 'Male', 'Homme', 'null#data processing#NigthParty#Sport#Manga#Movie', '48.8079933, 2.2396035999999997', '48.8138, 2.235', '2bis Rue Servien, 92190 Meudon, France', 'Meudon', 0),
-(9, 'test', 50, 'ca bug', 'Femme', 'Femme', 'null#Sport#NigthParty', '48.8964, 2.3184499999999844', '48.8138, 2.235', '96 Boulevard Bessières, Paris 17e Arrondissement, France', 'Meudon', 0),
-(10, 'test2', 60, 'testtsetsets', 'Male', 'Femme', 'null#Manga#NigthParty', '48.8079933, 2.2396035999999997', '48.8138, 2.235', '2bis Rue Servien, 92190 Meudon, France', 'Meudon', 0),
-(12, 'test3', 70, '', 'Femme', 'Femme', 'null', '48.812498899999994, 2.24694', '48.8138, 2.235', '12BIS Rue du Docteur Vuillième, 92190 Meudon, France', 'Meudon', 0),
-(13, 'test4', 10, 'htrhdghjydnjuyrj', 'Male', 'Bisexuelle', 'null#Manga#Sport', '48.8079933, 2.2396035999999997', '48.8138, 2.235', '2bis Rue Servien, 92190 Meudon, France', 'Meudon', 0),
+(9, 'test', 50, 'ca bug', 'Femme', 'Femme', 'null#Sport#NigthParty', '48.8964, 2.3184499999999844', '48.8574, 2.3795', '96 Boulevard Bessières, Paris 17e Arrondissement, France', 'Paris', -100),
+(10, 'test2', 60, 'testtsetsets', 'Male', 'Femme', 'null#Manga#NigthParty', '48.8079933, 2.2396035999999997', '48.8574, 2.3795', '2bis Rue Servien, 92190 Meudon, France', 'Paris', 100),
+(12, 'test3', 70, '', 'Femme', 'Femme', 'null', '48.812498899999994, 2.24694', '48.8574, 2.3795', '12BIS Rue du Docteur Vuillième, 92190 Meudon, France', 'Paris', 100),
+(13, 'test4', 10, 'htrhdghjydnjuyrj', 'Male', 'Bisexuelle', 'null#Manga#Sport', '48.8079933, 2.2396035999999997', '48.8574, 2.3795', '2bis Rue Servien, 92190 Meudon, France', 'Paris', 100),
 (15, 'coucou', 46, '', 'Male', 'Femme', 'null#Sport', '48.812498899999994, 2.24694', '48.8138, 2.235', '12BIS Rue du Docteur Vuillième, 92190 Meudon, France', 'Meudon', 0),
 (18, 'bat test', 0, 'null', 'Male', 'Femme', 'null#Sport#data processing#NigthParty', '48.80921180000001, 2.2395904', '48.8138, 2.235', '89A Rue de Paris, 92190 Meudon, France', 'Meudon', -100),
-(19, 'the man of steel', 35, 'i\'m superman yeah !!!', 'Femme', 'Homme', 'null#Manga#Sport#Movie', '48.8127305, 2.2468664', '48.8138, 2.235', '8 Rue du Docteur Vuillième, 92190 Meudon, France', 'Meudon', 0);
-COMMIT;
+(19, 'the man of steel', 35, 'im superman yeah !!!', 'Femme', 'Homme', 'null#Manga#Sport#Movie', '48.8127305, 2.2468664', '48.8138, 2.235', '8 Rue du Docteur Vuillième, 92190 Meudon, France', 'Meudon', 0),
+(20, 'test5', NULL, NULL, NULL, NULL, NULL, NULL, '48.8574, 2.3795', NULL, 'Paris', 0),
+(21, 'test6', NULL, NULL, NULL, NULL, NULL, NULL, '48.8574, 2.3795', NULL, 'Paris', 0),
+(22, 'test9', NULL, NULL, NULL, NULL, NULL, NULL, '48.8574, 2.3795', NULL, 'Paris', 0),
+(25, 'test12', NULL, NULL, NULL, NULL, NULL, NULL, '48.8574, 2.3795', NULL, 'Paris', 0),
+(29, 'test16', NULL, NULL, NULL, NULL, NULL, '48.8967101, 2.3183359', '48.8574, 2.3795', '96 Boulevard Bessières, 75017 Paris, France', 'Paris', 0);
 
+--
+-- Index pour les tables exportées
+--
+
+--
+-- Index pour la table `fakeuser`
+--
+ALTER TABLE `fakeuser`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `inlineuser`
+--
+ALTER TABLE `inlineuser`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `likeuser`
+--
+ALTER TABLE `likeuser`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `listblockprofil`
+--
+ALTER TABLE `listblockprofil`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `messages`
+--
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `picturesusers`
+--
+ALTER TABLE `picturesusers`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `profil`
+--
+ALTER TABLE `profil`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `profilmatch`
+--
+ALTER TABLE `profilmatch`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `userinfos`
+--
+ALTER TABLE `userinfos`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT pour les tables exportées
+--
+
+--
+-- AUTO_INCREMENT pour la table `fakeuser`
+--
+ALTER TABLE `fakeuser`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+--
+-- AUTO_INCREMENT pour la table `inlineuser`
+--
+ALTER TABLE `inlineuser`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+--
+-- AUTO_INCREMENT pour la table `likeuser`
+--
+ALTER TABLE `likeuser`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+--
+-- AUTO_INCREMENT pour la table `listblockprofil`
+--
+ALTER TABLE `listblockprofil`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+--
+-- AUTO_INCREMENT pour la table `messages`
+--
+ALTER TABLE `messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+--
+-- AUTO_INCREMENT pour la table `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=421;
+--
+-- AUTO_INCREMENT pour la table `picturesusers`
+--
+ALTER TABLE `picturesusers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=196;
+--
+-- AUTO_INCREMENT pour la table `profil`
+--
+ALTER TABLE `profil`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=154;
+--
+-- AUTO_INCREMENT pour la table `profilmatch`
+--
+ALTER TABLE `profilmatch`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+--
+-- AUTO_INCREMENT pour la table `userinfos`
+--
+ALTER TABLE `userinfos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

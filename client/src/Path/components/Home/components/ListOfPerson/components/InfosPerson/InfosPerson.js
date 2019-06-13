@@ -5,13 +5,16 @@ import DataProfil from "./components/DataProfil"
 import DataPersonal from "./components/DataPersonal"
 import LikeUser from "./components/LikeUser"
 
-import { blockProfil, reportingFakeProfil, getPopularScoreOfProfil } from "utils/fileProvider"
+import { reportingFakeProfil, getPopularScoreOfProfil } from "utils/fileProvider"
 
 class InfosPerson extends Component {
 
     constructor(props) {
         super(props)
-        this.state = { blocked: false }
+        this.state = {
+            blocked: false,
+            fake: false,
+        }
     }
     
     componentWillReceiveProps(nextProps) {
@@ -23,9 +26,7 @@ class InfosPerson extends Component {
 
     onClick = () => {
         const { dataPerson, dataUser, getListUser } = this.props
-        blockProfil(dataUser.userName, dataPerson.userName)
-        getListUser()
-        this.setState({ blocked: true })
+        this.setState({ blocked: true }, () => getListUser(dataUser.userName, dataPerson.userName))
     }
 
     render() {
@@ -33,7 +34,7 @@ class InfosPerson extends Component {
         if (dataPerson === null) {
             return <div />
         }
-        const { blocked } = this.state
+        const { blocked, fake } = this.state
         const {
             id, userName, lastName, firstName, biography,
             listInterest, gender, orientation, likeUser,
@@ -69,10 +70,10 @@ class InfosPerson extends Component {
                                     Block this profil
                                 </button>
                                 {
-                                    (fakeUser !== undefined)
+                                    (fakeUser !== undefined || fake === true)
                                         ? "This profil is potentially a fake Profil"
                                         : (
-                                            <button onClick={ () => reportingFakeProfil(userName) }>
+                                            <button onClick={ () => this.setState({ fake: true }, () => reportingFakeProfil(userName)) }>
                                                 Report this user like a fake profil
                                             </button>
                                         )
