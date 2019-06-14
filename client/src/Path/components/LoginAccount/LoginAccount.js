@@ -3,8 +3,6 @@ import React, { Component } from "react"
 import CreateAccount from "./components/CreateAccount"
 import LogIn from "./components/LogIn"
 
-import Map from "components/Map"
-
 class LoginAccount extends Component {
     
     constructor(props) {
@@ -40,7 +38,6 @@ class LoginAccount extends Component {
                         ? <LogIn />
                         : null
                 }
-                <Map />
             </div>
         )
     }

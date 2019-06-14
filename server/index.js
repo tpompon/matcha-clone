@@ -10,7 +10,7 @@ const bodyParser = require("body-parser")
 const connection = mysql.createConnection({
 	host: "localhost",
 	user: "root",
-	password: "",
+	password: "input305",
 	database: "matcha",
 	multipleStatements: true,
 })
@@ -104,7 +104,7 @@ app.post("/users/checkLogin", (req, res) => {
 
 app.post("/users/getUserProfil", (req, res) => {
 	const { id } = req.body
-	const selectDataProfil = `SELECT p.*, u.age, u.biography, u.listInterest, u.gender, u.orientation, u.userAddress, u.userLocation, u.userApproximateLocation, u.populareScore FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.id='${id}'`
+	const selectDataProfil = `SELECT p.*, u.age, u.biography, u.listInterest, u.gender, u.orientation, u.userAddress, u.userLocation, u.userApproximateLocation, u.userApproximateCity, u.populareScore FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.id='${id}'`
 	connection.query(selectDataProfil, (error, results) => {
 		if (error) {
 			return res.send(error)
@@ -566,8 +566,8 @@ app.post("/users/reportingFakeProfil", (req, res) => {
 })
 
 app.post("/users/getUserLocation", (req, res) => {
-	const { coords, userName, userAdress } = req.body
-	const insertLocation = `UPDATE userinfos SET userLocation='${coords}', userAddress='${userAdress}' WHERE userName='${userName}'`
+	const { coords, userName, userAddress } = req.body
+	const insertLocation = `UPDATE userinfos SET userLocation='${coords}', userAddress='${userAddress}' WHERE userName='${userName}'`
 	connection.query(insertLocation, (error, results) => {
 		if (error) {
 			return res.send(error)

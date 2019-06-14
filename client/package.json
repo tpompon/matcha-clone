@@ -6,7 +6,6 @@
     "esri-leaflet-geocoder": "^2.2.14",
     "hash.js": "^1.1.7",
     "leaflet": "^1.5.1",
-    "opencage-api-client": "^0.5.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

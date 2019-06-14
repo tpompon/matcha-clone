@@ -7,7 +7,7 @@ import ListInterest from "./components/ListInterest"
 import Orientation from "./components/Orientation"
 import Gender from "./components/Gender"
 import Pictures from "./components/Pictures"
-import NewLocation from "./components/NewLocation"
+import Map from "./components/Map"
 
 import { updateInfosPersonal } from "utils/fileProvider"
 
@@ -22,17 +22,7 @@ class InfosPersonal extends Component {
 
     componentWillMount() {
         const { infosUser } = this.props
-        const {
-            age, biography, gender, orientation,
-            listInterest, userAddress,
-        } = infosUser
-        this.setState({
-            ...this.state,
-            infosPersonalUser: {
-                age, biography, gender, orientation,
-                listInterest, userAddress,
-            },
-        })
+        this.setState({ infosPersonalUser: { ...infosUser } })
     }
 
     onChangeValue = (e, option) => {
@@ -67,7 +57,7 @@ class InfosPersonal extends Component {
         const { infosPersonalUser } = this.state
         const {
             age, orientation, gender, biography,
-            listInterest, userAddress,
+            listInterest, userLocation, userApproximateCity,
         } = infosPersonalUser
         return (
             <div>
@@ -87,10 +77,6 @@ class InfosPersonal extends Component {
                     onChangeValue={ this.onChangeValue }
                     value={ biography }
                 />
-                <NewLocation
-                    userName={ userName }
-                    userAddress={ userAddress }
-                />
                 <ListInterest
                     onChangeValue={ this.updateListInterest }
                     list={ listInterest }
@@ -99,6 +85,13 @@ class InfosPersonal extends Component {
                     userId={ id }
                     userName={ userName }
                 />
+                <div style={ { width: "100%", height: 200 } }>
+                    <Map
+                        userName={ userName }
+                        userLocation={ userLocation }
+                        userApproximateCity={ userApproximateCity }
+                    />
+                </div>
                 <button onClick={ () => this.onClick(infosPersonalUser, userName) }>Save</button>
             </div>
         )

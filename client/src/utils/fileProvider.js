@@ -1,9 +1,7 @@
 import hash from "hash.js"
-import * as Opencage from "opencage-api-client"
+import * as ELG from "esri-leaflet-geocoder"
 
 import { checkEmail, checkPassword } from "utils/utils"
-
-const apiKey = "54b379950fdd4dbeb5c56bc93a60afa9"
 
 const optionsFetch = (dataBody) => {
     const options = {
@@ -234,40 +232,29 @@ export const getPopularScoreOfProfil = (profilName) => {
     fetch("http://localhost:4000/users/showPopulareScore", optionsFetch({ profilName }))
 }
 
-export const getUserLocation = (userName) => {
+export const getLocation = (userName) => {
     location()
-        .then((location) => {
-            Opencage
-                .geocode({
-                    key: apiKey,
-                    q: `${location.coords.latitude}, ${location.coords.longitude}`,
+        .then((response) => {
+            ELG.reverseGeocode()
+                .latlng([response.coords.latitude, response.coords.longitude])
+                .run((error, results) => {
+                    if (error) {
+                        console.log(error)
+                    } else {
+                        fetch("http://localhost:4000/users/getUserLocation", optionsFetch({
+                            userName,
+                            coords: `${response.coords.latitude}, ${response.coords.longitude}`,
+                            userAddress: results.address.LongLabel,
+                        }))
+                    }
                 })
-                .then((response) => fetch("http://localhost:4000/users/getUserLocation", optionsFetch({
-                    userAdress: response.results[0].formatted,
-                    coords: `${location.coords.latitude}, ${location.coords.longitude}`,
-                    userName,
-                })))
-                .catch((error) => { console.log(error) })
         })
         .catch((error) => console.log(error))
     getUserApproximateLocation(userName)
 }
 
-export const setNewLocation = (userName, newLocation) => {
-    Opencage
-        .geocode({
-            key: apiKey,
-            q: newLocation,
-        })
-        /*
-        .then((response) => fetch("http://localhost:4000/users/getUserLocation", optionsFetch({
-            userAdress: response.results[0].formatted,
-            coords: `${response.results[0].geometry.lat}, ${response.results[0].geometry.lng}`,
-            userName,
-        })))
-        */
-       .then((response) => console.log(response))
-        .catch((error) => console.log(error))
+export const setNewLocation = (userName, coords, userAddress) => {
+    fetch("http://localhost:4000/users/getUserLocation", optionsFetch({ userName, coords, userAddress }))
 }
 
 const location = () => {
@@ -277,7 +264,6 @@ const location = () => {
             console.log("Not supported !")
         }
         geolocation.getCurrentPosition((position) => {
-            console.log("Location found !")
             resolve(position)
         }, () => {
             console.log("Location: Permission denied !")
@@ -291,11 +277,12 @@ const getUserApproximateLocation = (userName) => {
         .then((response) => response.json())
         .then((json) => fetch("http://localhost:4000/users/getUserApproximateLocation", optionsFetch({
             coords: `${json.latitude}, ${json.longitude}`,
-            city: json.city,
+            city: `${json.city}, ${json.country_name}`,
             userName,
         })))
         .catch((error) => console.log(error))
 }
+
 
 export const calculDistance = (lat1, lon1, lat2, lon2) => {
     if ((lat1 === lat2) && (lon1 === lon2)) {

@@ -8,7 +8,7 @@ import Chat from "./components/Chat"
 import Notifications from "./components/Notifications"
 
 import {
-    getNotificationsNoRead, /*userIsDeLog,*/ getUserProfil, getUserLocation,
+    getNotificationsNoRead, /*userIsDeLog,*/ getUserProfil, getLocation,
 } from "utils/fileProvider"
 
 const optionsArray = [
@@ -37,7 +37,7 @@ class Home extends Component {
             return
         }
         const { dataUser } = state
-        getUserLocation(dataUser.userName)
+        getLocation(dataUser.userName, dataUser.id)
         getUserProfil(dataUser.id)
             .then((response) => this.setState({ dataUser: response.data[0] }))
             .catch((error) => console.log(error))
