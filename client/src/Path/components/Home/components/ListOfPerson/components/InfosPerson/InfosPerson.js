@@ -20,7 +20,7 @@ class InfosPerson extends Component {
     componentWillReceiveProps(nextProps) {
         const { dataPerson } = nextProps
         if (this.props.dataPerson !== dataPerson) {
-            this.setState({ blocked: false })
+            this.setState({ blocked: false, fake: false })
         }
     }
 

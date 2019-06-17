@@ -57,7 +57,7 @@ class InfosPersonal extends Component {
         const { infosPersonalUser } = this.state
         const {
             age, orientation, gender, biography,
-            listInterest, userLocation, userApproximateCity,
+            listInterest, userLocation, userApproximateLocation,
         } = infosPersonalUser
         return (
             <div>
@@ -89,7 +89,7 @@ class InfosPersonal extends Component {
                     <Map
                         userName={ userName }
                         userLocation={ userLocation }
-                        userApproximateCity={ userApproximateCity }
+                        userApproximateLocation={ userApproximateLocation }
                     />
                 </div>
                 <button onClick={ () => this.onClick(infosPersonalUser, userName) }>Save</button>

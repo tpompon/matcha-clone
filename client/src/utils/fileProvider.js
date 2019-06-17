@@ -1,5 +1,4 @@
 import hash from "hash.js"
-import * as ELG from "esri-leaflet-geocoder"
 
 import { checkEmail, checkPassword } from "utils/utils"
 
@@ -232,32 +231,19 @@ export const getPopularScoreOfProfil = (profilName) => {
     fetch("http://localhost:4000/users/showPopulareScore", optionsFetch({ profilName }))
 }
 
-export const getLocation = (userName) => {
-    location()
-        .then((response) => {
-            ELG.reverseGeocode()
-                .latlng([response.coords.latitude, response.coords.longitude])
-                .run((error, results) => {
-                    if (error) {
-                        console.log(error)
-                    } else {
-                        fetch("http://localhost:4000/users/getUserLocation", optionsFetch({
-                            userName,
-                            coords: `${response.coords.latitude}, ${response.coords.longitude}`,
-                            userAddress: results.address.LongLabel,
-                        }))
-                    }
-                })
-        })
-        .catch((error) => console.log(error))
-    getUserApproximateLocation(userName)
+export const setLocation = (userName, dataAddress) => {
+    fetch("http://localhost:4000/users/getUserLocation", optionsFetch({
+        userName,
+        coords: dataAddress.coords,
+        userAddress: dataAddress.address,
+    }))
 }
 
 export const setNewLocation = (userName, coords, userAddress) => {
     fetch("http://localhost:4000/users/getUserLocation", optionsFetch({ userName, coords, userAddress }))
 }
 
-const location = () => {
+export const getLocation = () => {
     const geolocation = navigator.geolocation
     const getLocation = new Promise((resolve, reject) => {
         if (!geolocation) {
@@ -266,23 +252,26 @@ const location = () => {
         geolocation.getCurrentPosition((position) => {
             resolve(position)
         }, () => {
-            console.log("Location: Permission denied !")
+            return null
         })
     })
     return getLocation
 }
 
-const getUserApproximateLocation = (userName) => {
-    fetch("https://geoip-db.com/json/{ipv4-address}")
+export const getUserApproximateLocation = () => {
+    return fetch("https://geoip-db.com/json/{ipv4-address}")
         .then((response) => response.json())
-        .then((json) => fetch("http://localhost:4000/users/getUserApproximateLocation", optionsFetch({
-            coords: `${json.latitude}, ${json.longitude}`,
-            city: `${json.city}, ${json.country_name}`,
-            userName,
-        })))
+        .then((json) => json)
         .catch((error) => console.log(error))
 }
 
+export const setUserApproximateLocation = (userName, dataApproximateAddress) => {
+    fetch("http://localhost:4000/users/getUserApproximateLocation", optionsFetch({
+        coords: dataApproximateAddress.coords,
+        city: dataApproximateAddress.city,
+        userName,
+    }))    
+}
 
 export const calculDistance = (lat1, lon1, lat2, lon2) => {
     if ((lat1 === lat2) && (lon1 === lon2)) {

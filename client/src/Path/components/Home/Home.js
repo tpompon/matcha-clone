@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import * as ELG from "esri-leaflet-geocoder"
 
 import EditProfil from "./components/EditProfil"
 import Disconnect from "./components/Disconnect"
@@ -8,7 +9,7 @@ import Chat from "./components/Chat"
 import Notifications from "./components/Notifications"
 
 import {
-    getNotificationsNoRead, /*userIsDeLog,*/ getUserProfil, getLocation,
+    getNotificationsNoRead, /*userIsDeLog,*/ getUserProfil, getLocation, setLocation, getUserApproximateLocation, setUserApproximateLocation,
 } from "utils/fileProvider"
 
 const optionsArray = [
@@ -38,6 +39,55 @@ class Home extends Component {
         }
         const { dataUser } = state
         getLocation(dataUser.userName, dataUser.id)
+            .then((response) => {
+                if (response) {
+                    ELG.reverseGeocode()
+                        .latlng([response.coords.latitude, response.coords.longitude])
+                        .run((error, results) => {
+                            if (error) {
+                                return error
+                            } else {
+                                const dataAddress = {
+                                    coords: `${results.latlng.lat} , ${results.latlng.lng}`,
+                                    address: results.address.LongLabel,
+
+                                }
+                                setLocation(dataUser.userName, dataAddress)
+                                this.setState({
+                                    dataUser: {
+                                        ...this.state.dataUser,
+                                        userLocation: dataAddress.coords,
+                                        userAddress: dataAddress.address,
+                                    },
+                                })
+                            }
+                        })
+                }
+            })
+            .catch((error) => console.log(error))
+        getUserApproximateLocation()
+            .then((response) => {
+                ELG.geocode().text(response.city)
+                    .run((error, results) => {
+                        if (error) {
+                            console.log(error)
+                        } else {
+                            const dataApproximateAddress = {
+                                coords: `${results.results[0].latlng.lat}, ${results.results[0].latlng.lng}`,
+                                city: results.results[0].text,
+                            }
+                            setUserApproximateLocation(dataUser.userName, dataApproximateAddress)
+                            this.setState({
+                                dataUser: {
+                                    ...this.state.dataUser,
+                                    userApproximateLocation: dataApproximateAddress.coords,
+                                    userApproximateCity: dataApproximateAddress.city,
+                                },
+                            })
+                        }
+                    })
+            })
+            .catch((error) => console.log(error))
         getUserProfil(dataUser.id)
             .then((response) => this.setState({ dataUser: response.data[0] }))
             .catch((error) => console.log(error))

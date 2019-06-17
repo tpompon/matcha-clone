@@ -20,22 +20,7 @@ class MapComp extends Component {
     }
 
     componentWillMount() {
-        const { userLocation, userApproximateCity } = this.props
-        let coords
-        if (userLocation === null) {
-            ELG.geocode().text(userApproximateCity)
-                .run((error, results) => {
-                    if (error) {
-                        console.log(error)
-                    } else {
-                        coords = [results.results[0].latlng.lat, results.results[0].latlng.lng]
-                        this.setState({ center: coords })
-                    }
-                })
-        } else {
-            coords = userLocation.split(", ")
-            this.setState({ center: coords })
-        }
+        this.findLocation(this.props)
     }
 
     componentDidMount() {
@@ -57,6 +42,24 @@ class MapComp extends Component {
                 setNewLocation(userName, `${data.results[i].latlng.lat}, ${data.results[i].latlng.lng}`, data.results[i].text)
             }
         })
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { userLocation, userApproximateCity } = nextProps
+        if (this.props.userLocation !== userLocation || this.props.userApproximateCity !== userApproximateCity) {
+            this.findLocation(nextProps)
+        }
+    }
+
+    findLocation = (location) => {
+        const { userLocation, userApproximateLocation } = location
+        let coords
+        if (userLocation === null) {
+            coords = userApproximateLocation.split(", ")
+        } else {
+            coords = userLocation.split(", ")
+        }
+        this.setState({ center: coords })
     }
 
     render() {
