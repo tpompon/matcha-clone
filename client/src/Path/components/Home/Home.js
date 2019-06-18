@@ -29,6 +29,8 @@ class Home extends Component {
             showOption: "",
             notificationsArray: [],
             dataUser: undefined,
+            loadGeolocalistationSuccess: false,
+            loadGeolocalistationApproximateSuccess: false,
         }
         this.mounted = true
     }
@@ -38,10 +40,10 @@ class Home extends Component {
         if (state === undefined) {
             return
         }
+        console.log(this.state)
         const { dataUser } = state
         getLocation(dataUser.userName, dataUser.id)
             .then((response) => {
-                console.log("test")
                 ELG.reverseGeocode()
                     .latlng([response.coords.latitude, response.coords.longitude])
                     .run((error, results) => {
@@ -51,20 +53,26 @@ class Home extends Component {
                             const dataAddress = {
                                 coords: `${results.latlng.lat} , ${results.latlng.lng}`,
                                 address: results.address.LongLabel,
-
                             }
                             setLocation(dataUser.userName, dataAddress)
-                            this.setState({
-                                dataUser: {
-                                    ...this.state.dataUser,
-                                    userLocation: dataAddress.coords,
-                                    userAddress: dataAddress.address,
-                                },
-                            })
+                                .then(() => this.setState({
+                                    ...this.state,
+                                    dataUser: {
+                                        ...this.state.dataUser,
+                                        userLocation: dataAddress.coords,
+                                        userAddress: dataAddress.address,
+                                    },
+                                    loadGeolocalistationSuccess: true,
+                                }))
+                                .catch((error) => console.log(error))
                         }
                     })
             })
-            .catch(() => setLocationToNull(dataUser.userName))
+            .catch(() => {
+                setLocationToNull(dataUser.userName)
+                    .then(() => this.setState({ ...this.state, loadGeolocalistationSuccess: true }))
+                    .catch((error) => console.log(error))
+            })
         getUserApproximateLocation()
             .then((response) => {
                 ELG.geocode().text(response.city)
@@ -77,13 +85,16 @@ class Home extends Component {
                                 city: results.results[0].text,
                             }
                             setUserApproximateLocation(dataUser.userName, dataApproximateAddress)
-                            this.setState({
-                                dataUser: {
-                                    ...this.state.dataUser,
-                                    userApproximateLocation: dataApproximateAddress.coords,
-                                    userApproximateCity: dataApproximateAddress.city,
-                                },
-                            })
+                                .then(() => this.setState({
+                                    ...this.state,
+                                    dataUser: {
+                                        ...this.state.dataUser,
+                                        userApproximateLocation: dataApproximateAddress.coords,
+                                        userApproximateCity: dataApproximateAddress.city,
+                                    },
+                                    loadGeolocalistationApproximateSuccess: true,
+                                }))
+                                .catch((error) => console.log(error))
                         }
                     })
             })
@@ -160,9 +171,14 @@ class Home extends Component {
 
     render() {
         const { history } = this.props
-        const { notificationsArray, dataUser } = this.state
+        const {
+            notificationsArray, dataUser, loadGeolocalistationSuccess, loadGeolocalistationApproximateSuccess,
+        } = this.state
         if (dataUser === undefined) {
             history.push("/LoginAccount")
+            return <div />
+        }
+        if (loadGeolocalistationSuccess !== true || loadGeolocalistationApproximateSuccess !== true) {
             return <div />
         }
         return (

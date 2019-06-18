@@ -232,7 +232,7 @@ export const getPopularScoreOfProfil = (profilName) => {
 }
 
 export const setLocation = (userName, dataAddress) => {
-    fetch("http://localhost:4000/users/getUserLocation", optionsFetch({
+    return fetch("http://localhost:4000/users/getUserLocation", optionsFetch({
         userName,
         coords: dataAddress.coords,
         userAddress: dataAddress.address,
@@ -240,7 +240,7 @@ export const setLocation = (userName, dataAddress) => {
 }
 
 export const setNewLocation = (userName, coords, userAddress) => {
-    fetch("http://localhost:4000/users/getUserLocation", optionsFetch({ userName, coords, userAddress }))
+    return fetch("http://localhost:4000/users/getUserLocation", optionsFetch({ userName, coords, userAddress }))
 }
 
 export const getLocation = () => {
@@ -259,7 +259,7 @@ export const getLocation = () => {
 }
 
 export const setLocationToNull = (userName) => {
-    fetch("http://localhost:4000/users/setLocationToNull", optionsFetch({ userName }))
+    return fetch("http://localhost:4000/users/setLocationToNull", optionsFetch({ userName }))
 }
 
 export const getUserApproximateLocation = () => {
@@ -270,7 +270,7 @@ export const getUserApproximateLocation = () => {
 }
 
 export const setUserApproximateLocation = (userName, dataApproximateAddress) => {
-    fetch("http://localhost:4000/users/getUserApproximateLocation", optionsFetch({
+    return fetch("http://localhost:4000/users/getUserApproximateLocation", optionsFetch({
         coords: dataApproximateAddress.coords,
         city: dataApproximateAddress.city,
         userName,
