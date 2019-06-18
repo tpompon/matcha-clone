@@ -252,10 +252,14 @@ export const getLocation = () => {
         geolocation.getCurrentPosition((position) => {
             resolve(position)
         }, () => {
-            return null
+            reject (null)
         })
     })
     return getLocation
+}
+
+export const setLocationToNull = (userName) => {
+    fetch("http://localhost:4000/users/setLocationToNull", optionsFetch({ userName }))
 }
 
 export const getUserApproximateLocation = () => {

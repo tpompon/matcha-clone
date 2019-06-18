@@ -96,11 +96,12 @@ class CollectionView extends Component {
     }
 
     chooseTag = (tag) => {
+        const { listPerson } = this.props
         const { listTag } = this.state
         if (listTag.indexOf(tag) === -1) {
-            this.setState({ listTag: this.state.listTag + tag }, () => this.filterList())
+            this.setState({ listTag: this.state.listTag + tag }, () => this.filterList(listPerson))
         } else {
-            this.setState({ listTag: this.state.listTag.replace(tag, "") }, () => this.filterList())
+            this.setState({ listTag: this.state.listTag.replace(tag, "") }, () => this.filterList(listPerson))
         }
     }
 

@@ -69,7 +69,7 @@ class MapComp extends Component {
             <Map
                 style={ { height: "100%" } }
                 center={ center }
-                zoom={ (userLocation === null) ? "10" : "17" }
+                zoom={ (userLocation === null) ? "12" : "17" }
                 maxZoom="19"
                 ref={ (map) => { this.leafleMap = map } }
             >

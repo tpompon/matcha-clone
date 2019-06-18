@@ -18,7 +18,7 @@ const ListInterest = ({ list, onChangeValue }) => (
                         <li
                             key={ `interest-${interest}` }
                             style={ { color: (checkInterest !== -1) ? "red" : null } }
-                            onClick={ () => ((checkInterest !== -1)) ? onChangeValue(list.replace(interest, "")) : onChangeValue(list + `${interest}`) }
+                            onClick={ () => ((checkInterest !== -1)) ? onChangeValue(list.replace(interest, "")) : onChangeValue((list === null) ? "" :  list + `${interest}`) }
                         >
                             { interest }
                         </li>

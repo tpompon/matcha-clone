@@ -9,7 +9,8 @@ import Chat from "./components/Chat"
 import Notifications from "./components/Notifications"
 
 import {
-    getNotificationsNoRead, /*userIsDeLog,*/ getUserProfil, getLocation, setLocation, getUserApproximateLocation, setUserApproximateLocation,
+    getNotificationsNoRead, /*userIsDeLog,*/ getUserProfil, getLocation,
+    setLocation, getUserApproximateLocation,setUserApproximateLocation, setLocationToNull,
 } from "utils/fileProvider"
 
 const optionsArray = [
@@ -40,31 +41,30 @@ class Home extends Component {
         const { dataUser } = state
         getLocation(dataUser.userName, dataUser.id)
             .then((response) => {
-                if (response) {
-                    ELG.reverseGeocode()
-                        .latlng([response.coords.latitude, response.coords.longitude])
-                        .run((error, results) => {
-                            if (error) {
-                                return error
-                            } else {
-                                const dataAddress = {
-                                    coords: `${results.latlng.lat} , ${results.latlng.lng}`,
-                                    address: results.address.LongLabel,
+                console.log("test")
+                ELG.reverseGeocode()
+                    .latlng([response.coords.latitude, response.coords.longitude])
+                    .run((error, results) => {
+                        if (error) {
+                            return error
+                        } else {
+                            const dataAddress = {
+                                coords: `${results.latlng.lat} , ${results.latlng.lng}`,
+                                address: results.address.LongLabel,
 
-                                }
-                                setLocation(dataUser.userName, dataAddress)
-                                this.setState({
-                                    dataUser: {
-                                        ...this.state.dataUser,
-                                        userLocation: dataAddress.coords,
-                                        userAddress: dataAddress.address,
-                                    },
-                                })
                             }
-                        })
-                }
+                            setLocation(dataUser.userName, dataAddress)
+                            this.setState({
+                                dataUser: {
+                                    ...this.state.dataUser,
+                                    userLocation: dataAddress.coords,
+                                    userAddress: dataAddress.address,
+                                },
+                            })
+                        }
+                    })
             })
-            .catch((error) => console.log(error))
+            .catch(() => setLocationToNull(dataUser.userName))
         getUserApproximateLocation()
             .then((response) => {
                 ELG.geocode().text(response.city)

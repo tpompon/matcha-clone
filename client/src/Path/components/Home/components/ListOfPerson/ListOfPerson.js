@@ -50,6 +50,16 @@ class ListOfPerson extends Component {
 
     render() {
         const { dataUser } = this.props
+        const {
+            age, biography, gender, orientation, listInterest,
+        } = dataUser
+        if (!age || !biography || !gender || !orientation || !listInterest) {
+            return (
+                <div>
+                    Vous devez remplir votre profil pour acceder a cette page !
+                </div>
+            )
+        }
         const { dataPerson, listPerson } = this.state
         if (listPerson === null) {
             return <div />

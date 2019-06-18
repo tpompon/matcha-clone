@@ -10,7 +10,7 @@ const bodyParser = require("body-parser")
 const connection = mysql.createConnection({
 	host: "localhost",
 	user: "root",
-	password: "",
+	password: "input305",
 	database: "matcha",
 	multipleStatements: true,
 })
@@ -61,7 +61,7 @@ const saveImage = (dataPicture, userId, namePicture) => {
 }
 
 const addNotification = (from, to, message) => {
-	const sqlInsertNotification =  `INSERT INTO notifications (notificationUser, notificationType, date) SELECT '${to}', '${message.replace(/'/g, "\\'")}', NOW() WHERE NOT EXISTS (SELECT user FROM listblockprofil WHERE user='${to}' AND blockProfil='${from}')`
+	const sqlInsertNotification =  `INSERT INTO notifications (notificationUser, notificationType, date) SELECT '${to}', '${message.replace(/'/g, "\\'")}', NOW() FROM notifications WHERE NOT EXISTS (SELECT user FROM listblockprofil WHERE user='${to}' AND blockProfil='${from}') LIMIT 1`
 	return sqlInsertNotification
 }
 
@@ -104,7 +104,7 @@ app.post("/users/checkLogin", (req, res) => {
 
 app.post("/users/getUserProfil", (req, res) => {
 	const { id } = req.body
-	const selectDataProfil = `SELECT p.*, u.age, u.biography, u.listInterest, u.gender, u.orientation, u.userAddress, u.userLocation, u.userApproximateLocation, u.userApproximateCity, u.populareScore FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.id='${id}'`
+	const selectDataProfil = `SELECT p.*, u.age, u.biography, u.listInterest, u.gender, u.orientation, u.userApproximateLocation, u.userApproximateCity, u.populareScore FROM profil p INNER JOIN userinfos u ON p.userName=u.userName WHERE p.id='${id}'`
 	connection.query(selectDataProfil, (error, results) => {
 		if (error) {
 			return res.send(error)
@@ -133,7 +133,7 @@ app.post("/users/add", (req, res) => {
 	} = req.body
 	let insertUserIntoBdd = `INSERT INTO profil (userName, password, email, lastname, firstname, confirmKey)
 		VALUES('${name}', '${password}', '${email}', '${lastName}', '${firstName}', ${confirmKey});`
-	insertUserIntoBdd += `INSERT INTO userinfos (userName) VALUES ('${name}')`
+	insertUserIntoBdd += `INSERT INTO userinfos (userName, gender, orientation) VALUES ('${name}', 'Male', 'Bisexuelle')`
 	connection.query(insertUserIntoBdd, (error, results) => {
 		if (error) {
 			return res.send(error)
@@ -260,7 +260,8 @@ app.post("/users/updateInfosPersonal", (req, res) => {
 		age, orientation, gender, biography, listInterest, userName,
 	} = req.body
 	const text = (biography === null) ? "" : biography
-	const updateUserInfos = `UPDATE userinfos SET age=${age}, orientation='${orientation}', gender='${gender}', biography='${text.replace(/'/g, "\\'")}', listInterest='${listInterest}' WHERE userName='${userName}'`
+	const interest = (listInterest === null) ? "" : listInterest
+	const updateUserInfos = `UPDATE userinfos SET age=${age}, orientation='${orientation}', gender='${gender}', biography='${text.replace(/'/g, "\\'")}', listInterest='${interest}' WHERE userName='${userName}'`
 	connection.query(updateUserInfos, (error, results) => {
 		if (error) {
 			return res.send(error)
@@ -307,7 +308,7 @@ app.post("/users/likeOrUnlikeProfil", (req, res) => {
 							return res.send(error)
 						} else {
 							populareScore(profilName, valueLike)
-							if (results.length > 0 && results[0].likeUser === 1 && valueLike === 1) {
+							if (results.length > 0 && results[0].likeUser === 1) {
 								return res.send("match")
 							} else {
 								return res.send("like")
@@ -586,6 +587,18 @@ app.post("/users/getUserApproximateLocation", (req, res) => {
 			return res.send(error)
 		} else {
 			return res.send("insert approximate location success")
+		}
+	})
+})
+
+app.post("/users/setLocationToNull", (req, res) => {
+	const { userName } = req.body
+	const setLocationToNull = `UPDATE userinfos SET userLocation=NULL, userAddress=NULL WHERE userName='${userName}'`
+	connection.query(setLocationToNull, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.send("set location to null")
 		}
 	})
 })
