@@ -40,7 +40,6 @@ class Home extends Component {
         if (state === undefined) {
             return
         }
-        console.log(this.state)
         const { dataUser } = state
         getLocation(dataUser.userName, dataUser.id)
             .then((response) => {
@@ -179,7 +178,11 @@ class Home extends Component {
             return <div />
         }
         if (loadGeolocalistationSuccess !== true || loadGeolocalistationApproximateSuccess !== true) {
-            return <div />
+            return (
+                <div>
+                    <img src={ process.env.PUBLIC_URL + "loader1.gif" } alt="loader" />
+                </div>
+            )
         }
         return (
             <div>
