@@ -16,6 +16,7 @@ class CreateAccount extends Component {
                 { name: "firstName", type: "text", value: "", placeholder: "firstName" },
                 { name: "userName", type: "text", value: "", placeholder: "userName" },
                 { name: "password", type: "password", value: "", placeholder: "password" },
+                { name: "confirmPassword", type: "password", value: "", placeholder: "Confirm password" },
                 { name: "email", type: "email", value: "", placeholder: "email" },
             ],
             showConfirmKey: false,
@@ -44,14 +45,34 @@ class CreateAccount extends Component {
         this.setState({ showConfirmKey: !this.state.showConfirmKey })
     }
 
+    checkEmptyForm = () => {
+        const { inputArray } = this.state
+        let isEmpty = true
+        inputArray.forEach((inputData) => {
+            if (inputData.value.trim() === "") {
+                isEmpty = false
+            }
+        })
+        return isEmpty
+    }
+
+    doesPasswordMatch = () => {
+        const { inputArray } = this.state
+        const password = inputArray.find(x => x.name === "password").value
+        const confirmPassword = inputArray.find(x => x.name === "confirmPassword").value
+        return password === confirmPassword
+    }
+
     render() {
         const { inputArray, showConfirmKey, userName } = this.state
         return (
             <div>
                 <Form inputArray={ inputArray } onChangeValue={ this.onChangeValue } />
-                <button onClick={ () => this.checkIfUserExist() }>Create your account</button>
+                <span> { this.doesPasswordMatch() ? null : "Password doesn't match" }</span>
+                <button onClick={ () => (this.checkEmptyForm() && this.doesPasswordMatch()) ? this.checkIfUserExist() : null }>Create your account</button>
+                <button onClick={ () => (this.checkEmptyForm() && this.doesPasswordMatch()) ? this.setState({ showConfirmKey: true }) : null }>Show modal</button>
                 {
-                    (showConfirmKey)
+                    (showConfirmKey && this.checkEmptyForm() && this.doesPasswordMatch())
                         ? (
                             <ConfirmKey
                                 userName={ userName }

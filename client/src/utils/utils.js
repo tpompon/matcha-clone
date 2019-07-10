@@ -7,3 +7,7 @@ export const checkPassword = (password) => {
     const regexPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/
     return regexPassword.test(password)
 }
+
+export const uniqueId = () => {
+    return `${Date.now()}${Math.floor(Math.random() * 10000)}`
+}

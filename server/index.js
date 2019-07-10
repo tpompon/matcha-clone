@@ -7,20 +7,18 @@ const fs = require("fs")
 const app = express()
 const bodyParser = require("body-parser")
 const ipInfo = require("ipinfo")
+const cities = require("all-the-cities")
 
 const connection = mysql.createConnection({
 	host: "localhost",
 	user: "root",
-	password: "input305",
+	port: 3307,
+	password: "tpompon",
 	database: "matcha",
 	multipleStatements: true,
 })
 
 fs.existsSync("../client/public/imageProfil") || fs.mkdirSync("../client/public/imageProfil", 0777)
-
-ipInfo((err, cLoc) => {
-	console.log(err || cLoc)
-})
 
 const sendMail = (mail, text, subject) => {
 	let transporter = nodemailer.createTransport({
@@ -36,7 +34,7 @@ const sendMail = (mail, text, subject) => {
 		},
 	})
 	let helperOptions = {
-		from: "sylvainboeuf@gmail.com",
+		from: '"Fred Foo 👻" <foo@example.com>',
 		to: mail,
 		subject,
 		text,
@@ -68,6 +66,10 @@ const saveImage = (dataPicture, userId, namePicture) => {
 const addNotification = (from, to, message) => {
 	const sqlInsertNotification =  `INSERT INTO notifications (notificationUser, notificationType, date) SELECT '${to}', '${message.replace(/'/g, "\\'")}', NOW() FROM userinfos WHERE NOT EXISTS (SELECT user FROM listblockprofil WHERE user='${to}' AND blockProfil='${from}') LIMIT 1`
 	return sqlInsertNotification
+}
+
+const uniqueId = () => {
+	return `${Date.now()}${Math.floor(Math.random() * 10000)}`
 }
 
 connection.connect(err => {
@@ -184,12 +186,36 @@ app.post("/users/editProfil/sendPictures", (req, res) => {
 	})
 })
 
-app.post("/users/recorverPassword", (req, res) => {
-	const { email, newPassword, newPasswordHash } = req.body
-	const text = `This is Your new password: ${newPassword}`
-	const subject = "New password"
-	sendMail(email, text, subject)
-	const updatePassword = `UPDATE profil SET password='${newPasswordHash}' WHERE email='${email}'`
+app.post("/users/findEmail", (req, res) => {
+	const { email } = req.body
+	const findEmail = `SELECT email from profil WHERE email='${email}'`
+	connection.query(findEmail, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			if (results.length > 0) {
+				const key = uniqueId()
+				const text = `This is your key: ${key}`
+				const subject = "Key to reset your password"
+				const setKeyResetPassword = `UPDATE profil SET keyResetPassword='${key}' WHERE email='${email}'`
+				connection.query(setKeyResetPassword, (error, results) => {
+					if (error) {
+						return res.send(error)
+					} else {
+						sendMail(email, text, subject)
+						return res.json({ "result": true })
+					}
+				})
+			} else {
+				return res.json({ "result": false })
+			}
+		}
+	})
+})
+
+app.post("/users/recoverPassword", (req, res) => {
+	const { passwordHash, key } = req.body
+	const updatePassword = `UPDATE profil SET password='${passwordHash}' WHERE keyResetPassword='${key}'`
 	connection.query(updatePassword, (error, results) => {
 		if (error) {
 			return res.send(error)
@@ -585,13 +611,24 @@ app.post("/users/getUserLocation", (req, res) => {
 })
 
 app.post("/users/getUserApproximateLocation", (req, res) => {
-	const { coords, userName, city } = req.body
-	const insertApproximateLocation = `UPDATE userinfos SET userApproximateLocation='${coords}', userApproximateCity='${city}' WHERE userName='${userName}'`
-	connection.query(insertApproximateLocation, (error, results) => {
+	const { userName } = req.body
+	ipInfo((error, cLoc) => {
 		if (error) {
-			return res.send(error)
+			return error
 		} else {
-			return res.send("insert approximate location success")
+			const city = cities.filter(city => {
+				if (city.name === cLoc.city && city.country === cLoc.country) {
+					return city.name.match(cLoc.city)
+				}
+			})
+			const insertApproximateLocation = `UPDATE userinfos SET userApproximateLocation='${city[0].lat}, ${city[0].lon}', userApproximateCity='${city[0].name}' WHERE userName='${userName}'`
+			connection.query(insertApproximateLocation, (error, results) => {
+				if (error) {
+					return res.send(error)
+				} else {
+					return res.send("success")
+				}
+			})
 		}
 	})
 })

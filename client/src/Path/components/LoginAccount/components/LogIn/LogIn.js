@@ -40,6 +40,10 @@ class LogIn extends Component {
             .catch((error) => console.log(error))
     }
 
+    hideForgetPassword = () => {
+        this.setState({ showForgetPassword: false })
+    }
+
     render() {
         const { showForgetPassword, inputArray } = this.state
         return (
@@ -49,7 +53,7 @@ class LogIn extends Component {
                 <button onClick={ () => this.setState({ showForgetPassword: !this.state.showForgetPassword }) }>Mot de passe oublié</button>
                 {
                     (showForgetPassword)
-                        ? <ForgetPassword />
+                        ? <ForgetPassword hideForgetPassword={ this.hideForgetPassword } />
                         : null
                 }
             </div>

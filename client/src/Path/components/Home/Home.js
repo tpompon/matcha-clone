@@ -8,9 +8,11 @@ import ListProfilBlock from "./components/ListProfilBlock"
 import Chat from "./components/Chat"
 import Notifications from "./components/Notifications"
 
+import { Button } from "reactstrap"
+
 import {
     getNotificationsNoRead, /*userIsDeLog,*/ getUserProfil, getLocation,
-    setLocation, getUserApproximateLocation,setUserApproximateLocation, setLocationToNull,
+    setLocation, getUserApproximateLocation, setLocationToNull,
 } from "utils/fileProvider"
 
 const optionsArray = [
@@ -72,34 +74,13 @@ class Home extends Component {
                     .then(() => this.setState({ ...this.state, loadGeolocalistationSuccess: true }))
                     .catch((error) => console.log(error))
             })
-            /*
-        getUserApproximateLocation()
+        getUserApproximateLocation(dataUser.userName)
             .then((response) => {
-                ELG.geocode().text(response.city)
-                    .run((error, results) => {
-                        console.log(results)
-                        if (error) {
-                            console.log(error)
-                        } else {
-                            const dataApproximateAddress = {
-                                coords: `${results.results[0].latlng.lat}, ${results.results[0].latlng.lng}`,
-                                city: results.results[0].text,
-                            }
-                            setUserApproximateLocation(dataUser.userName, dataApproximateAddress)
-                                .then(() => this.setState({
-                                    ...this.state,
-                                    dataUser: {
-                                        ...this.state.dataUser,
-                                        userApproximateLocation: dataApproximateAddress.coords,
-                                        userApproximateCity: dataApproximateAddress.city,
-                                    },
-                                    loadGeolocalistationApproximateSuccess: true,
-                                }))
-                                .catch((error) => console.log(error))
-                        }
-                    })
+                if (response === 1) {
+                    this.setState({ loadGeolocalistationApproximateSuccess: true })
+                }
             })
-            .catch((error) => console.log(error))*/
+            .catch((error) => console.log(error))
         getUserProfil(dataUser.id)
             .then((response) => this.setState({ dataUser: response.data[0] }))
             .catch((error) => console.log(error))
@@ -179,7 +160,7 @@ class Home extends Component {
             history.push("/LoginAccount")
             return <div />
         }
-        if (loadGeolocalistationSuccess !== true /*|| loadGeolocalistationApproximateSuccess !== true*/) {
+        if (loadGeolocalistationSuccess !== true || loadGeolocalistationApproximateSuccess !== true) {
             return (
                 <div>
                     <img src={ process.env.PUBLIC_URL + "loader1.gif" } alt="loader" />
@@ -190,12 +171,13 @@ class Home extends Component {
             <div>
                 {
                     optionsArray.map((option) => (
-                        <button
+                        <Button
+                            color="danger"
                             key={ `option-${option}` }
                             onClick={ () => this.setState({ showOption: option }) }
                         >
                             { (option === "Notifications") ? `${notificationsArray.length}, ${option}` : option }
-                        </button>
+                        </Button>
                     ))
                 }
                 <Disconnect userName={ dataUser.userName } />

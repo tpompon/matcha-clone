@@ -93,12 +93,21 @@ const checkUserAlreadyExist = (dataNewUser) => {
         .catch((error) => console.log(error))
 }
 
-export const recorverPassword = (email) => {
-    const newPassword = Math.floor(Math.random() * 1000000)
-    const newPasswordHash = hash.sha256().update(newPassword.toString()).digest("hex")
-    fetch(`http://localhost:4000/users/recorverPassword`, optionsFetch({
-        email, newPassword, newPasswordHash,
-    }))
+export const findEmail = (email) => {
+    return fetch("http://localhost:4000/users/findEmail", optionsFetch({ email }))
+        .then((response) => response.json())
+        .then((responseJson) => {
+            if (responseJson.result === true) {
+                return 1
+            }
+            return 0
+        })
+        .catch((error) => console.log(error))
+}
+
+export const recoverPassword = (newPassword, key) => {
+    const passwordHash = hash.sha256().update(newPassword).digest("hex")
+    fetch(`http://localhost:4000/users/recoverPassword`, optionsFetch({ passwordHash, key }))
 }
 
 export const updateInfosProfil = (id, previousUserName, inputArray) => {
@@ -262,19 +271,11 @@ export const setLocationToNull = (userName) => {
     return fetch("http://localhost:4000/users/setLocationToNull", optionsFetch({ userName }))
 }
 
-export const getUserApproximateLocation = () => {
-    return fetch("https://geoip-db.com/json/{ipv4-address}")
-        .then((response) => response.json())
-        .then((json) => json)
+export const getUserApproximateLocation = (userName) => {
+    return fetch("http://localhost:4000/users/getUserApproximateLocation", optionsFetch({ userName }))
+        .then((response) => response.text())
+        .then((responseText) => (responseText === "success") ? 1 : 0)
         .catch((error) => console.log(error))
-}
-
-export const setUserApproximateLocation = (userName, dataApproximateAddress) => {
-    return fetch("http://localhost:4000/users/getUserApproximateLocation", optionsFetch({
-        coords: dataApproximateAddress.coords,
-        city: dataApproximateAddress.city,
-        userName,
-    }))    
 }
 
 export const calculDistance = (lat1, lon1, lat2, lon2) => {
