@@ -72,10 +72,12 @@ class Home extends Component {
                     .then(() => this.setState({ ...this.state, loadGeolocalistationSuccess: true }))
                     .catch((error) => console.log(error))
             })
+            /*
         getUserApproximateLocation()
             .then((response) => {
                 ELG.geocode().text(response.city)
                     .run((error, results) => {
+                        console.log(results)
                         if (error) {
                             console.log(error)
                         } else {
@@ -97,7 +99,7 @@ class Home extends Component {
                         }
                     })
             })
-            .catch((error) => console.log(error))
+            .catch((error) => console.log(error))*/
         getUserProfil(dataUser.id)
             .then((response) => this.setState({ dataUser: response.data[0] }))
             .catch((error) => console.log(error))
@@ -177,7 +179,7 @@ class Home extends Component {
             history.push("/LoginAccount")
             return <div />
         }
-        if (loadGeolocalistationSuccess !== true || loadGeolocalistationApproximateSuccess !== true) {
+        if (loadGeolocalistationSuccess !== true /*|| loadGeolocalistationApproximateSuccess !== true*/) {
             return (
                 <div>
                     <img src={ process.env.PUBLIC_URL + "loader1.gif" } alt="loader" />

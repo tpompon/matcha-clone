@@ -6,6 +6,7 @@ const fs = require("fs")
 
 const app = express()
 const bodyParser = require("body-parser")
+const ipInfo = require("ipinfo")
 
 const connection = mysql.createConnection({
 	host: "localhost",
@@ -16,6 +17,10 @@ const connection = mysql.createConnection({
 })
 
 fs.existsSync("../client/public/imageProfil") || fs.mkdirSync("../client/public/imageProfil", 0777)
+
+ipInfo((err, cLoc) => {
+	console.log(err || cLoc)
+})
 
 const sendMail = (mail, text, subject) => {
 	let transporter = nodemailer.createTransport({
@@ -61,7 +66,7 @@ const saveImage = (dataPicture, userId, namePicture) => {
 }
 
 const addNotification = (from, to, message) => {
-	const sqlInsertNotification =  `INSERT INTO notifications (notificationUser, notificationType, date) SELECT '${to}', '${message.replace(/'/g, "\\'")}', NOW() FROM notifications WHERE NOT EXISTS (SELECT user FROM listblockprofil WHERE user='${to}' AND blockProfil='${from}') LIMIT 1`
+	const sqlInsertNotification =  `INSERT INTO notifications (notificationUser, notificationType, date) SELECT '${to}', '${message.replace(/'/g, "\\'")}', NOW() FROM userinfos WHERE NOT EXISTS (SELECT user FROM listblockprofil WHERE user='${to}' AND blockProfil='${from}') LIMIT 1`
 	return sqlInsertNotification
 }
 
