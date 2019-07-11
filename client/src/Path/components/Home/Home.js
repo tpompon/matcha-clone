@@ -2,33 +2,24 @@ import React, { Component } from "react"
 import * as ELG from "esri-leaflet-geocoder"
 
 import EditProfil from "./components/EditProfil"
-import Disconnect from "./components/Disconnect"
 import ListOfPerson from "./components/ListOfPerson"
 import ListProfilBlock from "./components/ListProfilBlock"
 import Chat from "./components/Chat"
 import Notifications from "./components/Notifications"
-
-import { Button } from "reactstrap"
+import Loader from "components/Loader"
+import Header from "components/Header"
 
 import {
-    getNotificationsNoRead, /*userIsDeLog,*/ getUserProfil, getLocation,
+    getNotificationsNoRead, getUserProfil, getLocation,
     setLocation, getUserApproximateLocation, setLocationToNull,
 } from "utils/fileProvider"
-
-const optionsArray = [
-    "Edit profil",
-    "List of person",
-    "List Profil Block",
-    "Chat",
-    "Notifications",
-]
 
 class Home extends Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            showOption: "",
+            displayPage: "",
             notificationsArray: [],
             dataUser: undefined,
             loadGeolocalistationSuccess: false,
@@ -76,20 +67,21 @@ class Home extends Component {
             })
         getUserApproximateLocation(dataUser.userName)
             .then((response) => {
-                if (response === 1) {
-                    this.setState({ loadGeolocalistationApproximateSuccess: true })
-                }
+                this.setState({
+                    ...this.state,
+                    dataUser: {
+                        ...this.state.dataUser,
+                        userApproximateLocation: response.approximateLocation,
+                        userApproximateCity: response.userApproximateCity,
+                    },
+                    loadGeolocalistationApproximateSuccess: true,
+                })
             })
             .catch((error) => console.log(error))
         getUserProfil(dataUser.id)
             .then((response) => this.setState({ dataUser: response.data[0] }))
             .catch((error) => console.log(error))
         this.setState({ dataUser })
-        /*
-        window.onunload = window.onbeforeunload = () => {
-            userIsDeLog(dataUser.userName)
-        }
-        */
     }
 
     componentDidMount() {
@@ -126,9 +118,9 @@ class Home extends Component {
     }
 
     choosenOption = () => {
-        const { showOption, notificationsArray, dataUser } = this.state
+        const { displayPage, notificationsArray, dataUser } = this.state
         const { userName } = dataUser
-        switch (showOption) {
+        switch (displayPage) {
             
             case "Edit profil":
                 return <EditProfil dataUser={ dataUser } updateDataUser={ this.updateDataUser } />
@@ -151,6 +143,10 @@ class Home extends Component {
         }
     }
 
+    displayPage = (page) => {
+        this.setState({ displayPage: page })
+    }
+
     render() {
         const { history } = this.props
         const {
@@ -161,26 +157,15 @@ class Home extends Component {
             return <div />
         }
         if (loadGeolocalistationSuccess !== true || loadGeolocalistationApproximateSuccess !== true) {
-            return (
-                <div>
-                    <img src={ process.env.PUBLIC_URL + "loader1.gif" } alt="loader" />
-                </div>
-            )
+            return (<Loader />)
         }
         return (
             <div>
-                {
-                    optionsArray.map((option) => (
-                        <Button
-                            color="danger"
-                            key={ `option-${option}` }
-                            onClick={ () => this.setState({ showOption: option }) }
-                        >
-                            { (option === "Notifications") ? `${notificationsArray.length}, ${option}` : option }
-                        </Button>
-                    ))
-                }
-                <Disconnect userName={ dataUser.userName } />
+                <Header
+                    notificationsArray={ notificationsArray }
+                    displayPage={ this.displayPage }
+                    dataUser={ dataUser }
+                />
                 { this.choosenOption() }
             </div>
         )

@@ -2,32 +2,10 @@ import React, { Component } from "react"
 import { withRouter } from "react-router-dom"
 
 import Form from "components/Form"
+import Modal from "components/Modal"
 
 import { recoverPassword } from "utils/fileProvider"
 import { checkPassword } from "utils/utils"
-
-const styles = {
-    popup: {
-        position: "fixed",
-        width: "100%",
-        height: "100%",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        margin: "auto",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-    },
-    popupInner: {
-        position: "absolute",
-        left: "25%",
-        bottom: "25%",
-        top: "25%",
-        right: "25%",
-        margin: "auto",
-        background: "white",
-    },
-}
 
 class SetNewPassword extends Component {
 
@@ -66,12 +44,10 @@ class SetNewPassword extends Component {
 
 	render() {
 		return (
-			<div style={ styles.popup }>
-                <div style={ styles.popupInner }>
-					<Form inputArray = { this.state.inputArray } onChangeValue = { this.onChange } />
-                    <button onClick={ () => this.setNewPassword() }>Confirm key !</button>
-                </div>
-            </div>
+            <Modal>
+                <Form inputArray = { this.state.inputArray } onChangeValue = { this.onChange } />
+                <button onClick={ () => this.setNewPassword() }>Confirm key !</button>
+            </Modal>
 		)
 	}
 	

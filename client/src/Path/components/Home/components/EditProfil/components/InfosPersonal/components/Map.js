@@ -20,6 +20,7 @@ class MapComp extends Component {
     }
 
     componentWillMount() {
+        console.log(this.props)
         this.findLocation(this.props)
     }
 

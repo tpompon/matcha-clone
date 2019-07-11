@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 
 import PreviewProfil from "./components/PreviewProfil"
+import Form from "components/Form"
 
 import { calculDistance } from "utils/fileProvider"
 
@@ -12,6 +13,13 @@ const listTagArray = [
     "#data processing",
 ]
 
+const defaultAgeMin = 10
+const defaultAgeMax = 50
+const defaultDistanceMin = 0
+const defaultDistanceMax = 30
+const defaultPopulareScoreMin = 30
+const defaultPopulareScoreMax = 70
+
 class CollectionView extends Component {
 
     constructor(props) {
@@ -19,12 +27,18 @@ class CollectionView extends Component {
         this.state = {
             listProfil: null,
             listTag: "",
-            ageMin: 10,
-            ageMax: 50,
-            distanceMin: 0,
-            distanceMax: 30,
-            populareScoreMin: 30,
-            populareScoreMax: 70,
+            age: [
+                { name: "ageMin", type: "number", placeholder: "ageMin", value: defaultAgeMin },
+                { name: "ageMax", type: "number", placeholder: "ageMax", value: defaultAgeMax },
+            ],
+            distance: [
+                { name: "distanceMin", type: "number", placeholder: "distanceMin", value: defaultDistanceMin },
+                { name: "distanceMax", type: "number", placeholder: "distanceMax", value: defaultDistanceMax },
+            ],
+            score: [
+                { name: "populareScoreMin", type: "number", placeholder: "Score Min", value: defaultPopulareScoreMin },
+                { name: "populareScoreMax", type: "number", placeholder: "Score Max", value: defaultPopulareScoreMax },
+            ],
         }
     }
 
@@ -64,8 +78,10 @@ class CollectionView extends Component {
     }
 
     filterAge = (array) => {
-        const { ageMin, ageMax } = this.state
-        if (ageMin === ""|| ageMax === "") {
+        const { age } = this.state
+        const ageMin = (age.find((x) => x.name === "ageMin")).value
+        const ageMax = (age.find((x) => x.name === "ageMax")).value
+        if (ageMin <= 0 || ageMax <= 0) {
             return array
         }
         const newListPerson = []
@@ -79,8 +95,10 @@ class CollectionView extends Component {
 
     filterLocation = (array) => {
         const { userLocation, userApproximateLocation } = this.props.dataUser
-        const { distanceMin, distanceMax } = this.state
-        if (distanceMin === "" || distanceMax === "") {
+        const { distance } = this.state
+        const distanceMin = (distance.find((x) => x.name === "distanceMin")).value
+        const distanceMax = (distance.find((x) => x.name === "distanceMax")).value
+        if (distanceMin <= 0 || distanceMax <= 0) {
             return array
         }   
         const userCoords = (userLocation !== null) ? userLocation.split(", ") : userApproximateLocation.split(", ")
@@ -130,8 +148,10 @@ class CollectionView extends Component {
     }
 
     filterPopularScore = (array) => {
-        const { populareScoreMin, populareScoreMax } = this.state
-        if (populareScoreMin === "" || populareScoreMax === "") {
+        const { score } = this.state
+        const populareScoreMin = (score.find((x) => x.name === "populareScoreMin")).value
+        const populareScoreMax = (score.find((x) => x.name === "populareScoreMax")).value
+        if (populareScoreMin <= 0 || populareScoreMax <= 0) {
             return array
         }
         const newListPerson = []
@@ -143,22 +163,47 @@ class CollectionView extends Component {
         return newListPerson
     }
 
+    onChangeAge = (e, index) => {
+        const { age } = this.state
+        if (e.target.value < 0)
+            age[index].value = ""
+        else
+            age[index].value = e.target.value
+
+        this.setState({ age })
+    }
+
+    onChangeDistance = (e, index) => {
+        const { distance } = this.state
+        if (e.target.value < 0)
+            distance[index].value = ""
+        else
+            distance[index].value = e.target.value
+
+        this.setState({ distance })
+    }
+
+    onChangeScore = (e, index) => {
+        const { score } = this.state
+        if (e.target.value < 0)
+            score[index].value = ""
+        else if (e.target.value > 100)
+            score[index].value = 100
+        else
+            score[index].value = e.target.value
+        this.setState({ score })
+    }
+
     render() {
         const { chooseDataPerson, listPerson } = this.props
         const {
-            listProfil, ageMin, ageMax, distanceMin, distanceMax, listTag,
-            populareScoreMin, populareScoreMax,
+            listProfil, listTag, age, distance, score,
         } = this.state
         return (
             <div>
-                <input type="number" placeholder="ageMin" value={ ageMin } onChange={ (e) => this.setState({ ageMin: e.target.value }) } />
-                <input type="number" placeholder="ageMax" value={ ageMax } onChange={ (e) => this.setState({ ageMax: e.target.value }) } />
-                <button onClick={ () => this.filterList(listPerson) }>Filter age</button>
-                <input type="number" placeholder="distanceMin" value={ distanceMin } onChange={ (e) => this.setState({ distanceMin: e.target.value }) } />
-                <input type="number" placeholder="distanceMax" value={ distanceMax } onChange={ (e) => this.setState({ distanceMax: e.target.value }) } />
-                <button onClick={ () => this.filterList(listPerson) }>Filter distance</button>
-                <input type="number" placeholder="Score min" value={ populareScoreMin } onChange={ (e) => this.setState({ populareScoreMin: e.target.value }) } />
-                <input type="number" placeholder="Score max" value={ populareScoreMax } onChange={ (e) => this.setState({ populareScoreMax: e.target.value }) } />
+                <Form inputArray={ age } onChangeValue={ this.onChangeAge } />
+                <Form inputArray={ distance } onChangeValue={ this.onChangeDistance } />
+                <Form inputArray={ score } onChangeValue={ this.onChangeScore } />
                 <button onClick={ () => this.filterList(listPerson) }>Filter populare score</button>
                 <div>
                     {

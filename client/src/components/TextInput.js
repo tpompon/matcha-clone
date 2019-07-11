@@ -22,7 +22,7 @@ const TextInput = ({
 TextInput.propTypes = {
     placeholder: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired,
+    //value: PropTypes.string.isRequired,
     onChangeValue: PropTypes.func.isRequired,
 }
 

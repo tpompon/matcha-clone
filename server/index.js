@@ -626,7 +626,7 @@ app.post("/users/getUserApproximateLocation", (req, res) => {
 				if (error) {
 					return res.send(error)
 				} else {
-					return res.send("success")
+					return res.json({ approximateLocation: `${city[0].lat}, ${city[0].lon}`, userApproximateCity: `${city[0].name}` })
 				}
 			})
 		}

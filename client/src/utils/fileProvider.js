@@ -273,8 +273,8 @@ export const setLocationToNull = (userName) => {
 
 export const getUserApproximateLocation = (userName) => {
     return fetch("http://localhost:4000/users/getUserApproximateLocation", optionsFetch({ userName }))
-        .then((response) => response.text())
-        .then((responseText) => (responseText === "success") ? 1 : 0)
+        .then((response) => response.json())
+        .then((responseJson) => responseJson)
         .catch((error) => console.log(error))
 }
 

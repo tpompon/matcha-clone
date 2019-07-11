@@ -1,30 +1,9 @@
 import React, { Component } from "react"
 import { withRouter } from "react-router-dom"
 
-import { checkKey, userIsLog } from "utils/fileProvider"
+import Modal from "components/Modal"
 
-const styles = {
-    popup: {
-        position: "fixed",
-        width: "100%",
-        height: "100%",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        margin: "auto",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-    },
-    popupInner: {
-        position: "absolute",
-        left: "25%",
-        bottom: "25%",
-        top: "25%",
-        right: "25%",
-        margin: "auto",
-        background: "white",
-    },
-}
+import { checkKey, userIsLog } from "utils/fileProvider"
 
 class ConfirmKey extends Component {
 
@@ -52,18 +31,16 @@ class ConfirmKey extends Component {
         const { closeModal } = this.props
         const { valueKey } = this.state
         return (
-            <div style={ styles.popup }>
-                <div style={ styles.popupInner }>
-                    <input
-                        type="number"
-                        value={ valueKey }
-                        onChange={ (e) => this.setState({ valueKey: e.target.value }) }
-                        placeholder="Put your key here"
-                    />
-                    <button onClick={ () => this.confirmKey() }>Confirm key !</button>
-                    <button onClick={ () => closeModal() }>Close confirmKey</button>
-                </div>
-            </div>
+            <Modal>
+                <input
+                    type="number"
+                    value={ valueKey }
+                    onChange={ (e) => this.setState({ valueKey: e.target.value }) }
+                    placeholder="Put your key here"
+                />
+                <button onClick={ () => this.confirmKey() }>Confirm key !</button>
+                <button onClick={ () => closeModal() }>Close confirmKey</button>
+            </Modal>
         )
     }
 
