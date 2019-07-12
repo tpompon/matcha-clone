@@ -1,5 +1,7 @@
 import React, { Component } from "react"
 
+import CarouselProfil from "components/CarouselProfil"
+
 import { getPicturesUser } from "utils/fileProvider"
 
 class Images extends Component {
@@ -38,7 +40,7 @@ class Images extends Component {
         }
         return (
             <div>
-                {
+                {/*
                     imagesArray.map((image, index) => (
                         <img
                             key={ `image-${index}` }
@@ -52,7 +54,8 @@ class Images extends Component {
                             alt={ `PhotoProfil-${index}` }
                         />
                     ))
-                }
+                */}
+                <CarouselProfil pictureProfil={ imagesArray } />
             </div>
         )
     }

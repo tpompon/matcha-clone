@@ -3,21 +3,11 @@ import React, { Component } from "react"
 import CollectionView from "./components/CollectionView"
 import InfosPerson from "./components/InfosPerson"
 
+import { Container, Row, Col } from "reactstrap"
+
 import { blockList, getAllOtherDataOfProfil, visitProfil, blockProfil } from "utils/fileProvider"
 
-const styles = {
-    container: {
-        display: "flex",
-    },
-    infosPerson: {
-        width: "70%",
-    },
-    collectionView: {
-        width: "30%",
-    },
-}
-
-class ListOfPerson extends Component {
+class Discover extends Component {
 
     constructor(props) {
         super(props)
@@ -65,25 +55,28 @@ class ListOfPerson extends Component {
             return <div />
         }
         return (
-            <div style={ styles.container }>
-                <div style={ styles.infosPerson }>
-                    <InfosPerson
-                        dataUser={ dataUser }
-                        dataPerson={ dataPerson }
-                        getListUser={ this.getListUser }
-                    />
-                </div>
-                <div style={ styles.collectionView }>
-                    <CollectionView
-                        dataUser={ dataUser }
-                        listPerson={ listPerson }
-                        chooseDataPerson={ this.chooseDataPerson }
-                    />
-                </div>
-            </div>
+            <Container fluid style={ { width: "80%" } }>
+                <Row>
+                    <Col md="7">
+                        <CollectionView
+                            dataUser={ dataUser }
+                            listPerson={ listPerson }
+                            chooseDataPerson={ this.chooseDataPerson }
+                        />
+                    </Col>
+                    <Col md="3">
+                        <InfosPerson
+                            dataUser={ dataUser }
+                            dataPerson={ dataPerson }
+                            getListUser={ this.getListUser }
+                        />
+                    </Col>
+                </Row>
+            </Container>
+
         )
     }
 
 }
 
-export default ListOfPerson
+export default Discover

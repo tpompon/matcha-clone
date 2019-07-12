@@ -5,6 +5,8 @@ import Form from "components/Form"
 
 import { calculDistance } from "utils/fileProvider"
 
+import { Container, Row, Col, Button } from "reactstrap"
+
 const listTagArray = [
     "#Movie",
     "#Manga",
@@ -165,32 +167,37 @@ class CollectionView extends Component {
 
     onChangeAge = (e, index) => {
         const { age } = this.state
-        if (e.target.value < 0)
+        if (e.target.value < 0) {
             age[index].value = ""
-        else
+        }
+        else {
             age[index].value = e.target.value
-
+        }
         this.setState({ age })
     }
 
     onChangeDistance = (e, index) => {
         const { distance } = this.state
-        if (e.target.value < 0)
+        if (e.target.value < 0) {
             distance[index].value = ""
-        else
+        }
+        else {
             distance[index].value = e.target.value
-
+        }
         this.setState({ distance })
     }
 
     onChangeScore = (e, index) => {
         const { score } = this.state
-        if (e.target.value < 0)
+        if (e.target.value < 0) {
             score[index].value = ""
-        else if (e.target.value > 100)
+        }
+        else if (e.target.value > 100) {
             score[index].value = 100
-        else
+        }
+        else {
             score[index].value = e.target.value
+        }
         this.setState({ score })
     }
 
@@ -200,37 +207,47 @@ class CollectionView extends Component {
             listProfil, listTag, age, distance, score,
         } = this.state
         return (
-            <div>
-                <Form inputArray={ age } onChangeValue={ this.onChangeAge } />
-                <Form inputArray={ distance } onChangeValue={ this.onChangeDistance } />
-                <Form inputArray={ score } onChangeValue={ this.onChangeScore } />
-                <button onClick={ () => this.filterList(listPerson) }>Filter populare score</button>
-                <div>
+            <Container fluid style={{border: "1px solid red"}}>
+                <Row>
+                    <Col md="3">
+                        <Form inputArray={ age } onChangeValue={ this.onChangeAge } />
+                    </Col>
+                    <Col md="3">
+                        <Form inputArray={ distance } onChangeValue={ this.onChangeDistance } />
+                    </Col>
+                    <Col md="3">
+                        <Form inputArray={ score } onChangeValue={ this.onChangeScore } />                 
+                    </Col>
+                    <Col md="3">
+                        <button onClick={ () => this.filterList(listPerson) }>Filter populare score</button>                    
+                    </Col>
+                </Row>
+                <Row>
                     {
                         listTagArray.map((tag) => (
-                            <button
-                                key={ `tag-${tag}` }
+                            <Button
+                                key={ `Btn-${tag}` }
                                 onClick={ () => this.chooseTag(tag) }
-                                style={ { color: (listTag.indexOf(tag) !== -1) ? "red" : null } }
+                                style={ { marginRight: 5, color: (listTag.indexOf(tag) !== -1) ? "red" : null } }
                             >
                                 { tag }
-                            </button>
+                            </Button>
                         ))
                     }
-                </div>
-                <div>
+                </Row>
+                <Row>
                     {
                         listProfil.map((data) => (
-                            <div key={ `PreviewProfil-${data.id}` }>
+                            <Col key={ `PreviewProfil-${data.id}` } md="3">
                                 <PreviewProfil
                                     data={ data }
                                     chooseDataPerson={ chooseDataPerson }
                                 />
-                            </div>
+                            </Col>
                         ))
-                    }
-                </div>
-            </div>
+                    }               
+                </Row>
+            </Container>
         )
     }
 

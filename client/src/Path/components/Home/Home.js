@@ -2,9 +2,9 @@ import React, { Component } from "react"
 import * as ELG from "esri-leaflet-geocoder"
 
 import EditProfil from "./components/EditProfil"
-import ListOfPerson from "./components/ListOfPerson"
+import Discover from "./components/Discover"
 import ListProfilBlock from "./components/ListProfilBlock"
-import Chat from "./components/Chat"
+import Messages from "./components/Messages"
 import Notifications from "./components/Notifications"
 import Loader from "components/Loader"
 import Header from "components/Header"
@@ -125,14 +125,14 @@ class Home extends Component {
             case "Edit profil":
                 return <EditProfil dataUser={ dataUser } updateDataUser={ this.updateDataUser } />
 
-            case "List of person":
-                return <ListOfPerson dataUser={ dataUser } />
+            case "Discover":
+                return <Discover dataUser={ dataUser } />
             
             case "List Profil Block":
                 return <ListProfilBlock userName={ userName } />
 
-            case "Chat":
-                return <Chat userName={ userName } />
+            case "Messages":
+                return <Messages userName={ userName } />
 
             case "Notifications":
                 return <Notifications notificationsArray={ notificationsArray } userName={ userName } />

@@ -1,6 +1,9 @@
 import React, { Component } from "react"
+import { Input, Button } from "reactstrap"
 
 import { sendMessage } from "utils/fileProvider"
+
+import { FaRegPaperPlane } from "react-icons/fa"
 
 const styles = {
     container: {
@@ -20,13 +23,13 @@ class SendMessage extends Component {
         const { messageValue } = this.state
         return (
             <div style={ styles.container }>
-                <input
+                <Input
                     type="text"
                     value={ messageValue }
                     onChange={ (e) => this.setState({ messageValue: e.target.value }) }
                     placeholder="Put your message here"
                 />
-                <button onClick={ () => sendMessage(userName, profilMatchName, messageValue) }>Send your message</button>
+                <Button color="primary" onClick={ () => sendMessage(userName, profilMatchName, messageValue) }><FaRegPaperPlane /></Button>
             </div>
         )
     }
