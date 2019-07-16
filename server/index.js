@@ -99,7 +99,7 @@ app.get("/users", (req, res) => {
 
 app.post("/users/checkLogin", (req, res) => {
 	const { name, hashPassword } = req.body
-	const checkLogin = `SELECT p.* FROM profil p INNER JOIN inlineuser i ON p.userName=i.user WHERE (userName, password, confirmKeyOk) IN (('${name}', '${hashPassword}', 1)) AND i.inline=0`
+	const checkLogin = `SELECT p.* FROM profil p INNER JOIN inlineuser i ON p.userName=i.user WHERE (userName, password, confirmKeyOk) IN (('${name}', '${hashPassword}', 1))`
 	connection.query(checkLogin, (error, results) => {
 		if (error) {
 			return res.send(error)
