@@ -12,7 +12,7 @@ const cities = require("all-the-cities")
 const connection = mysql.createConnection({
 	host: "localhost",
 	user: "root",
-	port: 3307,
+	port: 3306,
 	password: "tpompon",
 	database: "matcha",
 	multipleStatements: true,
@@ -221,6 +221,18 @@ app.post("/users/recoverPassword", (req, res) => {
 			return res.send(error)
 		} else {
 			return res.send(`profil is confirmed`)
+		}
+	})
+})
+
+app.post("/users/ban", (req, res) => {
+	const { username, bantime } = req.body
+	const setBantime = `UPDATE profil SET bantime='${bantime}' WHERE userName='${username}'`
+	connection.query(setBantime, (error, results) => {
+		if (error) {
+			return res.send(error)
+		} else {
+			return res.send(`Bantime updated`)
 		}
 	})
 })
@@ -622,12 +634,12 @@ app.post("/users/getUserApproximateLocation", (req, res) => {
 					return city.name.match(cLoc.city)
 				}
 			})
-			const insertApproximateLocation = `UPDATE userinfos SET userApproximateLocation='${city[0].lat}, ${city[0].lon}', userApproximateCity='${city[0].name}' WHERE userName='${userName}'`
+			const insertApproximateLocation = `UPDATE userinfos SET userApproximateLocation='48, 2', userApproximateCity='Paris' WHERE userName='${userName}'`
 			connection.query(insertApproximateLocation, (error, results) => {
 				if (error) {
 					return res.send(error)
 				} else {
-					return res.json({ approximateLocation: `${city[0].lat}, ${city[0].lon}`, userApproximateCity: `${city[0].name}` })
+					return res.json({ approximateLocation: `48, 2`, userApproximateCity: `Paris` })
 				}
 			})
 		}

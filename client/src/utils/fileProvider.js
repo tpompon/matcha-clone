@@ -110,6 +110,10 @@ export const recoverPassword = (newPassword, key) => {
     fetch(`http://localhost:4000/users/recoverPassword`, optionsFetch({ passwordHash, key }))
 }
 
+export const banUser = (username, bantime) => {
+    fetch(`http://localhost:4000/users/ban`, optionsFetch({ username, bantime }))
+}
+
 export const updateInfosProfil = (id, previousUserName, inputArray) => {
     const infosProfilUser = { id, previousUserName, ...transformArrayInObject(inputArray) }
     const { email, newPassword } = infosProfilUser

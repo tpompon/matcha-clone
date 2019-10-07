@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 
-import Form from "components/Form"
+import { banUser } from "utils/fileProvider"
 
-//import {  } from "utils/fileProvider"
+import Form from "components/Form"
 
 class Admin extends Component {
 
@@ -33,6 +33,8 @@ class Admin extends Component {
 		const { banForm } = this.state
 		const banTime = (24*60*60) * banForm[1].value
 		const timestampUnban = Math.floor(Date.now() / 1000) + banTime
+
+		banUser(banForm[0].value, timestampUnban) 
 
 		console.log(`${banForm[0].value} has been banned for ${banForm[1].value} days (${banTime} seconds)`)
 		console.log(`He will be unban after timestamp: ${timestampUnban} / Current timestamp ${Math.floor(Date.now() / 1000)}`)
